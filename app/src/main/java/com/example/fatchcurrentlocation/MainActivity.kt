@@ -1,131 +1,100 @@
 package com.example.fatchcurrentlocation
 
-import android.Manifest
-import android.content.Context
-import android.content.pm.PackageManager
-import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
+import android.app.ProgressDialog
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import androidx.core.app.ActivityCompat
+import android.view.View
+import android.widget.*
+import androidx.annotation.RequiresApi
+import com.example.fatchcurrentlocation.DataClasses.ResponseDataClass
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import android.content.Intent
+import android.content.SharedPreferences
+import android.net.Uri
+import com.example.fatchcurrentlocation.DataClasses.MyDataClass
+
 
 class MainActivity : AppCompatActivity() {
-    lateinit var locationByNetwork: Location
-    lateinit var locationByGps: Location
-    val requestcode=1236
-    private var currentLocation: Location? = null
-    lateinit var locationManager: LocationManager
-    override fun onCreate(savedInstanceState: Bundle?) {
+lateinit var userId:EditText
+lateinit var userPassword:EditText
+lateinit var loginBtn:TextView
+lateinit var jumpToSignUp:TextView
+var retrofit:Retrofit?=null
+    lateinit var progressDialog:ProgressDialog
+override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        isLocationPermissionGranted()
-        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        val hasGps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-        val hasNetwork = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-        val gpsLocationListener: LocationListener = object : LocationListener {
-            override fun onLocationChanged(location: Location) {
-                var locationByGps = location
-            }
-
-            override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
-            override fun onProviderEnabled(provider: String) {}
-            override fun onProviderDisabled(provider: String) {}
+initialize()
+    loginBtn.setOnClickListener(object : View.OnClickListener{
+        @RequiresApi(Build.VERSION_CODES.O)
+        override fun onClick(p0: View?) {
+           if(userId.text.toString().isEmpty()){
+               userId.setError("Email Cann't be Empty")
+               userId.focusable
+           }else if(userPassword.text.toString().isEmpty()){
+               userPassword.setError("Password required")
+               userPassword.focusable
+           }else{
+               progressDialog.show()
+               Log.d("TAG",userId.text.toString()+""+userPassword.text.toString())
+               getData(userId.text.toString(),userPassword.text.toString())
+           }
         }
-        val networkLocationListener: LocationListener = object : LocationListener {
-            override fun onLocationChanged(location: Location) {
-                var locationByNetwork = location
-            }
+    })
+jumpToSignUp.setOnClickListener(object : View.OnClickListener{
+    override fun onClick(p0: View?) {
+        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.technofino.in/community/register/"))
+        startActivity(browserIntent)
+    }
+})
+    }
 
-            override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
-            override fun onProviderEnabled(provider: String) {}
-            override fun onProviderDisabled(provider: String) {}
-        }
-
-        if (hasGps) {
-            if (ActivityCompat.checkSelfPermission(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+    private fun getData(email:String,password:String) {
+       retrofit=RetrofitManager.getRetrofit1()
+        var api:HitApi= retrofit!!.create(HitApi::class.java)
+//        Log.d("TAG","HElloo"+api)
+        api.getResponseDataForLogin("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4",email,password).enqueue(object: Callback<ResponseDataClass>{
+            override fun onResponse(
+                call: Call<ResponseDataClass>,
+                response: Response<ResponseDataClass>,
             ) {
-
-                return
+               if(response.code().equals(200)) {
+                   var responseDataClass: ResponseDataClass? =response.body()
+                   if (responseDataClass != null) {
+                       MyDataClass.responseDataClass=responseDataClass
+                   }
+                   Toast.makeText(this@MainActivity, "Login Successfull", Toast.LENGTH_SHORT).show()
+                   var intent=Intent(this@MainActivity,Home().javaClass)
+                   intent.putExtra("responseDataObject",responseDataClass)
+                   startActivity(intent)
+                   finish()
+                   progressDialog.dismiss()
+               }else{
+                   Toast.makeText(this@MainActivity, "Invalid Credentials", Toast.LENGTH_SHORT).show()
+                   progressDialog.dismiss()
+               }
             }
-            locationManager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER,
-                5000,
-                0F,
-                gpsLocationListener
-            )
-        }
-        if (hasNetwork) {
-            locationManager.requestLocationUpdates(
-                LocationManager.NETWORK_PROVIDER,
-                5000,
-                0F,
-                networkLocationListener
-            )
-        }
-        val lastKnownLocationByGps =
-            locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-        lastKnownLocationByGps?.let {
-            locationByGps = lastKnownLocationByGps
-        }
-        val lastKnownLocationByNetwork =
-            locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-        lastKnownLocationByNetwork?.let {
-            locationByNetwork = lastKnownLocationByNetwork
-        }
-        if (locationByGps != null && locationByNetwork != null) {
-            if (locationByGps.accuracy > locationByNetwork!!.accuracy) {
-                currentLocation = locationByGps
-                var latitude = currentLocation!!.latitude
-                var longitude = currentLocation!!.longitude
-               Log.d("TAG","$latitude,$longitude")
-            } else {
-                currentLocation = locationByNetwork
-                var latitude = currentLocation!!.latitude
-                var longitude = currentLocation!!.longitude
-                Log.d("TAG","$latitude,$longitude")
+
+            override fun onFailure(call: Call<ResponseDataClass>, t: Throwable) {
+                Toast.makeText(this@MainActivity,t.localizedMessage,Toast.LENGTH_LONG).show()
+                progressDialog.dismiss()
             }
-        }
-
-
-    }
-    private fun isLocationPermissionGranted(): Boolean {
-        return if (ActivityCompat.checkSelfPermission(
-                this,
-                android.Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(
-                    android.Manifest.permission.ACCESS_FINE_LOCATION,
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION
-                ),
-                requestcode
-            )
-            false
-        } else {
-            true
-        }
+        })
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if(requestCode==requestcode&&grantResults.size>0&&grantResults[0]==PackageManager.PERMISSION_GRANTED){
-
-        }else{
-            isLocationPermissionGranted()
-        }
+    private fun initialize() {
+        progressDialog= ProgressDialog(this)
+        progressDialog.setMessage("Please Wait...")
+        userId=findViewById(R.id.login_user_id);
+        userPassword=findViewById(R.id.login_user_password);
+        loginBtn=findViewById(R.id.login_btn_login);
+        jumpToSignUp=findViewById(R.id.login_jumpToSignUp);
     }
+
 }
+

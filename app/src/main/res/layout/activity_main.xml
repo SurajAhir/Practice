@@ -1,18 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
-
-    <TextView
-        android:layout_width="wrap_content"
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:background="#400C87"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Technofino"
+            android:textStyle="bold"
+            android:textSize="24sp"
+            android:textColor="@color/white"/>
+    </androidx.appcompat.widget.Toolbar>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        android:gravity="center"
+        android:background="@drawable/login_background"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:textSize="40sp"
+            android:textStyle="bold"
+            android:textColor="#2200FF"
+            android:gravity="center"
+            android:text="Login"
+            />
+    <!--    <com.google.android.material.textfield.TextInputLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        app:startIconDrawable="@drawable/user_type">-->
+
+    <!--        <com.google.android.material.textfield.TextInputEditText-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:id="@+id/firebaseLogin_user_name"-->
+    <!--            android:text="Name"-->
+    <!--            />-->
+    <!--    </com.google.android.material.textfield.TextInputLayout>-->
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:startIconDrawable="@drawable/email"
+        android:layout_marginTop="10dp"
+        app:endIconMode="clear_text">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/login_user_id"
+            android:inputType="textEmailAddress"
+            android:hint="Email" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        app:endIconMode="password_toggle"
+        app:startIconDrawable="@drawable/password"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:inputType="textPassword"
+            android:id="@+id/login_user_password"
+            android:layout_height="wrap_content"
+            android:hint="Password" />
+    </com.google.android.material.textfield.TextInputLayout>
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:background="@drawable/login_button_bg"
+        android:text="Login"
+        android:layout_marginTop="10dp"
+        android:id="@+id/login_btn_login"
+        android:textColor="#E1DA49"
+        android:textStyle="bold"
+        android:textSize="25sp"
+        android:gravity="center"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Or"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="4dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:text="Don't have an account?" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Register now"
+                android:background="@color/teal_200"
+                android:textColor="@color/purple_500"
+                android:textStyle="bold"
+                android:padding="4dp"
+                android:layout_marginLeft="4dp"
+                android:textSize="16sp"
+                android:textAllCaps="false"
+                android:id="@+id/login_jumpToSignUp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>
