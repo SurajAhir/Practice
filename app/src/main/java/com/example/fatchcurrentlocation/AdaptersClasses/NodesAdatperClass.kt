@@ -1,7 +1,8 @@
-package com.example.fatchcurrentlocation
+package com.example.fatchcurrentlocation.AdaptersClasses
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,10 +10,13 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.FragmentContainerView
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
+import com.example.fatchcurrentlocation.DataClasses.MyDataClass
 import com.example.fatchcurrentlocation.DataClasses.NodesData1
 import com.example.fatchcurrentlocation.Fragments.ShowDetails
+import com.example.fatchcurrentlocation.R
 import java.util.*
 
 class NodesAdatperClass(
@@ -20,10 +24,9 @@ class NodesAdatperClass(
     val _list: LinkedList<NodesData1>,
     val _parentNodeId: Int,
     val layout: LinearLayout,
-    val beginTransaction: FragmentTransaction,
     val homeFragmentContainerViewForShowDetails: FragmentContainerView,
     val btn_text: String,
-   val homeScrollBar: NestedScrollView
+    val homeScrollBar: NestedScrollView
 ) : RecyclerView.Adapter<NodesAdatperClass.NodesViewHolder>() {
     val context = _context
     val list = _list
@@ -61,11 +64,16 @@ class NodesAdatperClass(
         holder.threads.append(list[position].type_data.discussion_count.toString())
         holder.title.setOnClickListener(object : View.OnClickListener {
             override fun onClick(p0: View?) {
-                layout.visibility=View.GONE
-                homeScrollBar.visibility=View.GONE
-                homeFragmentContainerViewForShowDetails.visibility=View.VISIBLE
-               beginTransaction.replace(R.id.home_fragment_containerViewForShowDetails,ShowDetails(list[position].node_id,btn_text,list[position].description,list[position].title))
-                beginTransaction.commit()
+                layout.visibility = View.GONE
+                homeScrollBar.visibility = View.GONE
+                homeFragmentContainerViewForShowDetails.visibility = View.VISIBLE
+                var transaction=MyDataClass.getTransaction()
+                transaction.replace(R.id.home_fragment_containerViewForShowDetails,
+                    ShowDetails(list[position].node_id,
+                        btn_text,
+                        list[position].description,
+                        list[position].title))
+               transaction.commit()
             }
         })
 

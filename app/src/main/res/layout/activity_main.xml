@@ -30,11 +30,11 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="80dp"
-            android:textSize="40sp"
+            android:textSize="25sp"
             android:textStyle="bold"
             android:textColor="#2200FF"
             android:gravity="center"
-            android:text="Login"
+            android:text="Login to continue"
             />
     <!--    <com.google.android.material.textfield.TextInputLayout-->
     <!--        android:layout_width="match_parent"-->
@@ -54,6 +54,7 @@
         android:layout_height="wrap_content"
         app:startIconDrawable="@drawable/email"
         android:layout_marginTop="10dp"
+        app:boxStrokeColor="@color/black"
         app:endIconMode="clear_text">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -61,12 +62,15 @@
             android:layout_height="wrap_content"
             android:id="@+id/login_user_id"
             android:inputType="textEmailAddress"
+            android:background="@color/white"
+            android:textColor="@color/black"
             android:hint="Email" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_marginTop="10dp"
+        app:boxStrokeColor="@color/black"
         app:endIconMode="password_toggle"
         app:startIconDrawable="@drawable/password"
         android:layout_height="wrap_content">
@@ -75,6 +79,8 @@
             android:layout_width="match_parent"
             android:inputType="textPassword"
             android:id="@+id/login_user_password"
+            android:background="@color/white"
+            android:textColor="@color/black"
             android:layout_height="wrap_content"
             android:hint="Password" />
     </com.google.android.material.textfield.TextInputLayout>

@@ -6,14 +6,21 @@
         <entry key="..\:/Users/suraj.DESKTOP-1KSTK77/AndroidStudioProjects/FatchCurrentLocation/app/src/main/res/drawable-v24/ic_baseline_notifications_24.xml" value="0.22760416666666666" />
         <entry key="..\:/Users/suraj.DESKTOP-1KSTK77/AndroidStudioProjects/FatchCurrentLocation/app/src/main/res/drawable-v24/login_background.xml" value="0.23489583333333333" />
         <entry key="..\:/Users/suraj.DESKTOP-1KSTK77/AndroidStudioProjects/FatchCurrentLocation/app/src/main/res/drawable-v24/login_button_bg.xml" value="0.1525" />
+        <entry key="..\:/Users/suraj.DESKTOP-1KSTK77/AndroidStudioProjects/FatchCurrentLocation/app/src/main/res/drawable/ic_baseline_notifications_none_24.xml" value="0.1455" />
+        <entry key="..\:/Users/suraj.DESKTOP-1KSTK77/AndroidStudioProjects/FatchCurrentLocation/app/src/main/res/drawable/ic_baseline_reply_24.xml" value="0.1455" />
+        <entry key="..\:/Users/suraj.DESKTOP-1KSTK77/AndroidStudioProjects/FatchCurrentLocation/app/src/main/res/drawable/ic_like.xml" value="0.1455" />
+        <entry key="..\:/Users/suraj.DESKTOP-1KSTK77/AndroidStudioProjects/FatchCurrentLocation/app/src/main/res/drawable/ic_share.xml" value="0.1455" />
+        <entry key="..\:/Users/suraj.DESKTOP-1KSTK77/AndroidStudioProjects/FatchCurrentLocation/app/src/main/res/drawable/ic_tag.xml" value="0.1455" />
         <entry key="..\:/Users/suraj.DESKTOP-1KSTK77/AndroidStudioProjects/FatchCurrentLocation/app/src/main/res/drawable/update_status_bg.xml" value="0.23489583333333333" />
         <entry key="..\:/Users/suraj.DESKTOP-1KSTK77/AndroidStudioProjects/FatchCurrentLocation/app/src/main/res/layout/activity_home.xml" value="0.21458333333333332" />
         <entry key="..\:/Users/suraj.DESKTOP-1KSTK77/AndroidStudioProjects/FatchCurrentLocation/app/src/main/res/layout/activity_main.xml" value="0.20729166666666668" />
         <entry key="..\:/Users/suraj.DESKTOP-1KSTK77/AndroidStudioProjects/FatchCurrentLocation/app/src/main/res/layout/fragment_show_details.xml" value="0.20729166666666668" />
+        <entry key="..\:/Users/suraj.DESKTOP-1KSTK77/AndroidStudioProjects/FatchCurrentLocation/app/src/main/res/layout/fragment_show_posts_of_threads.xml" value="0.21458333333333332" />
         <entry key="..\:/Users/suraj.DESKTOP-1KSTK77/AndroidStudioProjects/FatchCurrentLocation/app/src/main/res/layout/fragment_your_account.xml" value="0.21458333333333332" />
         <entry key="..\:/Users/suraj.DESKTOP-1KSTK77/AndroidStudioProjects/FatchCurrentLocation/app/src/main/res/layout/practic.xml" value="0.20729166666666668" />
         <entry key="..\:/Users/suraj.DESKTOP-1KSTK77/AndroidStudioProjects/FatchCurrentLocation/app/src/main/res/layout/recyclerview_custom_layout.xml" value="0.21458333333333332" />
         <entry key="..\:/Users/suraj.DESKTOP-1KSTK77/AndroidStudioProjects/FatchCurrentLocation/app/src/main/res/layout/show_details_custom_layout.xml" value="0.20729166666666668" />
+        <entry key="..\:/Users/suraj.DESKTOP-1KSTK77/AndroidStudioProjects/FatchCurrentLocation/app/src/main/res/layout/show_posts_of_threads_custom_layout.xml" value="0.264" />
         <entry key="..\:/Users/suraj.DESKTOP-1KSTK77/AndroidStudioProjects/FatchCurrentLocation/app/src/main/res/layout/staff_online_custom_layout.xml" value="0.21458333333333332" />
         <entry key="..\:/Users/suraj.DESKTOP-1KSTK77/AndroidStudioProjects/FatchCurrentLocation/app/src/main/res/menu/side_navigation_menu.xml" value="0.20729166666666668" />
       </map>

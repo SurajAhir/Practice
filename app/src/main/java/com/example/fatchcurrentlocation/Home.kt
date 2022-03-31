@@ -1,5 +1,6 @@
 package com.example.fatchcurrentlocation
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -13,6 +14,7 @@ import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.fatchcurrentlocation.AdaptersClasses.NodesAdatperClass
 import com.example.fatchcurrentlocation.DataClasses.MyDataClass
 import com.example.fatchcurrentlocation.DataClasses.Node
 import com.example.fatchcurrentlocation.DataClasses.NodesData1
@@ -35,7 +37,6 @@ class Home : AppCompatActivity() {
     lateinit var goUserNotification: ImageButton
     lateinit var goUserElectric: ImageButton
     lateinit var goUserSearch: ImageButton
-    lateinit var fragmentContainerView: FragmentContainerView
     lateinit var drawerLayout: DrawerLayout
     lateinit var navigationView: NavigationView
     lateinit var toolbar: Toolbar
@@ -104,16 +105,15 @@ class Home : AppCompatActivity() {
             override fun onClick(p0: View?) {
                 if (goProfile) {
                     goProfile = false
-                    fragmentContainerView.visibility = View.GONE
+                    binding.homeFragmentContainerViewForShowDetails.visibility = View.GONE
+                    binding.homeScrollBar.visibility=View.VISIBLE
                 } else {
                     goProfile = true
-                    fragmentContainerView.visibility = View.VISIBLE
+                    binding.homeFragmentContainerViewForShowDetails.visibility = View.VISIBLE
+                    binding.homeScrollBar.visibility=View.GONE
                     var fragmentTransaction: FragmentTransaction =
                         supportFragmentManager.beginTransaction()
-                    MyDataClass.responseDataClass?.let { YourAccount(it) }?.let {
-                        fragmentTransaction.replace(R.id.home_fragment_containerView,
-                            it)
-                    }
+                  fragmentTransaction.replace(R.id.home_fragment_containerViewForShowDetails,YourAccount(MyDataClass.responseDataClass))
                     fragmentTransaction.commit()
                 }
             }
@@ -132,8 +132,9 @@ class Home : AppCompatActivity() {
                         listGeneral,
                         15,
                         binding.linearLayout,
-                        supportFragmentManager.beginTransaction(),
-                        binding.homeFragmentContainerViewForShowDetails,binding.homeGeneralTv.text.toString(),binding.homeScrollBar)
+                        binding.homeFragmentContainerViewForShowDetails,
+                        binding.homeGeneralTv.text.toString(),
+                        binding.homeScrollBar)
                     recyclerViewGeneral.layoutManager = LinearLayoutManager(this@Home)
                 }
             }
@@ -152,11 +153,11 @@ class Home : AppCompatActivity() {
                         listBanking,
                         1,
                         binding.linearLayout,
-                        supportFragmentManager.beginTransaction(),
                         binding.homeFragmentContainerViewForShowDetails,
                         binding.homeGeneralTv.text.toString(),
-                        binding.homeScrollBar)
-                    recyclerViewBanking.layoutManager=LinearLayoutManager(this@Home)
+                        binding.homeScrollBar
+                    )
+                    recyclerViewBanking.layoutManager = LinearLayoutManager(this@Home)
                 }
             }
         })
@@ -174,8 +175,6 @@ class Home : AppCompatActivity() {
                         listOffer,
                         3,
                         binding.linearLayout,
-
-                        supportFragmentManager.beginTransaction(),
                         binding.homeFragmentContainerViewForShowDetails,
                         binding.homeGeneralTv.text.toString(),
                         binding.homeScrollBar)
@@ -198,8 +197,6 @@ class Home : AppCompatActivity() {
                             listPersonal,
                             11,
                             binding.linearLayout,
-
-                            supportFragmentManager.beginTransaction(),
                             binding.homeFragmentContainerViewForShowDetails,
                             binding.homeGeneralTv.text.toString(),
                             binding.homeScrollBar)
@@ -222,8 +219,6 @@ class Home : AppCompatActivity() {
                             listTravelling,
                             18,
                             binding.linearLayout,
-
-                            supportFragmentManager.beginTransaction(),
                             binding.homeFragmentContainerViewForShowDetails,
                             binding.homeGeneralTv.text.toString(),
                             binding.homeScrollBar)
@@ -246,10 +241,8 @@ class Home : AppCompatActivity() {
                             listForeign,
                             21,
                             binding.linearLayout,
-                            supportFragmentManager.beginTransaction(),
                             binding.homeFragmentContainerViewForShowDetails,
-                            binding.homeGeneralTv.text.toString(),
-                            binding.homeScrollBar)
+                            binding.homeGeneralTv.text.toString(), binding.homeScrollBar)
                     recyclerViewForeignCredit.layoutManager = LinearLayoutManager(this@Home)
                 }
             }
@@ -259,8 +252,10 @@ class Home : AppCompatActivity() {
     }
 
     private fun initialize() {
+        MyDataClass.homeFragmentContainerView = binding.homeFragmentContainerViewForShowDetails
+        MyDataClass.homeNestedScrollView = binding.homeScrollBar
+        MyDataClass.getTransaction = ::getFragmentTransaction
         responseDataObject = intent.getSerializableExtra("responseDataObject") as ResponseDataClass?
-        fragmentContainerView = findViewById(R.id.home_fragment_containerView)
         goUserElectric = findViewById(R.id.home_electric)
         goUserEmail = findViewById(R.id.home_email)
         goUserNotification = findViewById(R.id.home_notification)
@@ -289,13 +284,28 @@ class Home : AppCompatActivity() {
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
     }
+
     override fun onBackPressed() {
         val count = supportFragmentManager.backStackEntryCount
-        if (count == 0) {
-            super.onBackPressed()
-            //additional code
+        if(goProfile){
+            goProfile=false
+            startActivity(Intent(this, Home().javaClass))
+                finish()
+        }else if (count == 0) {
+            if (MyDataClass.countFrag == -1) {
+                super.onBackPressed()
+            } else {
+                MyDataClass.countFrag--
+                startActivity(Intent(this, Home().javaClass))
+                finish()
+            }
+
         } else {
             supportFragmentManager.popBackStack()
         }
+    }
+
+    fun getFragmentTransaction(): FragmentTransaction {
+        return supportFragmentManager.beginTransaction()
     }
 }

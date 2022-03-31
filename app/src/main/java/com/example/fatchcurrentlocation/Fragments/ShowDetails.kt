@@ -9,10 +9,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.fatchcurrentlocation.AdaptersClasses.ShowDetailsAdapter
 import com.example.fatchcurrentlocation.DataClasses.MyDataClass
-import com.example.fatchcurrentlocation.DataClasses.ReponseThread
+import com.example.fatchcurrentlocation.DataClasses.ResponseThread
 import com.example.fatchcurrentlocation.DataClasses.Threads
 import com.example.fatchcurrentlocation.HitApi
 import com.example.fatchcurrentlocation.Home
@@ -76,7 +77,6 @@ class ShowDetails() : Fragment() {
         binding.showCategory.setOnClickListener(object : View.OnClickListener {
             override fun onClick(p0: View?) {
                 startActivity(Intent(context, Home().javaClass))
-
             }
         })
         return binding.root
@@ -86,10 +86,10 @@ class ShowDetails() : Fragment() {
         var retrofit = RetrofitManager.getRetrofit1()
         var api: HitApi = retrofit.create(HitApi::class.java)
         api.getForumsResponse("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4", path, page)
-            .enqueue(object : retrofit2.Callback<ReponseThread> {
+            .enqueue(object : retrofit2.Callback<ResponseThread> {
                 override fun onResponse(
-                    call: Call<ReponseThread>,
-                    response: Response<ReponseThread>,
+                    call: Call<ResponseThread>,
+                    response: Response<ResponseThread>,
                 ) {
                     if (response.isSuccessful && response.body() != null) {
                         var list = response.body()?.threads?.toMutableList()
@@ -98,20 +98,19 @@ class ShowDetails() : Fragment() {
                         binding.showProgressBar.visibility = View.GONE
                         list?.let { list1.addAll(it) }
                         sticky?.let { list1.addAll(it) }
-                        var showDetailsAdapter =
-                            ShowDetailsAdapter(list1, context, response?.body()!!.pagination)
                         binding.showCategory.setText(btn_text)
                         binding.showDescription.setText(description)
                         binding.showTitle.setText(title)
+                        var showDetailsAdapter =
+                            ShowDetailsAdapter(list1, context, response?.body()!!.pagination,title)
                         binding.showRecyclerView.adapter = showDetailsAdapter
                         binding.showRecyclerView.layoutManager = LinearLayoutManager(context)
                     }
                 }
 
-                override fun onFailure(call: Call<ReponseThread>, t: Throwable) {
+                override fun onFailure(call: Call<ResponseThread>, t: Throwable) {
                     Toast.makeText(context, t.localizedMessage, Toast.LENGTH_LONG)
                 }
             })
     }
-
 }
