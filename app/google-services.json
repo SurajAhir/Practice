@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "476661028765",
+    "project_id": "technofino",
+    "storage_bucket": "technofino.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:476661028765:android:45ab5bde431e80122b4174",
+        "android_client_info": {
+          "package_name": "com.example.fatchcurrentlocation"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "476661028765-kevf4553co541mrurc7qpcgm180onroh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9bnwBjNilC8QqBsWfqSHTGY0c6qUOH18"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "476661028765-kevf4553co541mrurc7qpcgm180onroh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
