@@ -48,8 +48,9 @@ class ShowDetails() : Fragment() {
         savedInstanceState: Bundle?,
     ): View? {
         binding = FragmentShowDetailsBinding.inflate(layoutInflater, container, false)
+        MyDataClass.page=1
+        list1.clear()
         fetchDataFromApi(path)
-
         binding.showNestedScrollView.setOnScrollChangeListener(object :
             NestedScrollView.OnScrollChangeListener {
             override fun onScrollChange(
@@ -61,7 +62,9 @@ class ShowDetails() : Fragment() {
             ) {
                 if (v != null) {
                     if (scrollY == v.getChildAt(0).measuredHeight - v.measuredHeight) {
-                        if (MyDataClass.pagination.last_page == MyDataClass.page) {
+                        Log.d("TAG",
+                            "${MyDataClass.paginationForShowDetails.last_page} and ${MyDataClass.page}")
+                        if (MyDataClass.paginationForShowDetails.last_page == MyDataClass.page) {
                             binding.showProgressBar.visibility = View.GONE
                         } else {
                             MyDataClass.page++
@@ -88,13 +91,14 @@ class ShowDetails() : Fragment() {
         api.getForumsResponse("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4", path, page)
             .enqueue(object : retrofit2.Callback<ResponseThread> {
                 override fun onResponse(
+
                     call: Call<ResponseThread>,
                     response: Response<ResponseThread>,
                 ) {
                     if (response.isSuccessful && response.body() != null) {
                         var list = response.body()?.threads?.toMutableList()
                         var sticky = response.body()?.sticky?.toMutableList()
-                        MyDataClass.pagination = response.body()!!.pagination
+                        MyDataClass.paginationForShowDetails = response.body()!!.pagination
                         binding.showProgressBar.visibility = View.GONE
                         list?.let { list1.addAll(it) }
                         sticky?.let { list1.addAll(it) }

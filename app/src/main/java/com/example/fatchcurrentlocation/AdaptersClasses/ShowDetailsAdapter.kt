@@ -15,6 +15,8 @@ import com.example.fatchcurrentlocation.Fragments.ShowPostsOfThreads
 import com.example.fatchcurrentlocation.R
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
+import java.text.DateFormatSymbols
+import java.text.SimpleDateFormat
 import java.util.*
 
 class ShowDetailsAdapter(
@@ -39,7 +41,9 @@ class ShowDetailsAdapter(
         holder.title.setText(list?.get(position)?.title ?: "")
         holder.lastPostUserName.setText(list?.get(position)?.last_post_username ?: "")
         holder.replies.append(list?.get(position)?.reply_count.toString())
-        holder.date.setText(list?.get(position)?.post_date.toString())
+        var date = Date((list.get(position).post_date as Long)*1000)
+        var simple = SimpleDateFormat("dd yyyy")
+        holder.date.setText("${DateFormatSymbols().getShortMonths()[date.month]} ${simple.format(date)}")
         Picasso.get().load(list?.get(position)?.User?.avatar_urls?.o).placeholder(R.drawable.person)
             .into(holder.ProfileImage)
         holder.title.setOnClickListener(object : View.OnClickListener {
@@ -47,9 +51,12 @@ class ShowDetailsAdapter(
                 Log.d("TAG", "clicked ${list[position].title}")
                 MyDataClass.homeNestedScrollView.visibility = View.GONE
                 MyDataClass.homeFragmentContainerView.visibility = View.VISIBLE
-                var transaction=MyDataClass.getTransaction()
+                var transaction = MyDataClass.getTransaction()
                 transaction.replace(R.id.home_fragment_containerViewForShowDetails,
-                    ShowPostsOfThreads(list[position].last_post_username, list.get(position).title,title,list.get(position).thread_id))
+                    ShowPostsOfThreads(list[position].last_post_username,
+                        list.get(position).title,
+                        title,
+                        list.get(position).thread_id,"${DateFormatSymbols().getShortMonths()[date.month]} ${simple.format(date)}"))
                 transaction.addToBackStack(null).commit()
             }
         })

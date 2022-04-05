@@ -35,6 +35,7 @@
                 android:layout_weight="6"
                 android:layout_height="match_parent"
                 android:text="Title"
+                android:maxLines="1"
                 android:gravity="center|start"
                 android:id="@+id/show_title"
                 android:textSize="18sp"/>

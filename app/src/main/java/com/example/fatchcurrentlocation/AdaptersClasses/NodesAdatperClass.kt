@@ -17,6 +17,8 @@ import com.example.fatchcurrentlocation.DataClasses.MyDataClass
 import com.example.fatchcurrentlocation.DataClasses.NodesData1
 import com.example.fatchcurrentlocation.Fragments.ShowDetails
 import com.example.fatchcurrentlocation.R
+import java.text.DateFormatSymbols
+import java.text.SimpleDateFormat
 import java.util.*
 
 class NodesAdatperClass(
@@ -58,15 +60,16 @@ class NodesAdatperClass(
     ) {
         holder.title.setText(list?.get(position)?.title)
         holder.lastPostUserName.setText(list!![position].type_data.last_post_username)
-        holder.lastPostTime.setText(list[position].type_data.last_post_date.toString())
+        var date = Date((list[position].type_data.last_post_date as Long)*1000)
+        var simple = SimpleDateFormat("dd yyyy")
+        holder.lastPostTime.setText("${DateFormatSymbols().getShortMonths()[date.month]} ${simple.format(date)}")
         holder.lastThreadTitle.setText(list[position].type_data.last_thread_title)
         holder.message.append(list[position].type_data.message_count.toString())
         holder.threads.append(list[position].type_data.discussion_count.toString())
         holder.title.setOnClickListener(object : View.OnClickListener {
             override fun onClick(p0: View?) {
-                layout.visibility = View.GONE
-                homeScrollBar.visibility = View.GONE
-                homeFragmentContainerViewForShowDetails.visibility = View.VISIBLE
+                MyDataClass.homeNestedScrollView.visibility = View.GONE
+                MyDataClass.homeFragmentContainerView.visibility = View.VISIBLE
                 var transaction=MyDataClass.getTransaction()
                 transaction.replace(R.id.home_fragment_containerViewForShowDetails,
                     ShowDetails(list[position].node_id,

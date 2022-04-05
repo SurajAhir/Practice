@@ -1,6 +1,8 @@
 package com.example.fatchcurrentlocation
 
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -10,11 +12,12 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.FragmentContainerView
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fatchcurrentlocation.AdaptersClasses.NodesAdatperClass
+import com.example.fatchcurrentlocation.AdaptersClasses.ShowPostsOfThreadsAdapter
 import com.example.fatchcurrentlocation.DataClasses.MyDataClass
 import com.example.fatchcurrentlocation.DataClasses.Node
 import com.example.fatchcurrentlocation.DataClasses.NodesData1
@@ -29,7 +32,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import java.util.*
 
-class Home : AppCompatActivity() {
+class Home : AppCompatActivity(), ReactionListener {
     private lateinit var binding: ActivityHomeBinding
     var responseDataObject: ResponseDataClass? = null
     lateinit var goUserProfile: CircleImageView
@@ -105,15 +108,21 @@ class Home : AppCompatActivity() {
             override fun onClick(p0: View?) {
                 if (goProfile) {
                     goProfile = false
-                    binding.homeFragmentContainerViewForShowDetails.visibility = View.GONE
-                    binding.homeScrollBar.visibility=View.VISIBLE
+//                    binding.homeFragmentContainerViewForShowDetails.visibility = View.GONE
+//                    binding.homeScrollBar.visibility=View.VISIBLE
+                    MyDataClass.homeFragmentContainerView.visibility = View.GONE
+                    MyDataClass.homeNestedScrollView.visibility = View.VISIBLE
+                    startActivity(Intent(this@Home, Home().javaClass))
                 } else {
                     goProfile = true
-                    binding.homeFragmentContainerViewForShowDetails.visibility = View.VISIBLE
-                    binding.homeScrollBar.visibility=View.GONE
+//                    binding.homeFragmentContainerViewForShowDetails.visibility = View.VISIBLE
+//                    binding.homeScrollBar.visibility=View.GONE
+                    MyDataClass.homeFragmentContainerView.visibility = View.VISIBLE
+                    MyDataClass.homeNestedScrollView.visibility = View.GONE
                     var fragmentTransaction: FragmentTransaction =
                         supportFragmentManager.beginTransaction()
-                  fragmentTransaction.replace(R.id.home_fragment_containerViewForShowDetails,YourAccount(MyDataClass.responseDataClass))
+                    fragmentTransaction.replace(R.id.home_fragment_containerViewForShowDetails,
+                        YourAccount(MyDataClass.responseDataClass))
                     fragmentTransaction.commit()
                 }
             }
@@ -255,6 +264,8 @@ class Home : AppCompatActivity() {
         MyDataClass.homeFragmentContainerView = binding.homeFragmentContainerViewForShowDetails
         MyDataClass.homeNestedScrollView = binding.homeScrollBar
         MyDataClass.getTransaction = ::getFragmentTransaction
+        MyDataClass.onBack = ::onBackPressed
+        MyDataClass.reactionDialog = ::getReactionsDialog
         responseDataObject = intent.getSerializableExtra("responseDataObject") as ResponseDataClass?
         goUserElectric = findViewById(R.id.home_electric)
         goUserEmail = findViewById(R.id.home_email)
@@ -287,11 +298,11 @@ class Home : AppCompatActivity() {
 
     override fun onBackPressed() {
         val count = supportFragmentManager.backStackEntryCount
-        if(goProfile){
-            goProfile=false
+        if (goProfile) {
+            goProfile = false
             startActivity(Intent(this, Home().javaClass))
-                finish()
-        }else if (count == 0) {
+            finish()
+        } else if (count == 0) {
             if (MyDataClass.countFrag == -1) {
                 super.onBackPressed()
             } else {
@@ -307,5 +318,139 @@ class Home : AppCompatActivity() {
 
     fun getFragmentTransaction(): FragmentTransaction {
         return supportFragmentManager.beginTransaction()
+    }
+
+
+    fun getReactionsDialog(
+        postId: Int,
+        holder: ShowPostsOfThreadsAdapter.ShowPostsOfThreadsViewHolder,
+    ): DialogFragment {
+        var reactionDialog = ReactionDialogClass(postId, holder)
+        reactionDialog.show(supportFragmentManager, reactionDialog.javaClass.simpleName)
+        return reactionDialog
+    }
+
+    override fun onReactionSelection(
+        reactionType: Int,
+        postId: Int,
+        holder: ShowPostsOfThreadsAdapter.ShowPostsOfThreadsViewHolder,
+    ) {
+        Log.d("TAG", reactionType.toString())
+        MyDataClass.reactionType = reactionType
+        when (reactionType) {
+            1 -> {
+                hitApiForReact(reactionType, postId, holder)
+            }
+            2 -> {
+                hitApiForReact(reactionType, postId, holder)
+            }
+            3 -> {
+                hitApiForReact(reactionType, postId, holder)
+            }
+            4 -> {
+                hitApiForReact(reactionType, postId, holder)
+            }
+            5 -> {
+                hitApiForReact(reactionType, postId, holder)
+            }
+            6 -> {
+                hitApiForReact(reactionType, postId, holder)
+            }
+        }
+    }
+
+    private fun hitApiForReact(
+        reactionType: Int,
+        postId: Int,
+        holder: ShowPostsOfThreadsAdapter.ShowPostsOfThreadsViewHolder,
+    ) {
+//        var likeBtn:TextView=findViewById(R.id.show_posts_of_threads_custom_layout_like_btn)
+        var retrofit: Retrofit = RetrofitManager.getRetrofit1()
+        var api: HitApi = retrofit.create(HitApi::class.java)
+        api.getReaponseOfReact("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4",
+            MyDataClass.myUserId,
+            postId,
+            reactionType).enqueue(object : Callback<Map<String, Any>> {
+            override fun onResponse(
+                call: Call<Map<String, Any>>,
+                response: Response<Map<String, Any>>,
+            ) {
+                if (response.body()?.get("action").toString().equals("insert")) {
+                    when (reactionType) {
+                        1 -> {
+                            holder.likeBtn.setTextColor(Color.parseColor("#0B18CC"))
+                            holder.likeBtn.setTypeface(null, Typeface.BOLD)
+                            holder.likeBtn.setText("Like")
+                            holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_circle_like,
+                                0,
+                                0,
+                                0)
+                        }
+                        2 -> {
+                            holder.likeBtn.setTextColor(Color.parseColor("#BF0404"))
+                            holder.likeBtn.setText("Love")
+                            holder.likeBtn.setTypeface(null, Typeface.BOLD)
+                            holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_love_icon,
+                                0,
+                                0,
+                                0)
+                        }
+                        3 -> {
+                            holder.likeBtn.setTextColor(Color.parseColor("#FFC107"))
+                            holder.likeBtn.setText("haha")
+                            holder.likeBtn.setTypeface(null, Typeface.BOLD)
+                            holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_haha_icon,
+                                0,
+                                0,
+                                0)
+                        }
+                        4 -> {
+                            holder.likeBtn.setTextColor(Color.parseColor("#FFC107"))
+                            holder.likeBtn.setText("Wow")
+                            holder.likeBtn.setTypeface(null, Typeface.BOLD)
+                            holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_wow_icon,
+                                0,
+                                0,
+                                0)
+                        }
+                        5 -> {
+                            holder.likeBtn.setTextColor(Color.parseColor("#FFC107"))
+                            holder.likeBtn.setText("Sad")
+                            holder.likeBtn.setTypeface(null, Typeface.BOLD)
+                            holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_sad_icon,
+                                0,
+                                0,
+                                0)
+                        }
+                        6 -> {
+                            holder.likeBtn.setTextColor(Color.parseColor("#FB2707"))
+                            holder.likeBtn.setText("Angery")
+                            holder.likeBtn.setTypeface(null, Typeface.BOLD)
+                            holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_angry_icon,
+                                0,
+                                0,
+                                0)
+                        }
+                    }
+
+                } else {
+                    Log.d("TAG", response.body()?.get("action").toString())
+                    holder.likeBtn.setTextColor(Color.parseColor("#FF000000"))
+                    holder.likeBtn.setTypeface(null, Typeface.NORMAL)
+                    holder.likeBtn.setText("Like")
+                    holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like,
+                        0,
+                        0,
+                        0)
+
+
+                }
+            }
+
+            override fun onFailure(call: Call<Map<String, Any>>, t: Throwable) {
+
+            }
+        })
+
     }
 }

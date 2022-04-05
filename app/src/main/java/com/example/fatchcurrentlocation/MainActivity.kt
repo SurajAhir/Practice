@@ -16,6 +16,7 @@ import retrofit2.Retrofit
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
+import androidx.fragment.app.DialogFragment
 import com.example.fatchcurrentlocation.DataClasses.MyDataClass
 
 
@@ -67,6 +68,7 @@ jumpToSignUp.setOnClickListener(object : View.OnClickListener{
                    var responseDataClass: ResponseDataClass? =response.body()
                    if (responseDataClass != null) {
                        MyDataClass.responseDataClass=responseDataClass
+                       MyDataClass.myUserId=responseDataClass.user.user_id
                    }
                    Toast.makeText(this@MainActivity, "Login Successfull", Toast.LENGTH_SHORT).show()
                    var intent=Intent(this@MainActivity,Home().javaClass)
@@ -95,6 +97,10 @@ jumpToSignUp.setOnClickListener(object : View.OnClickListener{
         loginBtn=findViewById(R.id.login_btn_login);
         jumpToSignUp=findViewById(R.id.login_jumpToSignUp);
     }
-
+//fun getReactionsDialog():DialogFragment{
+//    var reactionDialog= ReactionDialogClass()
+//    reactionDialog.show(supportFragmentManager, reactionDialog.javaClass.simpleName)
+//    return reactionDialog
+//}
 }
 
