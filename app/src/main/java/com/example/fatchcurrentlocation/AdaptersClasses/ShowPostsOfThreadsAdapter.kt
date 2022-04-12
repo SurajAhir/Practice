@@ -1,20 +1,17 @@
 package com.example.fatchcurrentlocation.AdaptersClasses
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,8 +20,7 @@ import com.example.fatchcurrentlocation.DataClasses.MyDataClass
 import com.example.fatchcurrentlocation.DataClasses.Pagination
 import com.example.fatchcurrentlocation.DataClasses.Posts
 import com.example.fatchcurrentlocation.Fragments.PostComments
-import com.github.pgreze.reactions.ReactionPopup
-import com.github.pgreze.reactions.ReactionsConfigBuilder
+import com.example.fatchcurrentlocation.Fragments.UserProfile
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import org.jsoup.Jsoup
@@ -79,12 +75,14 @@ class ShowPostsOfThreadsAdapter(
             holder.blockQuoteMessage.setText(Jsoup.parse(string).text())
             var k: String = string1.replace(string, "")
             var d: Document = Jsoup.parse(k)
+            Log.d("TAG",list.get(position).message)
             holder.messageDown.setText(d.text().replace(upMessage, ""))
         } else {
             holder.blockQuoteLayout.visibility = View.GONE
             holder.messageUp.visibility = View.GONE
             holder.messageDown.setText(Jsoup.parse(list.get(position).message_parsed).text())
         }
+        isReactedTo(holder,position)
         var str1 = Jsoup.parse(list.get(position).message_parsed).text()
         holder.position.setText("#${list.get(position).position + 1}")
         var date = Date((list.get(position).post_date as Long) * 1000)
@@ -105,7 +103,159 @@ class ShowPostsOfThreadsAdapter(
             holder.founder.visibility = View.GONE
             holder.userTitle.setText(list.get(position).User.user_title)
         }
+        holder.replyBtn.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(p0: View?) {
+                var transaction = MyDataClass.getTransaction()
+                MyDataClass.homeNestedScrollView.visibility = View.GONE
+                MyDataClass.homeFragmentContainerView.visibility = View.VISIBLE
+                transaction.replace(R.id.home_fragment_containerViewForShowDetails,
+                    PostComments(holder.messageDown.text.toString(),
+                        list.get(position).User.username,
+                        list.get(position).thread_id,
+                        list.get(position).post_id,
+                        list.get(position).user_id))
+                transaction.addToBackStack(null).commit()
+            }
+        })
+        holder.likeBtn.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(p0: View?) {
+                LikePost(holder, position)
+            }
+        })
+        holder.likeBtn.setOnLongClickListener(object : View.OnLongClickListener {
+            override fun onLongClick(p0: View?): Boolean {
+                MyDataClass.reactionDialog(list.get(position).post_id, holder,list.get(position).reaction_score)
+                return true
+            }
+        })
+        holder.ProfileImage.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(p0: View?) {
+                MyDataClass.homeNestedScrollView.visibility = View.GONE
+                MyDataClass.homeFragmentContainerView.visibility = View.VISIBLE
+                var transaction = MyDataClass.getTransaction()
+                transaction.replace(R.id.home_fragment_containerViewForShowDetails,
+                    UserProfile(list, position))
+                transaction.addToBackStack(null).commit()
+            }
+        })
+    }
+
+    override fun getItemCount(): Int {
+        return list?.size!!
+    }
+
+    fun LikePost(holder: ShowPostsOfThreadsViewHolder, position: Int) {
+        Log.d("TAG", "threadid ${list.get(position).thread_id}")
+        var retrofit: Retrofit = RetrofitManager.getRetrofit1()
+        var api: HitApi = retrofit.create(HitApi::class.java)
+        api.getReaponseOfReact("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4",
+            MyDataClass.myUserId,
+            list.get(position).post_id,
+            1).enqueue(object : Callback<Map<String, Any>> {
+            @SuppressLint("ResourceAsColor")
+            override fun onResponse(
+                call: Call<Map<String, Any>>,
+                response: Response<Map<String, Any>>,
+            ) {
+                if (response.body()?.get("action").toString().equals("insert")) {
+                    Log.d("TAG", response.body()?.get("action").toString())
+                    holder.likeBtn.setTextColor(Color.parseColor("#0B18CC"))
+                    holder.likeBtn.setTypeface(null, Typeface.BOLD)
+                    holder.likeBtn.setText("Like")
+                    holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_circle_like,
+                        0,
+                        0,
+                        0)
+                    if (list.get(position).reaction_score > 0) {
+                        if ((list.get(position).reaction_score - 1) != 0) {
+                            holder.likeCounts.visibility=View.VISIBLE
+                            holder.likeCounts.setText("You,${list.get(position).reaction_score} other")
+                        } else {
+                            holder.likeCounts.visibility=View.VISIBLE
+                            holder.likeCounts.setText("You,${list.get(position).reaction_score} other")
+                        }
+                    } else {
+                        holder.likeCounts.visibility=View.VISIBLE
+                        holder.likeCounts.setText("You")
+                    }
+                } else {
+                    Log.d("TAG", response.body()?.get("action").toString())
+                    holder.likeBtn.setTextColor(Color.parseColor("#FF000000"))
+                    holder.likeBtn.setTypeface(null, Typeface.NORMAL)
+                    holder.likeBtn.setText("Like")
+                    holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like,
+                        0,
+                        0,
+                        0)
+                    if (list.get(position).reaction_score > 0) {
+                        if((list.get(position).reaction_score-1)!=0){
+                            holder.likeCounts.visibility=View.VISIBLE
+                            holder.likeCounts.setText("${list.get(position).reaction_score}")
+                        }else{
+                            holder.likeCounts.visibility=View.VISIBLE
+                            holder.likeCounts.setText("${list.get(position).reaction_score
+                            }")
+                        }
+                    }else{
+                        holder.likeCounts.visibility=View.GONE
+                    }
+
+                }
+            }
+
+            override fun onFailure(call: Call<Map<String, Any>>, t: Throwable) {
+
+            }
+        })
+    }
+
+    class ShowPostsOfThreadsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var ProfileImage: CircleImageView =
+            itemView.findViewById(R.id.show_posts_of_threads_custom_layout_UserProfileImage)
+        var userName: TextView =
+            itemView.findViewById(R.id.show_posts_of_threads_custom_layout_userName_tv)
+        var member: TextView =
+            itemView.findViewById(R.id.show_posts_of_threads_custom_layout_member_btn)
+        var founder: TextView =
+            itemView.findViewById(R.id.show_posts_of_threads_custom_layout_founder_btn)
+        var admin: TextView =
+            itemView.findViewById(R.id.show_posts_of_threads_custom_layout_admin_btn)
+        var postDate: TextView =
+            itemView.findViewById(R.id.show_posts_of_threads_custom_layout_post_date_tv2)
+        var position: TextView =
+            itemView.findViewById(R.id.show_posts_of_threads_custom_layout_position_tv)
+        var messageDown: TextView =
+            itemView.findViewById(R.id.show_posts_of_threads_custom_layout_message_tvDown)
+        var messageUp: TextView =
+            itemView.findViewById(R.id.show_posts_of_threads_custom_layout_message_tvUp)
+        var blockQuoteLayout: LinearLayout =
+            itemView.findViewById(R.id.show_posts_of_threads_custom_layout_blockQuote_Layout)
+        var blockQuoteMessage: TextView =
+            itemView.findViewById(R.id.show_posts_of_threads_custom_layout_blockQuote_message_tv)
+        var userTitle: TextView =
+            itemView.findViewById(R.id.show_posts_of_threads_custom_layout_usertitle_Tv)
+        var replyBtn: TextView =
+            itemView.findViewById(R.id.show_posts_of_threads_custom_layout_reply_btn)
+        var fragment: FragmentContainerView =
+            itemView.findViewById(R.id.show_posts_of_threads_custom_layout_Fragment)
+        var likeBtn: TextView =
+            itemView.findViewById(R.id.show_posts_of_threads_custom_layout_like_btn)
+        var likeCounts: TextView =
+            itemView.findViewById(R.id.show_posts_of_threads_custom_layout_like_counts)
+    }
+    private fun isReactedTo(holder: ShowPostsOfThreadsViewHolder, position: Int) {
         if (list.get(position).is_reacted_to) {
+            if (list.get(position).reaction_score > 0) {
+                if ((list.get(position).reaction_score - 1) != 0) {
+                    holder.likeCounts.visibility=View.VISIBLE
+                    holder.likeCounts.setText("You,${list.get(position).reaction_score - 1} other")
+                } else {
+                    holder.likeCounts.visibility=View.VISIBLE
+                    holder.likeCounts.setText("You")
+                }
+            } else {
+                holder.likeCounts.visibility = View.GONE
+            }
             when (list.get(position).visitor_reaction_id) {
                 1 -> {
                     holder.likeBtn.setTextColor(Color.parseColor("#0B18CC"))
@@ -171,113 +321,14 @@ class ShowPostsOfThreadsAdapter(
                 0,
                 0,
                 0)
-
+            if(list.get(position).reaction_score>0){
+                holder.likeCounts.visibility=View.VISIBLE
+                holder.likeCounts.setText("${list.get(position).reaction_score}")
+            }else{
+                holder.likeCounts.visibility=View.GONE
+            }
         }
-        holder.replyBtn.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(p0: View?) {
-                var transaction = MyDataClass.getTransaction()
-                MyDataClass.homeNestedScrollView.visibility = View.GONE
-                MyDataClass.homeFragmentContainerView.visibility = View.VISIBLE
-                transaction.replace(R.id.home_fragment_containerViewForShowDetails,
-                    PostComments(holder.messageDown.text.toString(),
-                        list.get(position).User.username,
-                        list.get(position).thread_id,
-                        list.get(position).post_id,
-                        list.get(position).user_id))
-                transaction.addToBackStack(null).commit()
-            }
-        })
-        holder.likeBtn.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(p0: View?) {
-                LikePost(holder, position)
-            }
-        })
-        holder.likeBtn.setOnLongClickListener(object : View.OnLongClickListener {
-            override fun onLongClick(p0: View?): Boolean {
-                MyDataClass.reactionDialog(list.get(position).post_id, holder)
-                return true
-            }
-        })
+
     }
-
-    override fun getItemCount(): Int {
-        return list?.size!!
-    }
-
-    fun LikePost(holder: ShowPostsOfThreadsViewHolder, position: Int) {
-        Log.d("TAG", "threadid ${list.get(position).thread_id}")
-        var retrofit: Retrofit = RetrofitManager.getRetrofit1()
-        var api: HitApi = retrofit.create(HitApi::class.java)
-        api.getReaponseOfReact("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4",
-            MyDataClass.myUserId,
-            list.get(position).post_id,
-            1).enqueue(object : Callback<Map<String, Any>> {
-            @SuppressLint("ResourceAsColor")
-            override fun onResponse(
-                call: Call<Map<String, Any>>,
-                response: Response<Map<String, Any>>,
-            ) {
-                if (response.body()?.get("action").toString().equals("insert")) {
-                    Log.d("TAG", response.body()?.get("action").toString())
-                    holder.likeBtn.setTextColor(Color.parseColor("#0B18CC"))
-                    holder.likeBtn.setTypeface(null, Typeface.BOLD)
-                    holder.likeBtn.setText("Like")
-                    holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_circle_like,
-                        0,
-                        0,
-                        0)
-//                            holder.likeBtn.compoundDrawableTintMode=null
-                } else {
-                    Log.d("TAG", response.body()?.get("action").toString())
-                    holder.likeBtn.setTextColor(Color.parseColor("#FF000000"))
-                    holder.likeBtn.setTypeface(null, Typeface.NORMAL)
-                    holder.likeBtn.setText("Like")
-                    holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like,
-                        0,
-                        0,
-                        0)
-
-                }
-            }
-
-            override fun onFailure(call: Call<Map<String, Any>>, t: Throwable) {
-
-            }
-        })
-    }
-
-    class ShowPostsOfThreadsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var ProfileImage: CircleImageView =
-            itemView.findViewById(R.id.show_posts_of_threads_custom_layout_UserProfileImage)
-        var userName: TextView =
-            itemView.findViewById(R.id.show_posts_of_threads_custom_layout_userName_tv)
-        var member: TextView =
-            itemView.findViewById(R.id.show_posts_of_threads_custom_layout_member_btn)
-        var founder: TextView =
-            itemView.findViewById(R.id.show_posts_of_threads_custom_layout_founder_btn)
-        var admin: TextView =
-            itemView.findViewById(R.id.show_posts_of_threads_custom_layout_admin_btn)
-        var postDate: TextView =
-            itemView.findViewById(R.id.show_posts_of_threads_custom_layout_post_date_tv2)
-        var position: TextView =
-            itemView.findViewById(R.id.show_posts_of_threads_custom_layout_position_tv)
-        var messageDown: TextView =
-            itemView.findViewById(R.id.show_posts_of_threads_custom_layout_message_tvDown)
-        var messageUp: TextView =
-            itemView.findViewById(R.id.show_posts_of_threads_custom_layout_message_tvUp)
-        var blockQuoteLayout: LinearLayout =
-            itemView.findViewById(R.id.show_posts_of_threads_custom_layout_blockQuote_Layout)
-        var blockQuoteMessage: TextView =
-            itemView.findViewById(R.id.show_posts_of_threads_custom_layout_blockQuote_message_tv)
-        var userTitle: TextView =
-            itemView.findViewById(R.id.show_posts_of_threads_custom_layout_usertitle_Tv)
-        var replyBtn: TextView =
-            itemView.findViewById(R.id.show_posts_of_threads_custom_layout_reply_btn)
-        var fragment: FragmentContainerView =
-            itemView.findViewById(R.id.show_posts_of_threads_custom_layout_Fragment)
-        var likeBtn: TextView =
-            itemView.findViewById(R.id.show_posts_of_threads_custom_layout_like_btn)
-    }
-
 
 }

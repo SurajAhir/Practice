@@ -163,7 +163,7 @@
         android:textColor="@color/black"
         android:padding="10dp"/>
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
        android:layout_marginRight="4dp"
         android:layout_marginLeft="4dp"
@@ -172,38 +172,45 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_baseline_notifications_none_24"
-            android:text="Report"
-            android:drawablePadding="5dp"
+            android:drawableLeft="@drawable/ic_like"
+            android:text="Like"
             android:textColor="@color/black"
-            android:id="@+id/show_posts_of_threads_custom_layout_report_btn"
-            android:gravity="center|start"/>
+            android:drawablePadding="5dp"
+            android:layout_marginRight="8dp"
+            android:id="@+id/show_posts_of_threads_custom_layout_like_btn"
+            android:gravity="center"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:id="@+id/show_posts_of_threads_custom_layout_like_counts"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_baseline_reply_24"
+            android:layout_marginLeft="4dp"
+            android:text="Reply"
+            android:textColor="@color/black"
+            android:drawablePadding="5dp"
+            android:id="@+id/show_posts_of_threads_custom_layout_reply_btn"
+            android:gravity="center"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:gravity="right|center">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_like"
-                android:text="Like"
-                android:textColor="@color/black"
+                android:drawableLeft="@drawable/ic_baseline_notifications_none_24"
+                android:text="Report"
                 android:drawablePadding="5dp"
-                android:layout_marginRight="8dp"
-                android:id="@+id/show_posts_of_threads_custom_layout_like_btn"
-                android:gravity="center"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_baseline_reply_24"
-                android:layout_marginLeft="4dp"
-                android:text="Reply"
                 android:textColor="@color/black"
-                android:drawablePadding="5dp"
-                android:id="@+id/show_posts_of_threads_custom_layout_reply_btn"
+                android:id="@+id/show_posts_of_threads_custom_layout_report_btn"
                 android:gravity="center"/>
         </LinearLayout>
+
+
     </LinearLayout>
     <View
         android:layout_width="match_parent"

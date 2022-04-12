@@ -88,7 +88,7 @@ class ShowDetails() : Fragment() {
     fun fetchDataFromApi(path: Int, page: Int = 1) {
         var retrofit = RetrofitManager.getRetrofit1()
         var api: HitApi = retrofit.create(HitApi::class.java)
-        api.getForumsResponse("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4", path, page)
+        api.getForumsResponse("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4", path, page,"desc","last_post_date")
             .enqueue(object : retrofit2.Callback<ResponseThread> {
                 override fun onResponse(
 

@@ -3,9 +3,13 @@
     <string name="apiKey"> 4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
+    <string name="selected_item">Selected item:</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="card_banking_experts"><![CDATA[Card & Banking Experts]]></string>
     <string name="foreign_credit_card_bank_a_c"><![CDATA[Foreign Credit Card & Bank A/C]]></string>
     <string name="technofino_about">TechnoFino is a digital platform (Available on YouTube, Twitter, Facebook, Website, etc) . The platform is made to help and provide best possible convenience in banking sector of India.</string>
+    <string name="reason">For security reasons,you must verify your existing password before you may set a new password.</string>
+    <string name="may_change_username">You may next change your username on or after Apr 21,2022</string>
+    <string name="keep_update_you">We will keep you updated about new content when you haven\'t visited for a while.</string>
 </resources>

@@ -1,11 +1,14 @@
 package com.example.fatchcurrentlocation
 
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Picture
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.DatePicker
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -18,22 +21,31 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fatchcurrentlocation.AdaptersClasses.NodesAdatperClass
 import com.example.fatchcurrentlocation.AdaptersClasses.ShowPostsOfThreadsAdapter
+import com.example.fatchcurrentlocation.AdaptersClasses.UserProfileAdapter
 import com.example.fatchcurrentlocation.DataClasses.MyDataClass
 import com.example.fatchcurrentlocation.DataClasses.Node
 import com.example.fatchcurrentlocation.DataClasses.NodesData1
 import com.example.fatchcurrentlocation.DataClasses.ResponseDataClass
+import com.example.fatchcurrentlocation.Fragments.AccountDetails
+import com.example.fatchcurrentlocation.Fragments.Notification
+import com.example.fatchcurrentlocation.Fragments.SelectThreadToPost
 import com.example.fatchcurrentlocation.Fragments.YourAccount
+import com.example.fatchcurrentlocation.ReactionDialogWork.ReactionDialogClass
+import com.example.fatchcurrentlocation.ReactionDialogWork.ReactionListener
 import com.example.fatchcurrentlocation.databinding.ActivityHomeBinding
 import com.google.android.material.navigation.NavigationView
+import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
+import java.text.DateFormat
 import java.util.*
 
-class Home : AppCompatActivity(), ReactionListener {
-    private lateinit var binding: ActivityHomeBinding
+class Home : AppCompatActivity(),
+    ReactionListener,DatePickerDialog.OnDateSetListener {
+    lateinit var binding: ActivityHomeBinding
     var responseDataObject: ResponseDataClass? = null
     lateinit var goUserProfile: CircleImageView
     lateinit var goUserEmail: ImageButton
@@ -58,6 +70,7 @@ class Home : AppCompatActivity(), ReactionListener {
     lateinit var recyclerViewTravelling: RecyclerView
     lateinit var recyclerViewForeignCredit: RecyclerView
     var goProfile: Boolean = false
+    var goNotification:Boolean=false
     var valid1: Boolean = false
     var valid2: Boolean = false
     var valid3: Boolean = false
@@ -67,56 +80,18 @@ class Home : AppCompatActivity(), ReactionListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
+        setContentView(binding.root)
         initialize()
-        var retrofit: Retrofit = RetrofitManager.getRetrofit1()
-        var api: HitApi = retrofit.create(HitApi::class.java)
-        api.getNodesResponse("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4").enqueue(object : Callback<Node> {
-            override fun onResponse(call: Call<Node>, response: Response<Node>) {
-                Log.d("TAG", "Suraj$response.code().toString()")
-                list = response.body()!!.nodes
-                for (i in 0..list.size - 1) {
-                    if (list[i].parent_node_id.equals(15)) {
-                        listGeneral.add(list[i])
-                    }
-                    if (list[i].parent_node_id.equals(1)) {
-                        listBanking.add(list[i])
-                    }
-                    if (list[i].parent_node_id.equals(3)) {
-                        listOffer.add(list[i])
-                    }
-                    if (list[i].parent_node_id.equals(11)) {
-                        listPersonal.add(list[i])
-                    }
-                    if (list[i].parent_node_id.equals(18)) {
-                        listTravelling.add(list[i])
-                    }
-                    if (list[i].parent_node_id.equals(21)) {
-                        listForeign.add(list[i])
-                    }
-                }
-
-            }
-
-            override fun onFailure(call: Call<Node>, t: Throwable) {
-                Log.d("TAG", t.localizedMessage)
-                Toast.makeText(this@Home, t.localizedMessage, Toast.LENGTH_LONG).show()
-            }
-        })
+       fetchDatFromApi()
         goUserProfile.setOnClickListener(object : View.OnClickListener {
             override fun onClick(p0: View?) {
                 if (goProfile) {
                     goProfile = false
-//                    binding.homeFragmentContainerViewForShowDetails.visibility = View.GONE
-//                    binding.homeScrollBar.visibility=View.VISIBLE
                     MyDataClass.homeFragmentContainerView.visibility = View.GONE
                     MyDataClass.homeNestedScrollView.visibility = View.VISIBLE
                     startActivity(Intent(this@Home, Home().javaClass))
                 } else {
                     goProfile = true
-//                    binding.homeFragmentContainerViewForShowDetails.visibility = View.VISIBLE
-//                    binding.homeScrollBar.visibility=View.GONE
                     MyDataClass.homeFragmentContainerView.visibility = View.VISIBLE
                     MyDataClass.homeNestedScrollView.visibility = View.GONE
                     var fragmentTransaction: FragmentTransaction =
@@ -256,8 +231,74 @@ class Home : AppCompatActivity(), ReactionListener {
                 }
             }
         })
+binding.homePostThread.setOnClickListener(object :View.OnClickListener{
+    override fun onClick(p0: View?) {
+        MyDataClass.homeNestedScrollView.visibility=View.GONE
+        MyDataClass.homeFragmentContainerView.visibility=View.VISIBLE
+        var transaction=MyDataClass.getTransaction()
+        transaction.replace(R.id.home_fragment_containerViewForShowDetails,SelectThreadToPost())
+        transaction.commit()
+    }
+})
+        binding.homeNotification.setOnClickListener(object :View.OnClickListener{
+            override fun onClick(p0: View?) {
+                if (goNotification) {
+                    goNotification = false
+                    MyDataClass.homeFragmentContainerView.visibility = View.GONE
+                    MyDataClass.homeNestedScrollView.visibility = View.VISIBLE
+                    startActivity(Intent(this@Home, Home().javaClass))
+                } else {
+                    goNotification = true
+                    MyDataClass.homeFragmentContainerView.visibility = View.VISIBLE
+                    MyDataClass.homeNestedScrollView.visibility = View.GONE
+                    var fragmentTransaction: FragmentTransaction =
+                        supportFragmentManager.beginTransaction()
+                    fragmentTransaction.replace(R.id.home_fragment_containerViewForShowDetails,
+                        Notification())
+                    fragmentTransaction.commit()
+                }
+            }
+        })
+
+    }
 
 
+    private fun fetchDatFromApi() {
+
+        var retrofit: Retrofit = RetrofitManager.getRetrofit1()
+        var api: HitApi = retrofit.create(HitApi::class.java)
+        api.getNodesResponse("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4").enqueue(object : Callback<Node> {
+            override fun onResponse(call: Call<Node>, response: Response<Node>) {
+                Log.d("TAG", "Suraj$response.code().toString()")
+                list = response.body()!!.nodes
+                for (i in 0..list.size - 1) {
+                    if (list[i].parent_node_id.equals(15)) {
+                        listGeneral.add(list[i])
+                    }
+                    if (list[i].parent_node_id.equals(1)) {
+                        listBanking.add(list[i])
+                    }
+                    if (list[i].parent_node_id.equals(3)) {
+                        listOffer.add(list[i])
+                    }
+                    if (list[i].parent_node_id.equals(11)) {
+                        listPersonal.add(list[i])
+                    }
+                    if (list[i].parent_node_id.equals(18)) {
+                        listTravelling.add(list[i])
+                    }
+                    if (list[i].parent_node_id.equals(21)) {
+                        listForeign.add(list[i])
+                    }
+                }
+
+            }
+
+            override fun onFailure(call: Call<Node>, t: Throwable) {
+                Log.d("TAG", t.localizedMessage)
+                Toast.makeText(this@Home, t.localizedMessage, Toast.LENGTH_LONG).show()
+            }
+        })
     }
 
     private fun initialize() {
@@ -267,6 +308,7 @@ class Home : AppCompatActivity(), ReactionListener {
         MyDataClass.onBack = ::onBackPressed
         MyDataClass.reactionDialog = ::getReactionsDialog
         responseDataObject = intent.getSerializableExtra("responseDataObject") as ResponseDataClass?
+        Picasso.get().load(MyDataClass.responseDataClass?.user?.avatar_urls?.o).placeholder(R.drawable.ic_no_image).into(binding.homeUserAccountProfile)
         goUserElectric = findViewById(R.id.home_electric)
         goUserEmail = findViewById(R.id.home_email)
         goUserNotification = findViewById(R.id.home_notification)
@@ -323,9 +365,14 @@ class Home : AppCompatActivity(), ReactionListener {
 
     fun getReactionsDialog(
         postId: Int,
-        holder: ShowPostsOfThreadsAdapter.ShowPostsOfThreadsViewHolder,
+        holder: Any,
+        reactionScore: Int,
     ): DialogFragment {
-        var reactionDialog = ReactionDialogClass(postId, holder)
+        var reactionDialog =
+            ReactionDialogClass(
+                postId,
+                holder,
+                reactionScore)
         reactionDialog.show(supportFragmentManager, reactionDialog.javaClass.simpleName)
         return reactionDialog
     }
@@ -333,28 +380,29 @@ class Home : AppCompatActivity(), ReactionListener {
     override fun onReactionSelection(
         reactionType: Int,
         postId: Int,
-        holder: ShowPostsOfThreadsAdapter.ShowPostsOfThreadsViewHolder,
+        holder: Any,
+        reactionScore: Int,
     ) {
         Log.d("TAG", reactionType.toString())
         MyDataClass.reactionType = reactionType
         when (reactionType) {
             1 -> {
-                hitApiForReact(reactionType, postId, holder)
+                hitApiForReact(reactionType, postId, holder, reactionScore)
             }
             2 -> {
-                hitApiForReact(reactionType, postId, holder)
+                hitApiForReact(reactionType, postId, holder, reactionScore)
             }
             3 -> {
-                hitApiForReact(reactionType, postId, holder)
+                hitApiForReact(reactionType, postId, holder, reactionScore)
             }
             4 -> {
-                hitApiForReact(reactionType, postId, holder)
+                hitApiForReact(reactionType, postId, holder, reactionScore)
             }
             5 -> {
-                hitApiForReact(reactionType, postId, holder)
+                hitApiForReact(reactionType, postId, holder, reactionScore)
             }
             6 -> {
-                hitApiForReact(reactionType, postId, holder)
+                hitApiForReact(reactionType, postId, holder, reactionScore)
             }
         }
     }
@@ -362,95 +410,253 @@ class Home : AppCompatActivity(), ReactionListener {
     private fun hitApiForReact(
         reactionType: Int,
         postId: Int,
-        holder: ShowPostsOfThreadsAdapter.ShowPostsOfThreadsViewHolder,
+        holder: Any,
+        reactionScore: Int,
     ) {
-//        var likeBtn:TextView=findViewById(R.id.show_posts_of_threads_custom_layout_like_btn)
-        var retrofit: Retrofit = RetrofitManager.getRetrofit1()
-        var api: HitApi = retrofit.create(HitApi::class.java)
-        api.getReaponseOfReact("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4",
-            MyDataClass.myUserId,
-            postId,
-            reactionType).enqueue(object : Callback<Map<String, Any>> {
-            override fun onResponse(
-                call: Call<Map<String, Any>>,
-                response: Response<Map<String, Any>>,
-            ) {
-                if (response.body()?.get("action").toString().equals("insert")) {
-                    when (reactionType) {
-                        1 -> {
-                            holder.likeBtn.setTextColor(Color.parseColor("#0B18CC"))
-                            holder.likeBtn.setTypeface(null, Typeface.BOLD)
+        if (holder is UserProfileAdapter.UserProfileHolder) {
+
+            var retrofit: Retrofit = RetrofitManager.getRetrofit1()
+            var api: HitApi = retrofit.create(HitApi::class.java)
+            api.getReaponseOfProfilePostsReact(MyDataClass.api_key,
+                MyDataClass.myUserId,
+                postId,
+                reactionType).enqueue(object : Callback<Map<String, Any>> {
+                override fun onResponse(
+                    call: Call<Map<String, Any>>,
+                    response: Response<Map<String, Any>>,
+                ) {
+                    if (response.body()?.get("action").toString().equals("insert")) {
+                        changeLikeButton(reactionType, holder)
+                        if (reactionScore > 0) {
+                            if ((reactionScore - 1) != 0) {
+                                holder.likeCounts.visibility = View.VISIBLE
+                                holder.likeCounts.setText("You,${reactionScore} other")
+                            } else {
+                                holder.likeCounts.visibility = View.VISIBLE
+                                holder.likeCounts.setText("You,${reactionScore} other")
+                            }
+                        } else {
+                            holder.likeCounts.visibility = View.VISIBLE
+                            holder.likeCounts.setText("You")
+                        }
+                    } else {
+                        Log.d("TAG", response.body()?.get("action").toString())
+                        holder.likeBtn.setTextColor(Color.parseColor("#FF000000"))
+                        holder.likeBtn.setTypeface(null, Typeface.NORMAL)
+                        holder.likeBtn.setText("Like")
+                        holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like,
+                            0,
+                            0,
+                            0)
+                        if (reactionScore > 0) {
+                            if ((reactionScore - 1) != 0) {
+                                holder.likeCounts.visibility = View.VISIBLE
+                                holder.likeCounts.setText("${reactionScore}")
+                            } else {
+                                holder.likeCounts.visibility = View.VISIBLE
+                                holder.likeCounts.setText("${
+                                    reactionScore
+                                }")
+                            }
+                        } else {
+                            holder.likeCounts.visibility = View.GONE
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<Map<String, Any>>, t: Throwable) {
+                    TODO("Not yet implemented")
+                }
+            })
+        } else if (holder is ShowPostsOfThreadsAdapter.ShowPostsOfThreadsViewHolder) {
+            var retrofit: Retrofit = RetrofitManager.getRetrofit1()
+            var api: HitApi = retrofit.create(HitApi::class.java)
+            api.getReaponseOfReact(MyDataClass.api_key, MyDataClass.myUserId, postId, reactionType)
+                .enqueue(object : Callback<Map<String, Any>> {
+                    override fun onResponse(
+                        call: Call<Map<String, Any>>,
+                        response: Response<Map<String, Any>>,
+                    ) {
+                        if (response.body()?.get("action").toString().equals("insert")) {
+                            changeLikeButton(reactionType, holder)
+                            if (reactionScore > 0) {
+                                if ((reactionScore - 1) != 0) {
+                                    holder.likeCounts.visibility = View.VISIBLE
+                                    holder.likeCounts.setText("You,${reactionScore} other")
+                                } else {
+                                    holder.likeCounts.visibility = View.VISIBLE
+                                    holder.likeCounts.setText("You,${reactionScore} other")
+                                }
+                            } else {
+                                holder.likeCounts.visibility = View.VISIBLE
+                                holder.likeCounts.setText("You")
+                            }
+                        } else {
+                            Log.d("TAG", response.body()?.get("action").toString())
+                            holder.likeBtn.setTextColor(Color.parseColor("#FF000000"))
+                            holder.likeBtn.setTypeface(null, Typeface.NORMAL)
                             holder.likeBtn.setText("Like")
-                            holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_circle_like,
+                            holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like,
                                 0,
                                 0,
                                 0)
-                        }
-                        2 -> {
-                            holder.likeBtn.setTextColor(Color.parseColor("#BF0404"))
-                            holder.likeBtn.setText("Love")
-                            holder.likeBtn.setTypeface(null, Typeface.BOLD)
-                            holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_love_icon,
-                                0,
-                                0,
-                                0)
-                        }
-                        3 -> {
-                            holder.likeBtn.setTextColor(Color.parseColor("#FFC107"))
-                            holder.likeBtn.setText("haha")
-                            holder.likeBtn.setTypeface(null, Typeface.BOLD)
-                            holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_haha_icon,
-                                0,
-                                0,
-                                0)
-                        }
-                        4 -> {
-                            holder.likeBtn.setTextColor(Color.parseColor("#FFC107"))
-                            holder.likeBtn.setText("Wow")
-                            holder.likeBtn.setTypeface(null, Typeface.BOLD)
-                            holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_wow_icon,
-                                0,
-                                0,
-                                0)
-                        }
-                        5 -> {
-                            holder.likeBtn.setTextColor(Color.parseColor("#FFC107"))
-                            holder.likeBtn.setText("Sad")
-                            holder.likeBtn.setTypeface(null, Typeface.BOLD)
-                            holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_sad_icon,
-                                0,
-                                0,
-                                0)
-                        }
-                        6 -> {
-                            holder.likeBtn.setTextColor(Color.parseColor("#FB2707"))
-                            holder.likeBtn.setText("Angery")
-                            holder.likeBtn.setTypeface(null, Typeface.BOLD)
-                            holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_angry_icon,
-                                0,
-                                0,
-                                0)
+                            if (reactionScore > 0) {
+                                if ((reactionScore - 1) != 0) {
+                                    holder.likeCounts.visibility = View.VISIBLE
+                                    holder.likeCounts.setText("${reactionScore}")
+                                } else {
+                                    holder.likeCounts.visibility = View.VISIBLE
+                                    holder.likeCounts.setText("${
+                                        reactionScore
+                                    }")
+                                }
+                            } else {
+                                holder.likeCounts.visibility = View.GONE
+                            }
                         }
                     }
 
-                } else {
-                    Log.d("TAG", response.body()?.get("action").toString())
-                    holder.likeBtn.setTextColor(Color.parseColor("#FF000000"))
-                    holder.likeBtn.setTypeface(null, Typeface.NORMAL)
+                    override fun onFailure(call: Call<Map<String, Any>>, t: Throwable) {
+                    }
+                })
+        }
+
+
+    }
+
+    private fun changeLikeButton(
+        reactionType: Int,
+        holder: Any,
+    ) {
+        when (reactionType) {
+            1 -> {
+                if (holder is UserProfileAdapter.UserProfileHolder) {
+                    holder.likeBtn.setTextColor(Color.parseColor("#0B18CC"))
+                    holder.likeBtn.setTypeface(null, Typeface.BOLD)
                     holder.likeBtn.setText("Like")
-                    holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like,
+                    holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_circle_like,
                         0,
                         0,
                         0)
-
-
+                } else if (holder is ShowPostsOfThreadsAdapter.ShowPostsOfThreadsViewHolder) {
+                    holder.likeBtn.setTextColor(Color.parseColor("#0B18CC"))
+                    holder.likeBtn.setTypeface(null, Typeface.BOLD)
+                    holder.likeBtn.setText("Like")
+                    holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_circle_like,
+                        0,
+                        0,
+                        0)
                 }
             }
-
-            override fun onFailure(call: Call<Map<String, Any>>, t: Throwable) {
+            2 -> {
+                if (holder is UserProfileAdapter.UserProfileHolder) {
+                    holder.likeBtn.setTextColor(Color.parseColor("#BF0404"))
+                    holder.likeBtn.setText("Love")
+                    holder.likeBtn.setTypeface(null, Typeface.BOLD)
+                    holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_love_icon,
+                        0,
+                        0,
+                        0)
+                } else if (holder is ShowPostsOfThreadsAdapter.ShowPostsOfThreadsViewHolder) {
+                    holder.likeBtn.setTextColor(Color.parseColor("#BF0404"))
+                    holder.likeBtn.setText("Love")
+                    holder.likeBtn.setTypeface(null, Typeface.BOLD)
+                    holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_love_icon,
+                        0,
+                        0,
+                        0)
+                }
+            }
+            3 -> {
+                if (holder is UserProfileAdapter.UserProfileHolder) {
+                    holder.likeBtn.setTextColor(Color.parseColor("#FFC107"))
+                    holder.likeBtn.setText("haha")
+                    holder.likeBtn.setTypeface(null, Typeface.BOLD)
+                    holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_haha_icon,
+                        0,
+                        0,
+                        0)
+                } else if (holder is ShowPostsOfThreadsAdapter.ShowPostsOfThreadsViewHolder) {
+                    holder.likeBtn.setTextColor(Color.parseColor("#FFC107"))
+                    holder.likeBtn.setText("haha")
+                    holder.likeBtn.setTypeface(null, Typeface.BOLD)
+                    holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_haha_icon,
+                        0,
+                        0,
+                        0)
+                }
+            }
+            4 -> {
+                if (holder is UserProfileAdapter.UserProfileHolder) {
+                    holder.likeBtn.setTextColor(Color.parseColor("#FFC107"))
+                    holder.likeBtn.setText("Wow")
+                    holder.likeBtn.setTypeface(null, Typeface.BOLD)
+                    holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_wow_icon,
+                        0,
+                        0,
+                        0)
+                } else if (holder is ShowPostsOfThreadsAdapter.ShowPostsOfThreadsViewHolder) {
+                    holder.likeBtn.setTextColor(Color.parseColor("#FFC107"))
+                    holder.likeBtn.setText("Wow")
+                    holder.likeBtn.setTypeface(null, Typeface.BOLD)
+                    holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_wow_icon,
+                        0,
+                        0,
+                        0)
+                }
+            }
+            5 -> {
+                if (holder is UserProfileAdapter.UserProfileHolder) {
+                    holder.likeBtn.setTextColor(Color.parseColor("#FFC107"))
+                    holder.likeBtn.setText("Sad")
+                    holder.likeBtn.setTypeface(null, Typeface.BOLD)
+                    holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_sad_icon,
+                        0,
+                        0,
+                        0)
+                } else if (holder is ShowPostsOfThreadsAdapter.ShowPostsOfThreadsViewHolder) {
+                    holder.likeBtn.setTextColor(Color.parseColor("#FFC107"))
+                    holder.likeBtn.setText("Sad")
+                    holder.likeBtn.setTypeface(null, Typeface.BOLD)
+                    holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_sad_icon,
+                        0,
+                        0,
+                        0)
+                }
+            }
+            6 -> {
+                if (holder is UserProfileAdapter.UserProfileHolder) {
+                    holder.likeBtn.setTextColor(Color.parseColor("#FB2707"))
+                    holder.likeBtn.setText("Angery")
+                    holder.likeBtn.setTypeface(null, Typeface.BOLD)
+                    holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_angry_icon,
+                        0,
+                        0,
+                        0)
+                } else if (holder is ShowPostsOfThreadsAdapter.ShowPostsOfThreadsViewHolder) {
+                    holder.likeBtn.setTextColor(Color.parseColor("#FB2707"))
+                    holder.likeBtn.setText("Angery")
+                    holder.likeBtn.setTypeface(null, Typeface.BOLD)
+                    holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_angry_icon,
+                        0,
+                        0,
+                        0)
+                }
 
             }
-        })
-
+        }
+    }
+    override fun onDateSet(p0: DatePicker?, p1: Int, p2: Int, p3: Int) {
+        var c=Calendar.getInstance()
+        c.set(Calendar.YEAR,p1)
+        c.set(Calendar.MONTH,p2)
+        c.set(Calendar.DATE,p3)
+        var string= DateFormat.getDateInstance().format(c.time)
+        Log.d("TAG","date $p1 $p2 $p3")
+        var list=LinkedList<Int>()
+        list.add(p3)
+        list.add(p2+1)
+        list.add(p1)
+        MyDataClass.datePick(list)
     }
 }

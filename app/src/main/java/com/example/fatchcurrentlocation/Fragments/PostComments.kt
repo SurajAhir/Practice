@@ -2,26 +2,18 @@ package com.example.fatchcurrentlocation.Fragments
 
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
-import android.content.Context
 import android.content.Intent
 import android.graphics.Typeface
-import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
-import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.example.fatchcurrentlocation.DataClasses.AttachmentDataResponse
+import com.example.fatchcurrentlocation.*
 import com.example.fatchcurrentlocation.DataClasses.MyDataClass
 import com.example.fatchcurrentlocation.DataClasses.ResponseThread
-import com.example.fatchcurrentlocation.FindPath
-import com.example.fatchcurrentlocation.HitApi
-import com.example.fatchcurrentlocation.ResponseObject
-import com.example.fatchcurrentlocation.RetrofitManager
 import com.example.fatchcurrentlocation.databinding.FragmentPostCommentsBinding
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -45,15 +37,13 @@ class PostComments(
     var isChangedTextStyleItalic: Boolean = false
     lateinit var progressBar: ProgressDialog
     val PICKFILE_REQUEST_CODE: Int = 1001
-    var fileAttchFileUrl: String = ""
-    var isGettedKey: Boolean = false
-    var IMAGE_DIRECTORY = "/demonuts_upload_gallery"
-    var BUFFER_SIZE = 1024 * 2
+    var attachmentId: Int = 0
+    var isAttachedFile: Boolean = false
 
     //    var  convertString:String="""<blockquote class=\"xfBb-quote\" data-name=\"$username\">${receivedText}</blockquote>"""
     var convertString: String =
         "[QUOTE=\\\"$username, post: $postId, member: $userId\\\"]$receivedText[/QUOTE]"
-
+    lateinit var attachmentFileString: String
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -104,33 +94,64 @@ class PostComments(
                     return
                 } else {
                     progressBar.show()
-                    var retrofit: Retrofit = RetrofitManager.getRetrofit1()
-                    var api: HitApi = retrofit.create(HitApi::class.java)
-                    api.getResponseOfComments("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4",
-                        MyDataClass.myUserId,
-                        threadId,
-                        convertString + binding.postCommentsReplyMessageEt.text.toString())
-                        .enqueue(object : Callback<ResponseThread> {
-                            override fun onResponse(
-                                call: Call<ResponseThread>,
-                                response: Response<ResponseThread>,
-                            ) {
-                                if (response.isSuccessful) {
-                                    progressBar.dismiss()
-                                    Log.d("TAG",
-                                        convertString + binding.postCommentsReplyMessageEt.text.toString())
-                                    Toast.makeText(context,
-                                        response.body()?.success.toString(),
-                                        Toast.LENGTH_LONG).show()
-                                    MyDataClass.onBack()
+                    Log.d("TAG", "thread $threadId")
+                    if (isAttachedFile) {
+                        var retrofit: Retrofit = RetrofitManager.getRetrofit1()
+                        var api: HitApi = retrofit.create(HitApi::class.java)
+                        api.getResponseOfComments("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4",
+                            MyDataClass.myUserId,
+                            threadId,
+                            convertString + binding.postCommentsReplyMessageEt.text.toString() + attachmentFileString)
+                            .enqueue(object : Callback<ResponseThread> {
+                                override fun onResponse(
+                                    call: Call<ResponseThread>,
+                                    response: Response<ResponseThread>,
+                                ) {
+                                    if (response.isSuccessful) {
+                                        progressBar.dismiss()
+                                        isAttachedFile = false
+                                        MyDataClass.onBack()
+                                    }
                                 }
-                            }
 
-                            override fun onFailure(call: Call<ResponseThread>, t: Throwable) {
-                                Toast.makeText(context, t.localizedMessage, Toast.LENGTH_LONG)
-                                    .show()
-                            }
-                        })
+                                override fun onFailure(call: Call<ResponseThread>, t: Throwable) {
+                                    Toast.makeText(context, t.localizedMessage, Toast.LENGTH_LONG)
+                                        .show()
+                                }
+                            })
+                    } else {
+                        var retrofit: Retrofit = RetrofitManager.getRetrofit1()
+                        var api: HitApi = retrofit.create(HitApi::class.java)
+                        api.getResponseOfComments("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4",
+                            MyDataClass.myUserId,
+                            threadId,
+                            convertString + binding.postCommentsReplyMessageEt.text.toString())
+                            .enqueue(object : Callback<ResponseThread> {
+                                override fun onResponse(
+                                    call: Call<ResponseThread>,
+                                    response: Response<ResponseThread>,
+                                ) {
+                                    if (response.isSuccessful) {
+                                        progressBar.dismiss()
+                                        Toast.makeText(context,
+                                            response.body()?.success.toString(),
+                                            Toast.LENGTH_LONG).show()
+                                        MyDataClass.onBack()
+                                    }else{
+                                        Log.d("TAG","code${response.code()}")
+                                        progressBar.dismiss()
+                                    }
+                                }
+
+                                override fun onFailure(call: Call<ResponseThread>, t: Throwable) {
+                                    Log.d("TAG","errr ${t.localizedMessage}")
+                                    progressBar.dismiss()
+                                    Toast.makeText(context, t.localizedMessage, Toast.LENGTH_LONG)
+                                        .show()
+                                }
+                            })
+                    }
+
 
                 }
             }
@@ -143,16 +164,13 @@ class PostComments(
         super.onActivityResult(requestCode, resultCode, data)
         progressBar.show()
         if (requestCode == PICKFILE_REQUEST_CODE) {
-            var uri1 = FindPath.getFilePathFromURI(context, data?.data)
-            Log.d("FILE",uri1)
+            var uri1 = FileUtils.getPath(context, data?.data)
+            Log.d("TAG", uri1)
             var file: File = File(uri1)
             val requestBody: RequestBody =
                 RequestBody.create(MediaType.parse("multipart/form-data"), file)
             val fileToUpload =
                 MultipartBody.Part.createFormData("attachment", file.getName(), requestBody)
-            var key = RequestBody.create(MediaType.parse("multipart/form-data"),
-                "1649135798-k7e0gGY9MBjy1IMWUmTF1")
-            var map =mapOf<String, RequestBody>("key" to key)
             var retrofit: Retrofit = RetrofitManager.getRetrofit1()
             var api: HitApi = retrofit.create(HitApi::class.java)
             api.generateAttachmentKey("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4",
@@ -164,23 +182,33 @@ class PostComments(
                         call: Call<Map<String, String>>,
                         response: Response<Map<String, String>>,
                     ) {
-//                       var  attachmentKey = response.body()?.get("key")!!
-//                        Log.d("TAG","${requestBody} and userid ${MyDataClass.myUserId} and key=${attachmentKey}")
+                        var gettedAttachmentKey = response.body()?.get("key")
+                        var attachmentKey =
+                            RequestBody.create(MediaType.parse("multipart/form-data"),
+                                gettedAttachmentKey)
                         api.postAttachmentFile("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4",
-                            MyDataClass.myUserId, fileToUpload, key
-                        ).enqueue(object : Callback<ResponseObject> {
+                            MyDataClass.myUserId, fileToUpload, attachmentKey
+                        ).enqueue(object : Callback<ResponseThread> {
                             override fun onResponse(
-                                call: Call<ResponseObject>,
-                                response: Response<ResponseObject>,
+                                call: Call<ResponseThread>,
+                                response: Response<ResponseThread>,
                             ) {
-                                progressBar.dismiss()
-                                Log.d("TAG", response.code().toString())
-                                Log.d("TAG", call.request().toString())
-                                Log.d("TAG", response.body().toString())
+                                if (response.isSuccessful) {
+                                    progressBar.dismiss()
+                                    attachmentId = response.body()?.attachment?.attachment_id!!
+                                    binding.postCommentsAttachedFileNameTv.visibility = View.VISIBLE
+                                    binding.postCommentsAttachedFileNameTv.setText("${response.body()!!.attachment.filename}")
+                                    attachmentFileString =
+                                        """[ATTACH type="full"]${attachmentId}[/ATTACH]"""
+                                    isAttachedFile = true
+                                } else {
+                                    progressBar.dismiss()
+                                }
+
                             }
 
                             override fun onFailure(
-                                call: Call<ResponseObject>,
+                                call: Call<ResponseThread>,
                                 t: Throwable,
                             ) {
                                 progressBar.dismiss()

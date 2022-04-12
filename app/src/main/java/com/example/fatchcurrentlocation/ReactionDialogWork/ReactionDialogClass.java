@@ -1,9 +1,8 @@
-package com.example.fatchcurrentlocation;
+package com.example.fatchcurrentlocation.ReactionDialogWork;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,14 +14,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import com.example.fatchcurrentlocation.AdaptersClasses.ShowPostsOfThreadsAdapter;
+import com.example.fatchcurrentlocation.R;
 
 public class ReactionDialogClass extends DialogFragment implements View.OnClickListener {
      int postId;
-    ShowPostsOfThreadsAdapter.ShowPostsOfThreadsViewHolder holder;
-    public ReactionDialogClass(int postId, ShowPostsOfThreadsAdapter.ShowPostsOfThreadsViewHolder holder){
+    Object holder;
+    int reactionScore;
+    public ReactionDialogClass(int postId, Object holder, int reactionScore){
         this.postId=postId;
         this.holder=holder;
+        this.reactionScore=reactionScore;
     }
     View view;
     ImageView like_btn, love_btn, haha_btn, wow_btn, angry_btn,sad_btn;
@@ -61,27 +62,27 @@ public class ReactionDialogClass extends DialogFragment implements View.OnClickL
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.reaction_dialog_like_btn:
-                reactionListener.onReactionSelection(1,postId,holder);
+                reactionListener.onReactionSelection(1,postId,holder,reactionScore);
                 getDialog().dismiss();
                 break;
             case R.id.reaction_dialog_love_btn:
-                reactionListener.onReactionSelection(2,postId,holder);
+                reactionListener.onReactionSelection(2,postId,holder,reactionScore);
                 getDialog().dismiss();
                 break;
             case R.id.reaction_dialog_haha_btn:
-                reactionListener.onReactionSelection(3,postId,holder);
+                reactionListener.onReactionSelection(3,postId,holder,reactionScore);
                 getDialog().dismiss();
                 break;
             case R.id.reaction_dialog_wow_btn:
-                reactionListener.onReactionSelection(4,postId,holder);
+                reactionListener.onReactionSelection(4,postId,holder,reactionScore);
                 getDialog().dismiss();
                 break;
             case R.id.reaction_dialog_sad_btn:
-                reactionListener.onReactionSelection(5,postId,holder);
+                reactionListener.onReactionSelection(5,postId,holder,reactionScore);
                 getDialog().dismiss();
                 break;
             case R.id.reaction_dialog_angry_btn:
-                reactionListener.onReactionSelection(6,postId,holder);
+                reactionListener.onReactionSelection(6,postId,holder,reactionScore);
                 getDialog().dismiss();
                 break;
         }

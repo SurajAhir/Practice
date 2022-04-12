@@ -73,7 +73,7 @@ class ShowPostsOfThreads(
     fun fetchDataFromApi(path: Int, page: Int = 1) {
         var retrofit = RetrofitManager.getRetrofit1()
         var api: HitApi = retrofit.create(HitApi::class.java)
-        api.getPostsOfThreadsResonse("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4",MyDataClass.myUserId, path, page)
+        api.getPostsOfThreadsResonse("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4",MyDataClass.myUserId, path, page,"desc","last_post_date")
             .enqueue(object : retrofit2.Callback<ResponseThread> {
                 override fun onResponse(
                     call: Call<ResponseThread>,
