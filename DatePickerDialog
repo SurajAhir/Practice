@@ -1,0 +1,36 @@
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+
+import java.util.Calendar;
+
+public class DatePickerDialogFragment extends DialogFragment {
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        Calendar calendar=Calendar.getInstance();
+        int year=calendar.get(Calendar.YEAR);
+        int month=calendar.get(Calendar.MONTH);
+        int day=calendar.get(Calendar.DATE);
+        return new DatePickerDialog(getActivity(),(DatePickerDialog.OnDateSetListener)getActivity(),year,month,day);
+    }
+}
+ \***********then you have to implement "DatePickerDialog.OnDateSetListener" this interface in your activity**************/and overide this method below******/
+ 
+     override fun onDateSet(p0: DatePicker?, p1: Int, p2: Int, p3: Int) {
+        var c=Calendar.getInstance()
+        c.set(Calendar.YEAR,p1)
+        c.set(Calendar.MONTH,p2)
+        c.set(Calendar.DATE,p3)
+        var string= DateFormat.getDateInstance().format(c.time)
+        Log.d("TAG","date $p1 $p2 $p3")
+        var list=LinkedList<Int>()
+        list.add(p3)
+        list.add(p2+1)
+        list.add(p1)
+        MyDataClass.datePick(list)
+    }
