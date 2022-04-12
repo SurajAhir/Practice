@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Fragments.Notification">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+<!--    <TextView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="50dp"-->
+<!--        android:text="Back to home"-->
+<!--        android:layout_marginTop="4dp"-->
+<!--        android:drawableLeft="@drawable/ic_arrow_back_ios_24"-->
+<!--        android:paddingLeft="8dp"-->
+<!--        android:layout_marginRight="2dp"-->
+<!--        android:layout_marginLeft="2dp"-->
+<!--        android:gravity="center|start"-->
+<!--        android:textColor="@color/black"-->
+<!--        android:background="@drawable/fragment_user_profile_button_bg"-->
+<!--        android:id="@+id/notification_goBack_btn"/>-->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Alerts"
+        android:background="#6FF9F7F7"
+        android:layout_marginTop="4dp"
+        android:textSize="18sp"
+        android:paddingLeft="10dp"
+        android:gravity="center|start"
+        android:textColor="@color/black" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="10dp"
+        tools:listitem="@layout/notification_custom_layout"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:id="@+id/notification_recyclerView"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/notification_noAlerts_tv"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:visibility="gone"/>
+</LinearLayout>
+
+
+</androidx.core.widget.NestedScrollView>

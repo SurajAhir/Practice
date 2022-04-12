@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context=".ChangeUserEmail">
+
+
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:text="Change email"
+    android:textSize="18sp"
+    android:drawableLeft="@drawable/ic_arrow_back_ios_24"
+    android:gravity="start|center"
+    android:paddingLeft="8dp"
+    android:id="@+id/change_userEmail_goBack_btn"
+    android:textColor="@color/black"
+    android:background="#84F2EEEE"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="vertical">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Email:"
+        android:textSize="18sp"
+        android:textColor="@color/black"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="8dp"
+            android:padding="5dp"
+            android:inputType="textEmailAddress"
+            android:minHeight="50dp"
+            android:id="@+id/change_userEmail_email_et"
+            android:background="@drawable/update_status_bg"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="If you change your email, you may need to confirm your account."/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Current password:"
+            android:textSize="18sp"
+            android:layout_marginTop="12dp"
+            android:textColor="@color/black"/>
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/ThemeOverlay.Material3.AutoCompleteTextView.OutlinedBox"
+            app:boxStrokeColor="@color/black"
+            app:boxStrokeWidth="0dp"
+            app:endIconMode="password_toggle"
+            android:layout_marginTop="8dp"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:id="@+id/change_userEmail_ConfirmPassword_et"
+                android:background="@drawable/update_status_bg"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:background="#CDC4C4"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/black"
+        android:text="Save"
+        android:layout_marginTop="12dp"
+        android:textColor="@color/white"
+        android:id="@+id/change_userEmail_save_btn"
+        android:layout_gravity="center_horizontal"/>
+</LinearLayout>

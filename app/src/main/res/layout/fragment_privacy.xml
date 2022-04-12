@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context=".Fragments.Privacy">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Your account"
+            android:layout_marginTop="4dp"
+            android:drawableLeft="@drawable/ic_arrow_back_ios_24"
+            android:paddingLeft="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:gravity="center|start"
+            android:textColor="@color/black"
+            android:background="@drawable/update_status_bg"
+            android:id="@+id/privacy_goBack_btn"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Privacy"
+                android:textSize="18sp"
+                android:layout_marginBottom="8dp"
+                android:textColor="@color/black" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Privacy options:"
+                android:layout_marginTop="5dp"
+                android:textSize="18sp"
+                android:textColor="@color/black" />
+            <CheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Show your online status"
+                android:id="@+id/privacy_showYourOnlineStatus_checkbox" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:gravity="top"
+                android:text="This will allow other people to see when you are online." />
+            <CheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="20dp"
+                android:text="Show your current activity"
+                android:id="@+id/privacy_showYourCurrentActivity_checkbox" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:gravity="top"
+                android:text="This will allow other people to see what page you are currently viewing." />
+            <CheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Show day and month of birth"
+                android:id="@+id/privacy_showDayAndMonthOfBirth_checkbox" />
+            <CheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Show year of birth"
+                android:layout_marginLeft="30dp"
+                android:id="@+id/privacy_ShowYearOfBirth_checkbox">
+            </CheckBox>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="top"
+                android:text="This will allow people to see your age."
+                android:layout_marginLeft="50dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Email options:"
+                android:layout_marginTop="12dp"
+                android:textSize="18sp"
+                android:textColor="@color/black" />
+            <CheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Receive news and update emails"
+                android:id="@+id/privacy_receiveNewsAndUpdateEmails_checkbox"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/keep_update_you"
+                android:layout_marginLeft="25dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Allow users to:"
+                android:layout_marginTop="12dp"
+                android:textSize="18sp"
+                android:textColor="@color/black" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="10"
+                android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:minHeight="50dp"
+                android:layout_marginTop="6dp"
+                android:weightSum="10">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="5"
+                    android:gravity="start|center"
+                    android:layout_height="match_parent"
+                    android:text="View your details on your profile page:" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/update_status_bg"
+                    android:layout_weight="5">
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_weight="5"
+                    android:gravity="start|center"
+                    android:layout_height="match_parent"
+                    android:id="@+id/privacy_ViewYourDetails_spinner" />
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_marginTop="6dp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:minHeight="50dp"
+                android:weightSum="10">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="5"
+                    android:gravity="start|center"
+                    android:layout_height="match_parent"
+                    android:text="Post messages on your profile page:"
+                    />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/update_status_bg"
+                    android:layout_weight="5">
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_weight="5"
+                        android:gravity="start|center"
+                        android:layout_height="match_parent"
+                        android:id="@+id/privacy_PostMessagesOnYour_spinner" />
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_marginTop="6dp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:minHeight="50dp"
+                android:weightSum="10">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="5"
+                    android:gravity="start|center"
+                    android:layout_height="match_parent"
+                    android:text="Received your news feed:"
+                    />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/update_status_bg"
+                    android:layout_weight="5">
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_weight="5"
+                        android:gravity="start|center"
+                        android:layout_height="match_parent"
+                        android:id="@+id/privacy_ReceiveYourNewsFeed_spinner" />
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_marginTop="6dp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:minHeight="50dp"
+                android:weightSum="10">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="5"
+                    android:gravity="start|center"
+                    android:layout_height="match_parent"
+                    android:text="Start conversations with you:"
+                    />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/update_status_bg"
+                    android:layout_weight="5">
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_weight="5"
+                        android:gravity="start|center"
+                        android:layout_height="match_parent"
+                        android:id="@+id/privacy_StartConversationsWith_spinner" />
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_marginTop="6dp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:minHeight="50dp"
+                android:layout_weight="2"
+                android:weightSum="10">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="5"
+                    android:layout_height="match_parent"
+                    android:gravity="start|center"
+                    android:text="View your identities:"
+                   />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/update_status_bg"
+                    android:layout_weight="5">
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_weight="5"
+                        android:gravity="start|center"
+                        android:layout_height="match_parent"
+                        android:id="@+id/privacy_ViewYourIdentities_spinner" />
+                </LinearLayout>
+            </LinearLayout>
+            </LinearLayout>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save"
+                android:backgroundTint="@color/black"
+                android:textColor="@color/white"
+                android:textAllCaps="false"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:id="@+id/privacy_save_btn"/>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

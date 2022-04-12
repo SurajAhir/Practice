@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp">
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/notification_custom_layout_UserProfileImage"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/person"
+        app:civ_border_color="#AAAAAA"
+        app:civ_border_width="2dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/notification_custom_layout_alertTest_tv"
+            android:textColor="@color/black"
+            android:paddingRight="8dp"
+            android:text="surjahri "
+            android:paddingLeft="5dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/notification_custom_layout_postDate_tv"
+            android:paddingRight="8dp"
+            android:text="22/02/2022"
+            android:paddingLeft="5dp"/>
+    </LinearLayout>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#F1EAEA"/>
+</LinearLayout>
