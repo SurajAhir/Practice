@@ -1,21 +1,27 @@
 package com.example.fatchcurrentlocation.Fragments
 
+import android.app.Activity
 import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import com.example.fatchcurrentlocation.*
 import com.example.fatchcurrentlocation.DataClasses.MyDataClass
 import com.example.fatchcurrentlocation.DataClasses.ResponseDataClass
-import com.example.fatchcurrentlocation.HitApi
-import com.example.fatchcurrentlocation.R
-import com.example.fatchcurrentlocation.RealPathUtil
-import com.example.fatchcurrentlocation.RetrofitManager
 import com.example.fatchcurrentlocation.databinding.FragmentYourAccountBinding
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.squareup.picasso.Picasso
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -25,6 +31,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import java.io.File
+
 
 class YourAccount(val responseDataObject: ResponseDataClass) : Fragment() {
     var responseDataObject1 = responseDataObject
@@ -36,17 +43,47 @@ class YourAccount(val responseDataObject: ResponseDataClass) : Fragment() {
     ): View? {
         binding = FragmentYourAccountBinding.inflate(layoutInflater, container, false)
         progressBar = ProgressDialog(context)
+        MyDataClass.isGoProfile=true
         binding.updateStatusEt.setOnClickListener(object : View.OnClickListener {
             override fun onClick(p0: View?) {
                 binding.updateStatusBtn.visibility = View.VISIBLE
             }
         })
-        Log.d("TAG", "HELLO$responseDataObject1")
+        binding.logout.setOnClickListener(object :View.OnClickListener{
+            override fun onClick(p0: View?) {
+                var sharedPreferences=activity?.getSharedPreferences("LoginUserDetails",Context.MODE_PRIVATE)
+                var editor=sharedPreferences?.edit()
+                editor?.putBoolean("valid",false)
+                editor?.clear()
+                editor?.commit()
+                startActivity(Intent(context,MainActivity()::class.java))
+            }
+        })
         binding.changeUserProfileBtn.setOnClickListener(object : View.OnClickListener {
             override fun onClick(p0: View?) {
-                var intent = Intent(Intent.ACTION_PICK)
-                intent.setType("image/*")
-                startActivityForResult(intent, 1001)
+                Dexter.withActivity(context as Activity?)
+                    .withPermissions(android.Manifest.permission.READ_EXTERNAL_STORAGE,android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    .withListener(object : MultiplePermissionsListener {
+                        override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+                            if(report?.areAllPermissionsGranted() == true){
+                            var intent = Intent(Intent.ACTION_PICK)
+                            intent.setType("image/*")
+                            startActivityForResult(intent, 1001)
+                            }else{
+                                Toast.makeText(context,"Allow Storage Permission!",Toast.LENGTH_LONG).show()
+                            }
+                        }
+
+                        override fun onPermissionRationaleShouldBeShown(
+                            permissions: MutableList<PermissionRequest>?,
+                            token: PermissionToken?,
+                        ) {
+                            token?.continuePermissionRequest()
+                        }
+
+                    }).check()
+
+
             }
         })
         binding.passwordAndSecurity.setOnClickListener(object : View.OnClickListener {
@@ -71,15 +108,24 @@ class YourAccount(val responseDataObject: ResponseDataClass) : Fragment() {
         binding.userReactionScoreCount.setText(responseDataObject1.user.reaction_score.toString())
         binding.userTrophyPoints.setText(responseDataObject1.user.trophy_points.toString())
         binding.userName.setText(responseDataObject1.user.username)
-        Picasso.get().load(responseDataObject1.user.avatar_urls.o)
-            .placeholder(R.drawable.ic_no_image).into(binding.userAccountProfile)
+        if(responseDataObject1.user.avatar_urls.o==null){
+            binding.userAccountProfileTv.visibility=View.VISIBLE
+            binding.userAccountProfile.visibility=View.GONE
+            binding.userAccountProfileTv.gravity= Gravity.CENTER
+            binding.userAccountProfileTv.setText(MyDataClass.responseDataClass!!.user.username.get(0).toString())
+        }else{
+            Picasso.get().load(responseDataObject1.user.avatar_urls.o).placeholder(R.drawable.person)
+                .into(binding.userAccountProfile)
+        }
         binding.userName.setOnClickListener(object : View.OnClickListener {
             override fun onClick(p0: View?) {
                 MyDataClass.homeNestedScrollView.visibility = View.GONE
                 MyDataClass.homeFragmentContainerView.visibility = View.VISIBLE
                 var transaction = MyDataClass.getTransaction()
-                transaction.replace(R.id.home_fragment_containerViewForShowDetails,
-                    MyProfile(MyDataClass.responseDataClass))
+                MyDataClass.responseDataClass?.let { MyProfile(it) }?.let {
+                    transaction.replace(R.id.home_fragment_containerViewForShowDetails,
+                        it)
+                }
                 transaction.addToBackStack(null).commit()
             }
         })
@@ -104,7 +150,7 @@ class YourAccount(val responseDataObject: ResponseDataClass) : Fragment() {
                     api.getReaponseOfProfilePostsOfMessages(MyDataClass.api_key,
                         MyDataClass.myUserId,
                         responseDataObject.user.user_id,
-                        binding.updateStatusEt.text.toString())
+                        binding.updateStatusEt.text.toString(),"")
                         .enqueue(object : Callback<ResponseDataClass> {
                             override fun onResponse(
                                 call: Call<ResponseDataClass>,
@@ -159,11 +205,12 @@ class YourAccount(val responseDataObject: ResponseDataClass) : Fragment() {
                                         Log.d("TAG", "code${response.code()}")
                                         if (response.isSuccessful) {
                                             progressBar.dismiss()
-                                            Log.d("TAG", "${response.body()?.me?.avatar_urls?.o}")
                                             responseDataObject1.user.avatar_urls.o =
                                                 response.body()?.me?.avatar_urls?.o!!
-                                            MyDataClass.responseDataClass.user.avatar_urls.o =
+                                            MyDataClass.responseDataClass!!.user.avatar_urls.o =
                                                 response.body()?.me?.avatar_urls?.o!!
+                                            binding.userAccountProfileTv.visibility=View.GONE
+                                            binding.userAccountProfile.visibility=View.VISIBLE
                                             Picasso.get().load(response.body()!!.me.avatar_urls.o)
                                                 .placeholder(R.drawable.ic_no_image)
                                                 .into(binding.userAccountProfile)

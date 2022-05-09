@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="10dp"
+    android:elevation="20dp"
+    app:cardCornerRadius="4dp"
+    android:id="@+id/custom_layout_general_discussion_cardView"
     android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,13 +39,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Threads: "
                 android:id="@+id/custom_layout_general_discussion_threads_tv"
                 android:textSize="12sp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Messages: "
                 android:layout_marginLeft="8dp"
                 android:id="@+id/custom_layout_general_discussion_messages_tv"
                 android:textSize="12sp"/>
@@ -48,7 +51,6 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="last_thread_title"
             android:textSize="14sp"
            android:textColor="#282424"
             android:id="@+id/custom_layout_general_discussion_last_thread_title_tv"/>
@@ -59,13 +61,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="None"
                 android:textSize="14sp"
                 android:id="@+id/custom_layout_general_discussion_last_post_date_tv"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="last_post_UserName"
                 android:layout_marginLeft="4dp"
                 android:textColor="#282424"
                 android:textSize="14sp"
@@ -74,9 +74,5 @@
 
     </LinearLayout>
     </LinearLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#AEA4A4"/>
 
-</LinearLayout>
+</androidx.cardview.widget.CardView>

@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:id="@+id/fragment_My_profile_NestedScrollView"
     tools:context=".Fragments.MyProfile">
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -41,6 +39,15 @@
                     android:layout_gravity="center"
                     app:civ_border_color="#AAAAAA"
                     app:civ_border_width="2dp"/>
+                <TextView
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    android:layout_marginTop="20dp"
+                    android:textAllCaps="true"
+                    android:background="@drawable/custom_circle_shape"
+                    android:layout_gravity="center"
+                    android:id="@+id/fragment_My_profile_UserProfileImage_tv"
+                    android:visibility="gone"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -183,22 +190,22 @@
                         android:soundEffectsEnabled="true"
                         android:id="@+id/fragment_My_profile_spinner_btn"/>
                 </LinearLayout>
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="6"
-                    android:layout_marginLeft="5dp"
-                    android:background="@drawable/fragment_user_profile_button_bg"
-                    android:layout_height="match_parent">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:gravity="center"
-                        android:layout_height="match_parent"
-                        android:backgroundTint="@color/white"
-                        android:maxLines="1"
-                        android:text="Start conversation"
-                        android:textColor="@color/black"
-                        android:id="@+id/fragment_My_profile_startConversation_btn"/>
-                </LinearLayout>
+<!--                <LinearLayout-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_weight="6"-->
+<!--                    android:layout_marginLeft="5dp"-->
+<!--                    android:background="@drawable/fragment_user_profile_button_bg"-->
+<!--                    android:layout_height="match_parent">-->
+<!--&lt;!&ndash;                    <TextView&ndash;&gt;-->
+<!--&lt;!&ndash;                        android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                        android:gravity="center"&ndash;&gt;-->
+<!--&lt;!&ndash;                        android:layout_height="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                        android:backgroundTint="@color/white"&ndash;&gt;-->
+<!--&lt;!&ndash;                        android:maxLines="1"&ndash;&gt;-->
+<!--&lt;!&ndash;                        android:text="Start conversation"&ndash;&gt;-->
+<!--&lt;!&ndash;                        android:textColor="@color/black"&ndash;&gt;-->
+<!--&lt;!&ndash;                        android:id="@+id/fragment_My_profile_startConversation_btn"/>&ndash;&gt;-->
+<!--                </LinearLayout>-->
 
             </LinearLayout>
             <TextView
@@ -216,14 +223,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#C7BCBC"
+                android:visibility="gone"
                 android:layout_marginTop="5dp"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="8dp"
-                android:paddingLeft="25dp"
-                android:paddingRight="25dp"
-                android:visibility="gone"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+        android:visibility="gone"
                 android:layout_marginBottom="15dp"
                 android:id="@+id/fragment_My_profile_writeSomething_LayoutToShow"
                 android:orientation="vertical">
@@ -231,100 +239,217 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/update_status_bg"
-                    android:layout_margin="10dp"
+                    android:padding="3dp"
+                    android:visibility="gone"
                     android:orientation="vertical">
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="wrap_content"
+                            android:padding="4dp"
+                            android:layout_height="wrap_content">
+
+                            <ImageButton
+                                android:id="@+id/fragment_My_profile_undo"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/undo"
+                                android:layout_margin="6dp"
+                                android:contentDescription="@null"
+                                />
+
+                            <ImageButton
+                                android:id="@+id/fragment_My_profile_redo"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="6dp"
+                                android:background="@drawable/redo"
+                                android:contentDescription="@null"
+                                />
+
+                            <ImageButton
+                                android:id="@+id/fragment_My_profile_bold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="6dp"
+                                android:background="@drawable/ic_b"
+                                android:contentDescription="@null" />
+
+                            <ImageButton
+                                android:id="@+id/fragment_My_profile_italic"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="6dp"
+                                android:background="@drawable/ic_i"
+                                android:contentDescription="@null" />
+
+                            <ImageButton
+                                android:id="@+id/fragment_My_profile_underline"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="6dp"
+                                android:background="@drawable/underline"
+                                android:contentDescription="@null" />
+
+                            <ImageButton
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/font_size"
+                                android:layout_margin="6dp"
+                                android:id="@+id/fragment_My_profile_font_size_btn"/>
+<!--                            <ImageButton-->
+<!--                                android:id="@+id/fragment_My_profile_indent"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_margin="6dp"-->
+<!--                                android:background="@drawable/indent"-->
+<!--                                android:contentDescription="@null"-->
+<!--                                />-->
+
+<!--                            <ImageButton-->
+<!--                                android:id="@+id/fragment_My_profile_outdent"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_margin="6dp"-->
+<!--                                android:background="@drawable/outdent"-->
+<!--                                android:contentDescription="@null" />-->
+
+                            <ImageButton
+                                android:id="@+id/fragment_My_profile_align_left"
+                                android:layout_width="wrap_content"
+                                android:layout_margin="6dp"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/justify_left"
+                                android:contentDescription="@null"
+                                />
+
+                            <ImageButton
+                                android:id="@+id/fragment_My_profile_align_center"
+                                android:layout_width="wrap_content"
+                                android:layout_margin="6dp"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/justify_center"
+                                android:contentDescription="@null" />
+
+                            <ImageButton
+                                android:id="@+id/fragment_My_profile_align_right"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="6dp"
+                                android:background="@drawable/justify_right"
+                                android:contentDescription="@null" />
+
+                            <ImageButton
+                                android:id="@+id/fragment_My_profile_insert_bullets"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bullets"
+                                android:layout_margin="6dp"
+                                android:contentDescription="@null" />
+
+                            <ImageButton
+                                android:id="@+id/fragment_My_profile_insert_numbers"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/numbers"
+                                android:layout_margin="6dp"
+                                android:contentDescription="@null" />
+
+
+<!--                            <ImageButton-->
+<!--                                android:id="@+id/fragment_My_profile_insert_image"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_margin="6dp"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:background="@drawable/ic_add_image"-->
+<!--                                android:contentDescription="@null" />-->
+
+                            <ImageButton
+                                android:id="@+id/fragment_My_profile_insert_link"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="6dp"
+                                android:background="@drawable/insert_link"
+                                android:contentDescription="@null" />
+
+                        </LinearLayout>
+                    </HorizontalScrollView>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#B2ABAB"
+                        android:layout_marginTop="2dp"/>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="#3BEAE4E4"
-                        android:padding="10dp"
-                        android:orientation="horizontal"
-                        android:weightSum="27">
-                        <ImageButton
-                            android:layout_width="0dp"
-                            android:layout_weight="3"
-                            android:layout_marginRight="4dp"
+                        android:padding="3dp"
+                        android:id="@+id/fragment_My_profile_insert_link_Layout"
+                        android:visibility="gone"
+                        android:orientation="vertical">
+                        <EditText
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/ic_b"
-                            android:backgroundTint="#5D5858"
-                            android:id="@+id/fragment_My_profile_b_btn"/>
-                        <ImageButton
-                            android:layout_width="0dp"
-                            android:layout_weight="3"
-                            android:backgroundTint="#5D5858"
-                            android:layout_marginRight="4dp"
+                            android:background="@drawable/update_status_bg"
+                            android:hint="URL"
+                            android:padding="3dp"
+                            android:id="@+id/fragment_My_profile_Url_et"/>
+                        <EditText
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/ic_i"
-                            android:id="@+id/fragment_My_profile_i_btn"/>
-                        <ImageButton
-                            android:layout_width="0dp"
-                            android:layout_weight="3"
-                            android:layout_marginRight="4dp"
+                            android:background="@drawable/update_status_bg"
+                            android:hint="Text"
+                            android:layout_marginTop="3dp"
+                            android:padding="3dp"
+                            android:id="@+id/fragment_My_profile_Text_et"/>
+                        <TextView
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/ic_menu_toolbar"
-                            android:id="@+id/fragment_My_profile_menu_toolbar_btn1"/>
-                        <ImageButton
-                            android:layout_width="0dp"
-                            android:layout_weight="3"
-                            android:layout_height="wrap_content"
+                            android:background="@color/black"
+                            android:textColor="@color/white"
+                            android:text="Insert"
+                            android:layout_gravity="right"
+                            android:padding="3dp"
+                            android:id="@+id/fragment_My_profile_insert_link_btn"
                             android:layout_marginRight="8dp"
-                            android:background="@drawable/ic_link"
-                            android:id="@+id/fragment_My_profile_link_btn"/>
-                        <ImageButton
-                            android:layout_width="0dp"
-                            android:layout_weight="3"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/ic_photo"
-                            android:layout_marginRight="4dp"
-                            android:layout_marginLeft="4dp"
-                            android:backgroundTint="#030303"
-                            android:id="@+id/fragment_My_profile_photo_btn"/>
-                        <ImageButton
-                            android:layout_width="0dp"
-                            android:layout_weight="3"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/ic_menu_toolbar"
-                            android:layout_marginRight="4dp"
-                            android:id="@+id/fragment_My_profile_menu_toolbar_btn2"/>
-                        <ImageButton
-                            android:layout_width="0dp"
-                            android:layout_weight="3"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="4dp"
-                            android:background="@drawable/ic_undo_24"
-                            android:id="@+id/fragment_My_profile_undo_btn"/>
-                        <ImageButton
-                            android:layout_width="0dp"
-                            android:layout_weight="3"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="4dp"
-                            android:background="@drawable/ic_menu_toolbar"
-                            android:id="@+id/fragment_My_profile_menu_toolbar_btn3"/>
-                        <ImageButton
-                            android:layout_width="0dp"
-                            android:layout_weight="3"
-                            android:layout_marginRight="4dp"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/ic_page_search"
-                            android:id="@+id/fragment_My_profile_search_page_btn"/>
+                            android:layout_marginTop="3dp"/>
                     </LinearLayout>
-                    <EditText
+                    <jp.wasabeef.richeditor.RichEditor
+                        android:id="@+id/fragment_My_profile_RichEditor"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        android:textSize="14sp"
-                        android:minHeight="70dp"
-                        android:gravity="start"
-                        android:hint="Update your status..."
-                        android:id="@+id/fragment_My_profile_reply_message_et"
-                        android:textColor="@color/black"/>
+                        android:visibility="gone"
+                        android:minHeight="200dp"
+                        android:layout_marginTop="3dp"
+                        />
                 </LinearLayout>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="200dp"
+                    android:hint="Write your status..."
+                    android:gravity="top"
+                    android:padding="4dp"
+                    android:textSize="15sp"
+                    android:background="@drawable/update_status_bg"
+                    android:id="@+id/fragment_My_profile_write_message"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:visibility="gone"
+                    android:id="@+id/fragment_My_profile_showAttachmentsRecyclerView"
+                    />
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginBottom="15dp"
                     android:orientation="horizontal"
+                    android:layout_marginTop="6dp"
                     android:weightSum="6">
                     <TextView
                         android:layout_width="0dp"
@@ -380,7 +505,5 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/fragment_My_profile_progressBar"/>
         </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
 
-
-</LinearLayout>
+</androidx.core.widget.NestedScrollView>

@@ -1,15 +1,13 @@
 package com.example.fatchcurrentlocation
 
-import com.example.fatchcurrentlocation.DataClasses.AttachmentDataResponse
 import com.example.fatchcurrentlocation.DataClasses.Node
 import com.example.fatchcurrentlocation.DataClasses.ResponseDataClass
 import com.example.fatchcurrentlocation.DataClasses.ResponseThread
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
-import java.io.File
-import java.lang.ref.ReferenceQueue
 
 
 interface HitApi {
@@ -33,11 +31,21 @@ interface HitApi {
         @Query("order") order: String,
     ): Call<ResponseThread>
 
+    @GET("forums/{id}/threads/")
+    fun getForumsResponseByFilter(
+        @Header("XF-Api-Key") key: String,
+        @Path("id") id: Int,
+        @Query("direction") direction: String,
+        @Query("order") order: String,
+        @Query("starter_id") starter_id: Int,
+        @Query("last_days") last_days: String,
+    ): Call<ResponseThread>
+
     @GET("threads/{id}/posts/")
     fun getPostsOfThreadsResonse(
         @Header("XF-Api-Key") key: String,
         @Header("XF-Api-User") userId: Int,
-        @Path("id") id: Int,
+        @Path("id") thread_id: Int,
         @Query("page") page: Int,
         @Query("direction") direction: String,
         @Query("order") order: String,
@@ -48,15 +56,69 @@ interface HitApi {
     fun getResponseOfComments(
         @Header("XF-Api-Key") key: String,
         @Header("XF-Api-User") userId: Int,
-        @Field("thread_id") thread_id: Int, @Field("message") message: String,
+        @Field("thread_id") thread_id: Int,
+        @Field("message") message: String,
+        @Field("attachment_key") attachment_key: String,
     ): Call<ResponseThread>
+
+    @DELETE("posts/{id}/")
+    fun deletePost(
+        @Header("XF-Api-Key") key: String,
+        @Header("XF-Api-User") userId: Int,
+        @Path("id") post_id: Int,
+    ): Call<Map<String, Boolean>>
 
     @POST("attachments/new-key")
     @FormUrlEncoded
     fun generateAttachmentKey(
         @Header("XF-Api-Key") key: String,
         @Header("XF-Api-User") userId: Int,
-        @Field("context[thread_id]") thread_id: Int, @Field("type") type: String,
+        @Field("context[thread_id]") thread_id: Int,
+        @Field("type") type: String,
+    ): Call<Map<String, String>>
+
+    @POST("attachments/new-key")
+    @FormUrlEncoded
+    fun generateAttachmentKeyForPostThread(
+        @Header("XF-Api-Key") key: String,
+        @Header("XF-Api-User") userId: Int,
+        @Field("context[node_id]") node_id: Int,
+        @Field("type") type: String,
+    ): Call<Map<String, String>>
+
+    @POST("attachments/new-key")
+    @FormUrlEncoded
+    fun generateAttachmentKeyForUserProfile(
+        @Header("XF-Api-Key") key: String,
+        @Header("XF-Api-User") userId: Int,
+        @Field("context[profile_user_id]") profile_user_id: Int,
+        @Field("type") type: String,
+    ): Call<Map<String, String>>
+
+    @POST("attachments/new-key")
+    @FormUrlEncoded
+    fun generateAttachmentKeyForUserProfileOfComments(
+        @Header("XF-Api-Key") key: String,
+        @Header("XF-Api-User") userId: Int,
+        @Field("context[profile_post_id]") profile_post_id: Int,
+        @Field("type") type: String,
+    ): Call<Map<String, String>>
+
+    @POST("attachments/new-key")
+    @FormUrlEncoded
+    fun generateAttachmentKeyForConversation(
+        @Header("XF-Api-Key") key: String,
+        @Header("XF-Api-User") userId: Int,
+        @Field("type") type: String,
+    ): Call<Map<String, String>>
+
+    @POST("attachments/new-key")
+    @FormUrlEncoded
+    fun generateAttachmentKeyForPostReplyForConversation(
+        @Header("XF-Api-Key") key: String,
+        @Header("XF-Api-User") userId: Int,
+        @Field("context[conversation_id]") message_id: Int,
+        @Field("type") type: String,
     ): Call<Map<String, String>>
 
     @Multipart
@@ -68,6 +130,13 @@ interface HitApi {
         @Part("key") attachmentKey: RequestBody,
     ): Call<ResponseThread>
 
+    @DELETE("attachments/{id}/")
+    fun deleteAttachment(
+        @Header("XF-Api-Key") key: String,
+        @Header("XF-Api-User") userId: Int,
+        @Path("id") attachmentId: Int,
+    ): Call<Map<String, Boolean>>
+
     @POST("posts/{id}/react")
     @FormUrlEncoded
     fun getReaponseOfReact(
@@ -75,6 +144,16 @@ interface HitApi {
         @Header("XF-Api-User") userId: Int,
         @Path("id") post_id: Int,
         @Field("reaction_id") reaction_id: Int,
+    ): Call<Map<String, Any>>
+
+    @FormUrlEncoded
+    @POST("profile-post-comments/")
+    fun getResponseOfProfilePostsOfComments(
+        @Header("XF-Api-Key") key: String,
+        @Header("XF-Api-User") userId: Int,
+        @Field("profile_post_id") profile_post_id: Int,
+        @Field("message") message: String,
+        @Field("attachment_key") attachment_key: String,
     ): Call<Map<String, Any>>
 
     @GET("users/{id}/profile-posts")
@@ -91,6 +170,7 @@ interface HitApi {
         @Header("XF-Api-User") userId: Int,
         @Field("user_id") user_id: Int,
         @Field("message") message: String,
+        @Field("attachment_key") attachment_key: String,
     ): Call<ResponseDataClass>
 
     @POST("profile-posts/{id}/react")
@@ -191,11 +271,101 @@ interface HitApi {
         @Field("node_id") node_id: Int,
         @Field("title") title: String,
         @Field("message") message: String,
+        @Field("attachment_key") attachment_key: String,
     ): Call<Map<String, Boolean>>
 
     @GET("alerts/")
     fun getAlerts(
         @Header("XF-Api-Key") key: String,
-        @Header("XF-Api-User") userId: Int
+        @Header("XF-Api-User") userId: Int,
+        @Query("page") page: Int,
+        @Query("direction") direction: String,
+        @Query("order") order: String,
+    ): Call<ResponseThread>
+
+    @GET("conversations/")
+    fun getConversations(
+        @Header("XF-Api-Key") key: String,
+        @Header("XF-Api-User") userId: Int,
+        @Query("page") page: Int,
+        @Query("direction") direction: String,
+        @Query("order") order: String,
+    ): Call<ResponseThread>
+
+    @GET("users/find-name")
+    fun findUserName(
+        @Header("XF-Api-Key") key: String,
+        @Header("XF-Api-User") userId: Int,
+        @Query("username") username: String,
+    ): Call<ResponseThread>
+
+    @POST("conversations/")
+    @FormUrlEncoded
+    fun startNewConversation(
+        @Header("XF-Api-Key") key: String,
+        @Header("XF-Api-User") userId: Int,
+        @Field("recipient_ids[]") recipient_ids: List<Int>,
+        @Field("title") title: String,
+        @Field("message") message: String,
+        @Field("attachment_key") attachment_key: String,
+        @Field("conversation_open") conversation_open: Boolean,
+        @Field("open_invite") open_invite: Boolean,
+    ): Call<ResponseThread>
+
+    @GET("conversations/{id}/messages")
+    fun getConversationMessages(
+        @Header("XF-Api-Key") key: String,
+        @Header("XF-Api-User") userId: Int,
+        @Path("id") conversation_id: Int,
+        @Query("page") page: Int,
+    ): Call<ResponseDataClass>
+
+    @GET("attachments/{id}/data")
+    fun getAttachments(
+        @Header("XF-Api-Key") key: String,
+        @Header("XF-Api-User") userId: Int,
+        @Path("id") attachment_id: Int,
+    ): Call<ResponseBody>
+
+    @FormUrlEncoded
+    @POST("conversation-messages/")
+    fun postConversationReply(
+        @Header("XF-Api-Key") key: String,
+        @Header("XF-Api-User") userId: Int,
+        @Field("conversation_id") conversation_id: Int,
+        @Field("message") message: String,
+        @Field("attachment_key") attachment_key: String,
+    ): Call<ResponseThread>
+
+    @POST("conversations/{id}/invite")
+    @FormUrlEncoded
+    fun inviteMembers(
+        @Header("XF-Api-Key") key: String,
+        @Header("XF-Api-User") userId: Int,
+        @Path("id") conversation_id: Int,
+        @Field("recipient_ids[]") recipient_ids: List<Int>,
+    ): Call<Map<String, Boolean>>
+
+    @GET("conversations/{id}/")
+    fun getConversationsByConversId(
+        @Header("XF-Api-Key") key: String,
+        @Header("XF-Api-User") userId: Int,
+        @Path("id") conversation_id: Int,
+    ): Call<ResponseThread>
+
+    @GET("posts/{id}/")
+    fun getPostOfAlerts(
+        @Header("XF-Api-Key") key: String,
+        @Header("XF-Api-User") userId: Int,
+        @Path("id") content_id: Int,
+    ): Call<ResponseThread>
+
+    @GET("threads/")
+    fun getLatestPosts(
+        @Header("XF-Api-Key") key: String,
+        @Header("XF-Api-User") userId: Int,
+        @Query("page") page: Int,
+        @Query("order") order: String,
+        @Query("direction") direction: String,
     ):Call<ResponseThread>
 }

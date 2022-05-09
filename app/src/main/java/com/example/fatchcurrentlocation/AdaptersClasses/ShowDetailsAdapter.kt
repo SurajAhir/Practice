@@ -2,7 +2,7 @@ package com.example.fatchcurrentlocation.AdaptersClasses
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +24,7 @@ class ShowDetailsAdapter(
     val _context: Context?,
     val pagination: Pagination,
     val title: String,
+   val requestCode: Int,
 ) : RecyclerView.Adapter<ShowDetailsAdapter.ShowDetailsViewHolder>() {
     var list = _list
     var context = _context
@@ -46,20 +47,36 @@ class ShowDetailsAdapter(
         holder.date.setText("${DateFormatSymbols().getShortMonths()[date.month]} ${
             simple.format(date)
         }")
-        Picasso.get().load(list?.get(position)?.User?.avatar_urls?.o).placeholder(R.drawable.person)
-            .into(holder.ProfileImage)
+//        Log.d("TAG",list.get(position).User.toString())
+        if(list.get(position).User!=null){
+            if(list.get(position).User.avatar_urls.o==null){
+                holder.profileImage_tv.visibility=View.VISIBLE
+                holder.ProfileImage.visibility=View.GONE
+                holder.profileImage_tv.gravity= Gravity.CENTER
+                holder.profileImage_tv.setText(list.get(position).User.username.get(0).toString())
+            }else{
+                Picasso.get().load(list.get(position).User.avatar_urls.o).placeholder(R.drawable.person)
+                    .into(holder.ProfileImage)
+            }
+        }
         holder.title.setOnClickListener(object : View.OnClickListener {
             override fun onClick(p0: View?) {
-                Log.d("TAG", "clicked ${list[position].title}")
+                var title1=""
+                if(requestCode==1001){
+                    title1=title
+                }else if(requestCode==1002){
+                    title1=list.get(position).Forum.title
+                }
                 MyDataClass.homeNestedScrollView.visibility = View.GONE
                 MyDataClass.homeFragmentContainerView.visibility = View.VISIBLE
                 var transaction = MyDataClass.getTransaction()
                 transaction.replace(R.id.home_fragment_containerViewForShowDetails,
                     ShowPostsOfThreads(list[position].last_post_username,
                         list.get(position).title,
-                        title,
+                        title1,
                         list.get(position).thread_id,
-                        "${DateFormatSymbols().getShortMonths()[date.month]} ${simple.format(date)}"))
+                        "${DateFormatSymbols().getShortMonths()[date.month]} ${simple.format(date)}",
+                        0,1002))
                 transaction.addToBackStack(null).commit()
             }
         })
@@ -72,6 +89,8 @@ class ShowDetailsAdapter(
     class ShowDetailsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var ProfileImage: CircleImageView =
             itemView.findViewById(R.id.show_details_custom_layout_UserProfileImage)
+        var profileImage_tv: TextView =
+            itemView.findViewById(R.id.show_details_custom_layout_UserProfileImage_tv)
         var title: TextView = itemView.findViewById(R.id.show_details_custom_layout_title_Tv)
         var lastPostUserName: TextView =
             itemView.findViewById(R.id.show_details_custom_layout_lastPostUserName_Tv)

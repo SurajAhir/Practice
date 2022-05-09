@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/showLatestPosts_NesttedScrollView"
+    tools:context=".Fragments.ShowLatestPosts">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Forums"
+        android:layout_marginTop="4dp"
+        android:drawableLeft="@drawable/ic_arrow_back_ios_24"
+        android:paddingLeft="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:gravity="center|start"
+        android:textColor="@color/black"
+        android:background="@drawable/update_status_bg"
+        android:id="@+id/showLatestPosts_goBack_btn"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/black"
+        android:textColor="@color/white"
+        android:text="Latest posts"
+        android:padding="6dp"
+        android:layout_marginTop="8dp"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:id="@+id/showLatestPosts_recyclerView"
+        tools:listitem="@layout/show_details_custom_layout"/>
+    <ProgressBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/showLatestPosts_progressBar"/>
+</LinearLayout>
+
+
+</androidx.core.widget.NestedScrollView>

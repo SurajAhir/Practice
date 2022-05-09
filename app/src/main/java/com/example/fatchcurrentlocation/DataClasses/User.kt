@@ -1,7 +1,5 @@
 package com.example.fatchcurrentlocation.DataClasses
 
-import android.util.Log
-import java.io.BufferedOutputStream
 import java.io.Serializable
 
 data class User(
@@ -30,5 +28,9 @@ data class User(
     var allow_send_personal_conversation:String,
     var allow_view_identities:String,
     val allow_view_profile:String,
-    var visible:Boolean
+    var visible:Boolean,
+    val can_converse:Boolean,
+    val can_post_profile:Boolean,
+    val can_view_profile:Boolean,
+    val can_view_profile_posts:Boolean
 ) : Serializable

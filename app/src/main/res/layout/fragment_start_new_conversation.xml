@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragments.StartNewConversation">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Conversations"
+        android:layout_marginTop="4dp"
+        android:drawableLeft="@drawable/ic_arrow_back_ios_24"
+        android:paddingLeft="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:gravity="center|start"
+        android:textColor="@color/black"
+        android:background="@drawable/update_status_bg"
+        android:id="@+id/startNewConversation_goBack_btn"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:elevation="15dp"
+        android:padding="10dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:text="Start conversation"
+            android:textSize="18sp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="8dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Recipients:"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:layout_marginTop="8dp"/>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:background="@drawable/update_status_bg"
+    android:padding="1dp"
+    android:orientation="vertical">
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_margin="4dp"
+        tools:listitem="@layout/show_selected_users_name_custom_layuot"
+        android:id="@+id/startNewConversation_recyclerViewForShowSelectUsersName"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="40dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:background="@color/white"
+        android:id="@+id/startNewConversation_findRecipient_Et"/>
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:visibility="gone"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="4dp"
+   tools:listitem="@layout/show_recipients_user_name_custom_layout"
+
+        android:id="@+id/startNewConversation_listView"
+        android:background="@drawable/update_status_bg"/>
+</LinearLayout>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="40dp"
+            android:hint="Title..."
+            android:layout_marginTop="10dp"
+            android:paddingLeft="8dp"
+            android:background="@drawable/update_status_bg"
+            android:id="@+id/startNewConversation_title_Et"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/update_status_bg"
+            android:layout_marginTop="15dp"
+            android:padding="4dp"
+            android:visibility="gone"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:padding="4dp"
+                        android:layout_height="wrap_content">
+
+                        <ImageButton
+                            android:id="@+id/startNewConversation_undo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/undo"
+                            android:layout_margin="6dp"
+                            android:contentDescription="@null"
+                            />
+
+                        <ImageButton
+                            android:id="@+id/startNewConversation_redo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="6dp"
+                            android:background="@drawable/redo"
+                            android:contentDescription="@null"
+                            />
+
+                        <ImageButton
+                            android:id="@+id/startNewConversation_bold"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="6dp"
+                            android:background="@drawable/ic_b"
+                            android:contentDescription="@null" />
+
+                        <ImageButton
+                            android:id="@+id/startNewConversation_italic"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="6dp"
+                            android:background="@drawable/ic_i"
+                            android:contentDescription="@null" />
+
+                        <ImageButton
+                            android:id="@+id/startNewConversation_underline"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="6dp"
+                            android:background="@drawable/underline"
+                            android:contentDescription="@null" />
+
+                        <ImageButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/font_size"
+                            android:layout_margin="6dp"
+                            android:id="@+id/startNewConversation_font_size_btn"/>
+<!--                        <ImageButton-->
+<!--                            android:id="@+id/startNewConversation_indent"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_margin="6dp"-->
+<!--                            android:background="@drawable/indent"-->
+<!--                            android:contentDescription="@null"-->
+<!--                            />-->
+
+<!--                        <ImageButton-->
+<!--                            android:id="@+id/startNewConversation_outdent"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_margin="6dp"-->
+<!--                            android:background="@drawable/outdent"-->
+<!--                            android:contentDescription="@null" />-->
+
+                        <ImageButton
+                            android:id="@+id/startNewConversation_align_left"
+                            android:layout_width="wrap_content"
+                            android:layout_margin="6dp"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/justify_left"
+                            android:contentDescription="@null"
+                            />
+
+                        <ImageButton
+                            android:id="@+id/startNewConversation_align_center"
+                            android:layout_width="wrap_content"
+                            android:layout_margin="6dp"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/justify_center"
+                            android:contentDescription="@null" />
+
+                        <ImageButton
+                            android:id="@+id/startNewConversation_align_right"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="6dp"
+                            android:background="@drawable/justify_right"
+                            android:contentDescription="@null" />
+
+                        <ImageButton
+                            android:id="@+id/startNewConversation_insert_bullets"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bullets"
+                            android:layout_margin="6dp"
+                            android:contentDescription="@null" />
+
+                        <ImageButton
+                            android:id="@+id/startNewConversation_insert_numbers"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/numbers"
+                            android:layout_margin="6dp"
+                            android:contentDescription="@null" />
+
+
+<!--                        <ImageButton-->
+<!--                            android:id="@+id/startNewConversation_insert_image"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_margin="6dp"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:background="@drawable/ic_add_image"-->
+<!--                            android:contentDescription="@null" />-->
+
+                        <ImageButton
+                            android:id="@+id/startNewConversation_insert_link"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="6dp"
+                            android:background="@drawable/insert_link"
+                            android:contentDescription="@null" />
+
+                    </LinearLayout>
+                </HorizontalScrollView>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#B2ABAB"
+                    android:layout_marginTop="2dp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="3dp"
+                    android:id="@+id/startNewConversation_insert_link_Layout"
+                    android:visibility="gone"
+                    android:orientation="vertical">
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/update_status_bg"
+                        android:hint="URL"
+                        android:padding="3dp"
+                        android:id="@+id/startNewConversation_Url_et"/>
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/update_status_bg"
+                        android:hint="Text"
+                        android:layout_marginTop="3dp"
+                        android:padding="3dp"
+                        android:id="@+id/startNewConversation_Text_et"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/black"
+                        android:textColor="@color/white"
+                        android:text="Insert"
+                        android:layout_gravity="right"
+                        android:padding="3dp"
+                        android:id="@+id/startNewConversation_insert_link_btn"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginTop="3dp"/>
+                </LinearLayout>
+                <jp.wasabeef.richeditor.RichEditor
+                    android:id="@+id/startNewConversation_RichEditor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:minHeight="150dp"
+                    android:visibility="gone"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:background="@drawable/update_status_bg"
+            android:minHeight="100dp"
+            android:hint="Write here..."
+            android:gravity="start"
+            android:paddingRight="10dp"
+            android:id="@+id/startNewConversation_message_et"
+            android:textColor="@color/black"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/startNewConversation_recyclerView"
+            android:visibility="gone"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:drawableLeft="@drawable/ic_attach_file"
+            android:paddingLeft="8dp"
+            android:elevation="8dp"
+            android:paddingRight="5dp"
+            android:text="Attach files"
+            android:layout_marginTop="15dp"
+            android:gravity="center|start"
+            android:background="@drawable/update_status_bg"
+            android:drawablePadding="4dp"
+            android:id="@+id/startNewConversation_attach_file_btn"/>
+        <CheckBox
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Allow anyone in the conversation to invite others"
+            android:layout_marginTop="10dp"
+            android:id="@+id/startNewConversation_allowAnyone_checkbox"/>
+        <CheckBox
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Lock conversation (no responses will be allowed)"
+            android:layout_marginTop="4dp"
+            android:id="@+id/startNewConversation_lockConversation_checkbox"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#D4C9C9"/>
+    </LinearLayout>
+   <TextView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:drawableLeft="@drawable/ic_message_icon"
+       android:background="@color/black"
+       android:drawableTint="@color/white"
+       android:text="Start conversation"
+       android:textColor="@color/white"
+       android:drawablePadding="8dp"
+       android:padding="10dp"
+       android:layout_gravity="center"
+       android:id="@+id/startNewConversation_startNewConversation_Btn"
+       android:layout_marginBottom="10dp"/>
+
+</LinearLayout>
+
+
+</androidx.core.widget.NestedScrollView>

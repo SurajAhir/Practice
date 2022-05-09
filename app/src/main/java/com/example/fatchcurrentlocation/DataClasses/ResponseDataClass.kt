@@ -8,5 +8,6 @@ data class ResponseDataClass(
     val success: Boolean,
     val user: User,
     val errors: List<UserLoginError>,
-    var me:User
+    var me:User,
+    val messages:List<Posts>
 ) : Serializable

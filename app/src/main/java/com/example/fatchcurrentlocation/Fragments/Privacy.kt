@@ -19,15 +19,14 @@ import com.example.fatchcurrentlocation.databinding.FragmentPrivacyBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.*
 
 class Privacy : Fragment(), AdapterView.OnItemSelectedListener {
     lateinit var binding: FragmentPrivacyBinding
-    var list1 = arrayOf("All visitors", "Members only", "People you follow", "Nobody")
-    var list2 = arrayOf("Members only", "People you follow", "Nobody")
-    var list3 = arrayOf("All visitors", "Members only", "People you follow", "Nobody")
-    var list4 = arrayOf("Members only", "People you follow", "Nobody")
-    var list5 = arrayOf("All visitors", "Members only", "People you follow", "Nobody")
+    var list1 = arrayOf("${MyDataClass.responseDataClass!!.user.allow_post_profile.capitalize()}", "Members only", "People you follow", "Nobody")
+    var list2 = arrayOf("${MyDataClass.responseDataClass!!.user.allow_receive_news_feed.capitalize()}", "People you follow", "Nobody")
+    var list3 = arrayOf("${MyDataClass.responseDataClass!!.user.allow_send_personal_conversation.capitalize()}", "Members only", "People you follow", "Nobody")
+    var list4 = arrayOf("${MyDataClass.responseDataClass!!.user.allow_view_identities.capitalize()}", "People you follow", "Nobody")
+    var list5 = arrayOf("${MyDataClass.responseDataClass!!.user.allow_view_profile.capitalize()}", "Members only", "People you follow", "Nobody")
     lateinit var progressBar: ProgressDialog
     var isShowYourOnlineStatus: Boolean = false
     var isShowYourCurrentActivity: Boolean = false
@@ -113,25 +112,25 @@ class Privacy : Fragment(), AdapterView.OnItemSelectedListener {
                                                 Toast.makeText(context,
                                                     "Your profile updated successfully",
                                                     Toast.LENGTH_LONG).show()
-                                                MyDataClass.responseDataClass.me =
+                                                MyDataClass.responseDataClass!!.me =
                                                     response.body()?.me!!
-                                                MyDataClass.responseDataClass.user.show_dob_year =
+                                                MyDataClass.responseDataClass!!.user.show_dob_year =
                                                     response.body()?.me!!.show_dob_year!!
-                                                MyDataClass.responseDataClass.user.show_dob_date =
+                                                MyDataClass.responseDataClass!!.user.show_dob_date =
                                                     response.body()?.me!!.show_dob_date!!
-                                                MyDataClass.responseDataClass.user.receive_admin_email =
+                                                MyDataClass.responseDataClass!!.user.receive_admin_email =
                                                     response.body()?.me!!.receive_admin_email!!
-                                                MyDataClass.responseDataClass.user.activity_visible =
+                                                MyDataClass.responseDataClass!!.user.activity_visible =
                                                     response.body()!!.me.activity_visible
-                                                MyDataClass.responseDataClass.user.visible =
+                                                MyDataClass.responseDataClass!!.user.visible =
                                                     response.body()!!.me.visible
-                                                MyDataClass.responseDataClass.user.allow_post_profile =
+                                                MyDataClass.responseDataClass!!.user.allow_post_profile =
                                                     response.body()!!.me.allow_post_profile
-                                                MyDataClass.responseDataClass.user.allow_receive_news_feed =
+                                                MyDataClass.responseDataClass!!.user.allow_receive_news_feed =
                                                     response.body()!!.me.allow_receive_news_feed
-                                                MyDataClass.responseDataClass.user.allow_send_personal_conversation =
+                                                MyDataClass.responseDataClass!!.user.allow_send_personal_conversation =
                                                     response.body()!!.me.allow_send_personal_conversation
-                                                MyDataClass.responseDataClass.user.allow_view_identities =
+                                                MyDataClass.responseDataClass!!.user.allow_view_identities =
                                                     response.body()!!.me.allow_view_identities
                                                 MyDataClass.onBack()
                                             } else {
@@ -161,34 +160,35 @@ class Privacy : Fragment(), AdapterView.OnItemSelectedListener {
                 })
             }
         })
-
+binding.privacyGoBackBtn.setOnClickListener { MyDataClass.onBack() }
         return binding.root
     }
 
     private fun initializeData() {
+        MyDataClass.isGoProfile=false
         progressBar = ProgressDialog(context)
-        if (MyDataClass.responseDataClass.user.visible == true) {
+        if (MyDataClass.responseDataClass!!.user.visible == true) {
             binding.privacyShowYourOnlineStatusCheckbox.isChecked = true
         } else {
             binding.privacyShowYourOnlineStatusCheckbox.isChecked = false
         }
-        if (MyDataClass.responseDataClass.user.activity_visible == true) {
+        if (MyDataClass.responseDataClass!!.user.activity_visible == true) {
             binding.privacyShowYourCurrentActivityCheckbox.isChecked = true
         } else {
             binding.privacyShowYourCurrentActivityCheckbox.isChecked  = false
         }
-        if (MyDataClass.responseDataClass.user.receive_admin_email == true) {
+        if (MyDataClass.responseDataClass!!.user.receive_admin_email == true) {
             binding.privacyReceiveNewsAndUpdateEmailsCheckbox.isChecked = true
         } else {
             binding.privacyReceiveNewsAndUpdateEmailsCheckbox.isChecked  = false
         }
 
-        if (MyDataClass.responseDataClass.user.show_dob_date == true) {
+        if (MyDataClass.responseDataClass!!.user.show_dob_date == true) {
             binding.privacyShowDayAndMonthOfBirthCheckbox.isChecked = true
         } else {
             binding.privacyShowDayAndMonthOfBirthCheckbox.isChecked = false
         }
-        if (MyDataClass.responseDataClass.user.receive_admin_email == true) {
+        if (MyDataClass.responseDataClass!!.user.receive_admin_email == true) {
             binding.privacyReceiveNewsAndUpdateEmailsCheckbox.isChecked = true
         } else {
             binding.privacyReceiveNewsAndUpdateEmailsCheckbox.isChecked=false
@@ -246,6 +246,6 @@ class Privacy : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {
-        TODO("Not yet implemented")
+
     }
 }

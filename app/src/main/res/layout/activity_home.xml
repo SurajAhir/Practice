@@ -25,6 +25,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="0dp"
                 android:text="TECHNOFINO"
+                android:textStyle="bold"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
 
@@ -32,52 +33,61 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="8dp"
-                android:orientation="horizontal"
-                android:weightSum="10">
+                android:gravity="right"
+                android:orientation="horizontal">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/home_userAccountProfile"
-                    android:layout_width="0dp"
+                    android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginLeft="8dp"
-                    android:layout_weight="2"
+                    android:layout_marginRight="15dp"
                     android:src="@drawable/person"
                     app:civ_border_color="#FFFDFD"
                     app:civ_border_width="2dp" />
+                <TextView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="15dp"
+                    android:visibility="gone"
+                    android:textAllCaps="true"
+                    android:background="@drawable/custom_circle_shape"
+                    android:id="@+id/home_userAccountProfile_tv"/>
 
                 <ImageButton
                     android:id="@+id/home_email"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="4dp"
-                    android:layout_weight="2"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="15dp"
                     android:background="@drawable/email"
                     android:backgroundTint="@color/white" />
 
                 <ImageButton
                     android:id="@+id/home_notification"
-                    android:layout_width="0dp"
+                    android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginLeft="4dp"
-                    android:layout_weight="2"
+                    android:layout_marginRight="10dp"
                     android:background="@drawable/ic_baseline_notifications_24"
                     android:backgroundTint="@color/white" />
 
-                <ImageButton
-                    android:id="@+id/home_electric"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="4dp"
-                    android:layout_weight="2"
-                    android:background="@drawable/ic_electric_bolt_24" />
+<!--                <ImageButton-->
+<!--                    android:id="@+id/home_electric"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginLeft="4dp"-->
+<!--                    android:layout_weight="2"-->
+<!--                    android:background="@drawable/ic_electric_bolt_24" />-->
 
-                <ImageButton
-                    android:id="@+id/home_search"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="4dp"
-                    android:layout_weight="2"
-                    android:background="@drawable/ic_search_24" />
+<!--                <ImageButton-->
+<!--                    android:id="@+id/home_search"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginLeft="4dp"-->
+<!--                    android:layout_weight="2"-->
+<!--                    android:background="@drawable/ic_search_24" />-->
             </LinearLayout>
         </androidx.appcompat.widget.Toolbar>
         <androidx.core.widget.NestedScrollView
@@ -102,6 +112,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
                         android:layout_marginTop="8dp"
+                        android:fontFamily="@font/montserrat_extrabold"
                         android:text="TechnoFino - #1 Community Of Credit"
                         android:textColor="@color/black"
                         android:textSize="18sp" />
@@ -110,6 +121,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
+                        android:fontFamily="@font/montserrat_extrabold"
                         android:text="@string/card_banking_experts"
                         android:textColor="@color/black"
                         android:textSize="18sp" />
@@ -120,18 +132,18 @@
                         android:layout_marginTop="8dp"
                         android:orientation="horizontal">
 
-                        <TextView
-                            android:id="@+id/home_newPosts"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="8dp"
-                            android:background="@color/black"
-                            android:drawableLeft="@drawable/ic_electric_bolt_24"
-                            android:drawablePadding="4dp"
-                            android:drawableTint="@color/white"
-                            android:padding="8dp"
-                            android:text="New posts"
-                            android:textColor="@color/white" />
+<!--                        <TextView-->
+<!--                            android:id="@+id/home_newPosts"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginLeft="8dp"-->
+<!--                            android:background="@color/black"-->
+<!--                            android:drawableLeft="@drawable/ic_electric_bolt_24"-->
+<!--                            android:drawablePadding="4dp"-->
+<!--                            android:drawableTint="@color/white"-->
+<!--                            android:padding="8dp"-->
+<!--                            android:text="New posts"-->
+<!--                            android:textColor="@color/white" />-->
 
                         <TextView
                             android:id="@+id/home_post_thread"
@@ -146,567 +158,583 @@
                             android:text="Post thread..."
                             android:textColor="@color/white" />
                     </LinearLayout>
+<androidx.recyclerview.widget.RecyclerView
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    android:layout_marginTop="5dp"
+    android:id="@+id/home_recyclerView"
+    tools:listitem="@layout/show_nodes_custom_layout"/>
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="10dp"-->
+<!--                        android:gravity="center"-->
+<!--                        android:orientation="vertical">-->
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:gravity="center"
-                        android:orientation="vertical">
+<!--                        <LinearLayout-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:background="#242525"-->
+<!--                            android:gravity="center"-->
+<!--                            android:padding="10dp"-->
+<!--                            android:weightSum="10">-->
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="#242525"
-                            android:gravity="center"
-                            android:padding="10dp"
-                            android:weightSum="10">
+<!--                            <TextView-->
+<!--                                android:id="@+id/home_general_tv"-->
+<!--                                android:layout_width="0dp"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_weight="9"-->
+<!--                                android:text="General"-->
+<!--                                android:textColor="@color/white"-->
+<!--                                android:textSize="18sp" />-->
 
-                            <TextView
-                                android:id="@+id/home_general_tv"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="9"
-                                android:text="General"
-                                android:textColor="@color/white"
-                                android:textSize="18sp" />
+<!--                            <ImageButton-->
+<!--                                android:id="@+id/home_general_rightArrow_btn"-->
+<!--                                android:layout_width="0dp"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_weight="1"-->
+<!--                                android:background="@drawable/ic_arrow_right_24"-->
+<!--                                android:backgroundTint="@color/white" />-->
+<!--                        </LinearLayout>-->
 
-                            <ImageButton
-                                android:id="@+id/home_general_rightArrow_btn"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:background="@drawable/ic_arrow_right_24"
-                                android:backgroundTint="@color/white" />
-                        </LinearLayout>
+<!--                        <androidx.recyclerview.widget.RecyclerView-->
+<!--                            android:id="@+id/home_general_recyclerView"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_marginTop="8dp"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:visibility="gone" />-->
+<!--                    </LinearLayout>-->
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/home_general_recyclerView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:visibility="gone" />
-                    </LinearLayout>
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="18dp"-->
+<!--                        android:gravity="center"-->
+<!--                        android:orientation="vertical">-->
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="18dp"
-                        android:gravity="center"
-                        android:orientation="vertical">
+<!--                        <LinearLayout-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:background="@color/black"-->
+<!--                            android:gravity="center"-->
+<!--                            android:padding="10dp"-->
+<!--                            android:weightSum="10">-->
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@color/black"
-                            android:gravity="center"
-                            android:padding="10dp"
-                            android:weightSum="10">
+<!--                            <TextView-->
+<!--                                android:id="@+id/home_banking_tv"-->
+<!--                                android:layout_width="0dp"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_weight="9"-->
+<!--                                android:text="Banking"-->
+<!--                                android:textColor="@color/white"-->
+<!--                                android:textSize="18sp" />-->
 
-                            <TextView
-                                android:id="@+id/home_banking_tv"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="9"
-                                android:text="Banking"
-                                android:textColor="@color/white"
-                                android:textSize="18sp" />
+<!--                            <ImageButton-->
+<!--                                android:id="@+id/home_banking_rightArrow_btn"-->
+<!--                                android:layout_width="0dp"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_weight="1"-->
+<!--                                android:background="@drawable/ic_arrow_right_24"-->
+<!--                                android:backgroundTint="@color/white" />-->
+<!--                        </LinearLayout>-->
 
-                            <ImageButton
-                                android:id="@+id/home_banking_rightArrow_btn"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:background="@drawable/ic_arrow_right_24"
-                                android:backgroundTint="@color/white" />
-                        </LinearLayout>
+<!--                        <androidx.recyclerview.widget.RecyclerView-->
+<!--                            android:id="@+id/home_banking_recyclerView"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_marginTop="8dp"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:visibility="gone" />-->
+<!--                    </LinearLayout>-->
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/home_banking_recyclerView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:visibility="gone" />
-                    </LinearLayout>
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="18dp"-->
+<!--                        android:gravity="center"-->
+<!--                        android:orientation="vertical">-->
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="18dp"
-                        android:gravity="center"
-                        android:orientation="vertical">
+<!--                        <LinearLayout-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:background="@color/black"-->
+<!--                            android:gravity="center"-->
+<!--                            android:padding="10dp"-->
+<!--                            android:weightSum="10">-->
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@color/black"
-                            android:gravity="center"
-                            android:padding="10dp"
-                            android:weightSum="10">
+<!--                            <TextView-->
+<!--                                android:id="@+id/home_offers_tv"-->
+<!--                                android:layout_width="0dp"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_weight="9"-->
+<!--                                android:text="Offers"-->
+<!--                                android:textColor="@color/white"-->
+<!--                                android:textSize="18sp" />-->
 
-                            <TextView
-                                android:id="@+id/home_offers_tv"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="9"
-                                android:text="Offers"
-                                android:textColor="@color/white"
-                                android:textSize="18sp" />
+<!--                            <ImageButton-->
+<!--                                android:id="@+id/home_offers_rightArrow_btn"-->
+<!--                                android:layout_width="0dp"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_weight="1"-->
+<!--                                android:background="@drawable/ic_arrow_right_24"-->
+<!--                                android:backgroundTint="@color/white" />-->
+<!--                        </LinearLayout>-->
 
-                            <ImageButton
-                                android:id="@+id/home_offers_rightArrow_btn"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:background="@drawable/ic_arrow_right_24"
-                                android:backgroundTint="@color/white" />
-                        </LinearLayout>
+<!--                        <androidx.recyclerview.widget.RecyclerView-->
+<!--                            android:id="@+id/home_offers_recyclerView"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_marginTop="8dp"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:visibility="gone" />-->
+<!--                    </LinearLayout>-->
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/home_offers_recyclerView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:visibility="gone" />
-                    </LinearLayout>
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="18dp"-->
+<!--                        android:gravity="center"-->
+<!--                        android:orientation="vertical">-->
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="18dp"
-                        android:gravity="center"
-                        android:orientation="vertical">
+<!--                        <LinearLayout-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:background="@color/black"-->
+<!--                            android:gravity="center"-->
+<!--                            android:padding="10dp"-->
+<!--                            android:weightSum="10">-->
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@color/black"
-                            android:gravity="center"
-                            android:padding="10dp"
-                            android:weightSum="10">
+<!--                            <TextView-->
+<!--                                android:id="@+id/home_personalFinace_tv"-->
+<!--                                android:layout_width="0dp"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_weight="9"-->
+<!--                                android:text="Personal Finance"-->
+<!--                                android:textColor="@color/white"-->
+<!--                                android:textSize="18sp" />-->
 
-                            <TextView
-                                android:id="@+id/home_personalFinace_tv"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="9"
-                                android:text="Personal Finance"
-                                android:textColor="@color/white"
-                                android:textSize="18sp" />
+<!--                            <ImageButton-->
+<!--                                android:id="@+id/home_personalFinace_rightArrow_btn"-->
+<!--                                android:layout_width="0dp"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_weight="1"-->
+<!--                                android:background="@drawable/ic_arrow_right_24"-->
+<!--                                android:backgroundTint="@color/white" />-->
+<!--                        </LinearLayout>-->
 
-                            <ImageButton
-                                android:id="@+id/home_personalFinace_rightArrow_btn"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:background="@drawable/ic_arrow_right_24"
-                                android:backgroundTint="@color/white" />
-                        </LinearLayout>
+<!--                        <androidx.recyclerview.widget.RecyclerView-->
+<!--                            android:id="@+id/home_personalFinace_recyclerView"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginTop="8dp"-->
+<!--                            android:visibility="gone" />-->
+<!--                    </LinearLayout>-->
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/home_personalFinace_recyclerView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:visibility="gone" />
-                    </LinearLayout>
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="18dp"-->
+<!--                        android:gravity="center"-->
+<!--                        android:orientation="vertical">-->
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="18dp"
-                        android:gravity="center"
-                        android:orientation="vertical">
+<!--                        <LinearLayout-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:background="@color/black"-->
+<!--                            android:gravity="center"-->
+<!--                            android:padding="10dp"-->
+<!--                            android:weightSum="10">-->
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@color/black"
-                            android:gravity="center"
-                            android:padding="10dp"
-                            android:weightSum="10">
+<!--                            <TextView-->
+<!--                                android:id="@+id/home_travelling_tv"-->
+<!--                                android:layout_width="0dp"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_weight="9"-->
+<!--                                android:text="Travelling"-->
+<!--                                android:textColor="@color/white"-->
+<!--                                android:textSize="18sp" />-->
 
-                            <TextView
-                                android:id="@+id/home_travelling_tv"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="9"
-                                android:text="Travelling"
-                                android:textColor="@color/white"
-                                android:textSize="18sp" />
+<!--                            <ImageButton-->
+<!--                                android:id="@+id/home_travelling_rightArrow_btn"-->
+<!--                                android:layout_width="0dp"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_weight="1"-->
+<!--                                android:background="@drawable/ic_arrow_right_24"-->
+<!--                                android:backgroundTint="@color/white" />-->
+<!--                        </LinearLayout>-->
 
-                            <ImageButton
-                                android:id="@+id/home_travelling_rightArrow_btn"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:background="@drawable/ic_arrow_right_24"
-                                android:backgroundTint="@color/white" />
-                        </LinearLayout>
+<!--                        <androidx.recyclerview.widget.RecyclerView-->
+<!--                            android:id="@+id/home_travelling_recyclerView"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginTop="8dp"-->
+<!--                            android:visibility="gone" />-->
+<!--                    </LinearLayout>-->
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/home_travelling_recyclerView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:visibility="gone" />
-                    </LinearLayout>
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="18dp"-->
+<!--                        android:gravity="center"-->
+<!--                        android:orientation="vertical">-->
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="18dp"
-                        android:gravity="center"
-                        android:orientation="vertical">
+<!--                        <LinearLayout-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:background="@color/black"-->
+<!--                            android:gravity="center"-->
+<!--                            android:padding="10dp"-->
+<!--                            android:weightSum="10">-->
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@color/black"
-                            android:gravity="center"
-                            android:padding="10dp"
-                            android:weightSum="10">
+<!--                            <TextView-->
+<!--                                android:id="@+id/home_foreign_credit_card_tv"-->
+<!--                                android:layout_width="0dp"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_weight="9"-->
+<!--                                android:text="@string/foreign_credit_card_bank_a_c"-->
+<!--                                android:textColor="@color/white"-->
+<!--                                android:textSize="18sp" />-->
 
-                            <TextView
-                                android:id="@+id/home_foreign_credit_card_tv"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="9"
-                                android:text="@string/foreign_credit_card_bank_a_c"
-                                android:textColor="@color/white"
-                                android:textSize="18sp" />
+<!--                            <ImageButton-->
+<!--                                android:id="@+id/home_foreign_credit_Arrowbtn"-->
+<!--                                android:layout_width="0dp"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_weight="1"-->
+<!--                                android:background="@drawable/ic_arrow_right_24"-->
+<!--                                android:backgroundTint="@color/white" />-->
+<!--                        </LinearLayout>-->
 
-                            <ImageButton
-                                android:id="@+id/home_foreign_credit_Arrowbtn"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:background="@drawable/ic_arrow_right_24"
-                                android:backgroundTint="@color/white" />
-                        </LinearLayout>
+<!--                        <androidx.recyclerview.widget.RecyclerView-->
+<!--                            android:id="@+id/home_foreign_credit_recyclerView"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginTop="8dp"-->
+<!--                            android:visibility="gone" />-->
+<!--                    </LinearLayout>-->
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/home_foreign_credit_recyclerView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:visibility="gone" />
-                    </LinearLayout>
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:orientation="vertical">-->
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
+<!--                        <TextView-->
+<!--                            android:id="@+id/home_staff_online_tv"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="40dp"-->
+<!--                            android:layout_marginTop="18dp"-->
+<!--                            android:background="#393e49"-->
+<!--                            android:drawableLeft="@drawable/ic_staff_online"-->
+<!--                            android:drawablePadding="8dp"-->
+<!--                            android:drawableTint="@color/white"-->
+<!--                            android:gravity="center|start"-->
+<!--                            android:paddingLeft="10dp"-->
+<!--                            android:text="Staff online"-->
+<!--                            android:textColor="@color/white"-->
+<!--                            android:textSize="18sp" />-->
 
-                        <TextView
-                            android:id="@+id/home_staff_online_tv"
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:layout_marginTop="18dp"
-                            android:background="#393e49"
-                            android:drawableLeft="@drawable/ic_staff_online"
-                            android:drawablePadding="8dp"
-                            android:drawableTint="@color/white"
-                            android:gravity="center|start"
-                            android:paddingLeft="10dp"
-                            android:text="Staff online"
-                            android:textColor="@color/white"
-                            android:textSize="18sp" />
+<!--                        <androidx.recyclerview.widget.RecyclerView-->
+<!--                            android:id="@+id/home_staff_online_recyclerView"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content" />-->
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/home_staff_online_recyclerView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+<!--                    </LinearLayout>-->
 
-                    </LinearLayout>
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:orientation="vertical">-->
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
+<!--                        <TextView-->
+<!--                            android:id="@+id/home_member_online_tv"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="40dp"-->
+<!--                            android:layout_marginTop="18dp"-->
+<!--                            android:background="#393e49"-->
+<!--                            android:drawableLeft="@drawable/ic_member"-->
+<!--                            android:drawablePadding="8dp"-->
+<!--                            android:drawableTint="@color/white"-->
+<!--                            android:gravity="center|start"-->
+<!--                            android:paddingLeft="10dp"-->
+<!--                            android:text="Members online"-->
+<!--                            android:textColor="@color/white"-->
+<!--                            android:textSize="18sp" />-->
 
-                        <TextView
-                            android:id="@+id/home_member_online_tv"
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:layout_marginTop="18dp"
-                            android:background="#393e49"
-                            android:drawableLeft="@drawable/ic_member"
-                            android:drawablePadding="8dp"
-                            android:drawableTint="@color/white"
-                            android:gravity="center|start"
-                            android:paddingLeft="10dp"
-                            android:text="Members online"
-                            android:textColor="@color/white"
-                            android:textSize="18sp" />
+<!--                        <TextView-->
+<!--                            android:id="@+id/home_member_online_tv1"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:padding="10dp" />-->
 
-                        <TextView
-                            android:id="@+id/home_member_online_tv1"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:padding="10dp" />
+<!--                        <TextView-->
+<!--                            android:id="@+id/home_member_online_tv2"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:padding="10dp" />-->
+<!--                    </LinearLayout>-->
 
-                        <TextView
-                            android:id="@+id/home_member_online_tv2"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:padding="10dp" />
-                    </LinearLayout>
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:orientation="vertical">-->
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
+<!--                        <TextView-->
+<!--                            android:id="@+id/home_latest_posts_tv"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="40dp"-->
+<!--                            android:layout_marginTop="18dp"-->
+<!--                            android:background="#393e49"-->
+<!--                            android:drawableLeft="@drawable/ic_latest_post"-->
+<!--                            android:drawablePadding="8dp"-->
+<!--                            android:drawableTint="@color/white"-->
+<!--                            android:gravity="center|start"-->
+<!--                            android:paddingLeft="10dp"-->
+<!--                            android:text="Latest posts"-->
+<!--                            android:textColor="@color/white"-->
+<!--                            android:textSize="18sp" />-->
 
-                        <TextView
-                            android:id="@+id/home_latest_posts_tv"
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:layout_marginTop="18dp"
-                            android:background="#393e49"
-                            android:drawableLeft="@drawable/ic_latest_post"
-                            android:drawablePadding="8dp"
-                            android:drawableTint="@color/white"
-                            android:gravity="center|start"
-                            android:paddingLeft="10dp"
-                            android:text="Latest posts"
-                            android:textColor="@color/white"
-                            android:textSize="18sp" />
+<!--                        <androidx.recyclerview.widget.RecyclerView-->
+<!--                            android:id="@+id/home_latest_posts_recyclerView"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content" />-->
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/home_latest_posts_recyclerView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+<!--                    </LinearLayout>-->
 
-                    </LinearLayout>
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:orientation="vertical">-->
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
+<!--                        <TextView-->
+<!--                            android:id="@+id/home_latest_profile_posts_tv"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="40dp"-->
+<!--                            android:layout_marginTop="18dp"-->
+<!--                            android:background="#393e49"-->
+<!--                            android:drawableLeft="@drawable/ic_latest_profile_post"-->
+<!--                            android:drawablePadding="8dp"-->
+<!--                            android:drawableTint="@color/white"-->
+<!--                            android:gravity="center|start"-->
+<!--                            android:paddingLeft="10dp"-->
+<!--                            android:text="Latest profile posts"-->
+<!--                            android:textColor="@color/white"-->
+<!--                            android:textSize="18sp" />-->
 
-                        <TextView
-                            android:id="@+id/home_latest_profile_posts_tv"
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:layout_marginTop="18dp"
-                            android:background="#393e49"
-                            android:drawableLeft="@drawable/ic_latest_profile_post"
-                            android:drawablePadding="8dp"
-                            android:drawableTint="@color/white"
-                            android:gravity="center|start"
-                            android:paddingLeft="10dp"
-                            android:text="Latest profile posts"
-                            android:textColor="@color/white"
-                            android:textSize="18sp" />
+<!--                        <EditText-->
+<!--                            android:id="@+id/home_latest_profile_posts_updateStatus"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="50dp"-->
+<!--                            android:layout_margin="8dp"-->
+<!--                            android:background="@drawable/update_status_bg"-->
+<!--                            android:hint="Update your status..."-->
+<!--                            android:paddingLeft="8dp" />-->
 
-                        <EditText
-                            android:id="@+id/home_latest_profile_posts_updateStatus"
-                            android:layout_width="match_parent"
-                            android:layout_height="50dp"
-                            android:layout_margin="8dp"
-                            android:background="@drawable/update_status_bg"
-                            android:hint="Update your status..."
-                            android:paddingLeft="8dp" />
+<!--                        <TextView-->
+<!--                            android:id="@+id/home_update_status_btn"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginLeft="20dp"-->
+<!--                            android:background="@color/black"-->
+<!--                            android:drawableLeft="@drawable/ic_post"-->
+<!--                            android:drawablePadding="5dp"-->
+<!--                            android:drawableTint="@color/white"-->
+<!--                            android:gravity="center"-->
+<!--                            android:paddingRight="4dp"-->
+<!--                            android:text="Post"-->
+<!--                            android:textColor="@color/white"-->
+<!--                            android:textSize="24sp"-->
+<!--                            android:visibility="gone" />-->
 
-                        <TextView
-                            android:id="@+id/home_update_status_btn"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="20dp"
-                            android:background="@color/black"
-                            android:drawableLeft="@drawable/ic_post"
-                            android:drawablePadding="5dp"
-                            android:drawableTint="@color/white"
-                            android:gravity="center"
-                            android:paddingRight="4dp"
-                            android:text="Post"
-                            android:textColor="@color/white"
-                            android:textSize="24sp"
-                            android:visibility="gone" />
+<!--                        <androidx.recyclerview.widget.RecyclerView-->
+<!--                            android:id="@+id/home_latest_profile_posts_recyclerView"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content" />-->
+<!--                    </LinearLayout>-->
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/home_latest_profile_posts_recyclerView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
-                    </LinearLayout>
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:orientation="vertical">-->
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
+<!--                        <TextView-->
+<!--                            android:id="@+id/home_forum_statistics_tv"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="40dp"-->
+<!--                            android:layout_marginTop="18dp"-->
+<!--                            android:background="#393e49"-->
+<!--                            android:drawableLeft="@drawable/ic_forum_statistics"-->
+<!--                            android:drawablePadding="8dp"-->
+<!--                            android:drawableTint="@color/white"-->
+<!--                            android:gravity="center|start"-->
+<!--                            android:paddingLeft="10dp"-->
+<!--                            android:text="Forum statistics"-->
+<!--                            android:textColor="@color/white"-->
+<!--                            android:textSize="18sp" />-->
 
-                        <TextView
-                            android:id="@+id/home_forum_statistics_tv"
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:layout_marginTop="18dp"
-                            android:background="#393e49"
-                            android:drawableLeft="@drawable/ic_forum_statistics"
-                            android:drawablePadding="8dp"
-                            android:drawableTint="@color/white"
-                            android:gravity="center|start"
-                            android:paddingLeft="10dp"
-                            android:text="Forum statistics"
-                            android:textColor="@color/white"
-                            android:textSize="18sp" />
+<!--                        <androidx.recyclerview.widget.RecyclerView-->
+<!--                            android:id="@+id/home_forum_statistics_recyclerView"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content" />-->
+<!--                    </LinearLayout>-->
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/home_forum_statistics_recyclerView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/home_share_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginBottom="10dp"
-                        android:drawableLeft="@drawable/ic_share"
-                        android:drawablePadding="5dp"
-                        android:text="Share"
-                        android:textSize="16sp" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/home_share_btn"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginLeft="10dp"-->
+<!--                        android:layout_marginTop="12dp"-->
+<!--                        android:layout_marginBottom="10dp"-->
+<!--                        android:drawableLeft="@drawable/ic_share"-->
+<!--                        android:drawablePadding="5dp"-->
+<!--                        android:text="Share"-->
+<!--                        android:textSize="16sp" />-->
                 </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:background="@color/black"
-                    android:orientation="vertical"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="20dp"
-                    android:paddingRight="10dp">
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="8dp"-->
+<!--                    android:background="@color/black"-->
+<!--                    android:orientation="vertical"-->
+<!--                    android:paddingLeft="10dp"-->
+<!--                    android:paddingTop="20dp"-->
+<!--                    android:paddingRight="10dp">-->
 
-                    <TextView
-                        android:id="@+id/home_style_chooser"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:text="Style chooser"
-                        android:textColor="@color/white" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/home_style_chooser"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="15dp"-->
+<!--                        android:text="Style chooser"-->
+<!--                        android:textColor="@color/white" />-->
 
-                    <TextView
-                        android:id="@+id/home_contact_us"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:text="Contact us"
-                        android:textColor="@color/white" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/home_contact_us"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="15dp"-->
+<!--                        android:text="Contact us"-->
+<!--                        android:textColor="@color/white" />-->
 
-                    <TextView
-                        android:id="@+id/home_terms_and_rules"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:text="Terms and rules"
-                        android:textColor="@color/white" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/home_terms_and_rules"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="15dp"-->
+<!--                        android:text="Terms and rules"-->
+<!--                        android:textColor="@color/white" />-->
 
-                    <TextView
-                        android:id="@+id/home_privacy_policy"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:text="Privacy policy"
-                        android:textColor="@color/white" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/home_privacy_policy"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="15dp"-->
+<!--                        android:text="Privacy policy"-->
+<!--                        android:textColor="@color/white" />-->
 
-                    <TextView
-                        android:id="@+id/home_help"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:text="Help"
-                        android:textColor="@color/white" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/home_help"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="15dp"-->
+<!--                        android:text="Help"-->
+<!--                        android:textColor="@color/white" />-->
 
-                    <TextView
-                        android:id="@+id/home_home"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:text="Home"
-                        android:textColor="@color/white" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/home_home"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="15dp"-->
+<!--                        android:text="Home"-->
+<!--                        android:textColor="@color/white" />-->
 
-                    <TextView
-                        android:id="@+id/home_wify"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginTop="15dp"
-                        android:layout_marginBottom="20dp"
-                        android:drawableStart="@drawable/ic_wifi"
-                        android:drawableTint="@color/white"
-                        android:textColor="@color/white" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/home_wify"-->
+<!--                        android:layout_width="24dp"-->
+<!--                        android:layout_height="24dp"-->
+<!--                        android:layout_marginTop="15dp"-->
+<!--                        android:layout_marginBottom="20dp"-->
+<!--                        android:drawableStart="@drawable/ic_wifi"-->
+<!--                        android:drawableTint="@color/white"-->
+<!--                        android:textColor="@color/white" />-->
 
-                    <ImageView
-                        android:id="@+id/home_technofino_logo"
-                        android:layout_width="150dp"
-                        android:layout_height="80dp"
-                        android:layout_marginBottom="10dp"
-                        android:src="@drawable/technofino" />
+<!--                    <ImageView-->
+<!--                        android:id="@+id/home_technofino_logo"-->
+<!--                        android:layout_width="150dp"-->
+<!--                        android:layout_height="80dp"-->
+<!--                        android:layout_marginBottom="10dp"-->
+<!--                        android:src="@drawable/technofino" />-->
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:text="@string/technofino_about"
-                        android:textColor="@color/white" />
+<!--                    <TextView-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:padding="5dp"-->
+<!--                        android:text="@string/technofino_about"-->
+<!--                        android:textColor="@color/white" />-->
 
-                    <TextView
-                        android:id="@+id/home_whats_new"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:layout_marginBottom="15dp"
-                        android:text="What's new"
-                        android:textColor="@color/white"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/home_whats_new"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="15dp"-->
+<!--                        android:layout_marginBottom="15dp"-->
+<!--                        android:text="What's new"-->
+<!--                        android:textColor="@color/white"-->
+<!--                        android:textSize="18sp"-->
+<!--                        android:textStyle="bold" />-->
 
-                    <TextView
-                        android:id="@+id/home_whats_new_posts"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:text="New posts"
-                        android:textColor="#EEE4E4" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/home_whats_new_posts"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="20dp"-->
+<!--                        android:text="New posts"-->
+<!--                        android:textColor="#EEE4E4" />-->
 
-                    <TextView
-                        android:id="@+id/home_whats_new_profile_posts"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:text="New profile posts"
-                        android:textColor="#8C8484" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/home_whats_new_profile_posts"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="20dp"-->
+<!--                        android:text="New profile posts"-->
+<!--                        android:textColor="#8C8484" />-->
 
-                    <TextView
-                        android:id="@+id/home_whats_new_your_news_feed"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:text="Your news feed"
-                        android:textColor="#8C8484" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/home_whats_new_your_news_feed"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="20dp"-->
+<!--                        android:text="Your news feed"-->
+<!--                        android:textColor="#8C8484" />-->
 
-                    <TextView
-                        android:id="@+id/home_whats_new_latest_activity"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:text="Latest activity"
-                        android:textColor="#8C8484" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/home_whats_new_latest_activity"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="20dp"-->
+<!--                        android:text="Latest activity"-->
+<!--                        android:textColor="#8C8484" />-->
 
-                    <TextView
-                        android:id="@+id/home_all_rights_reserved"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="50dp"
-                        android:layout_marginBottom="8dp"
-                        android:text="© 2021-2022 TechnoFino® All Rights Reserved"
-                        android:textColor="@color/white"
-                        android:textSize="12sp" />
-                </LinearLayout>
+<!--                    <TextView-->
+<!--                        android:id="@+id/home_all_rights_reserved"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="50dp"-->
+<!--                        android:layout_marginBottom="8dp"-->
+<!--                        android:text="© 2021-2022 TechnoFino® All Rights Reserved"-->
+<!--                        android:textColor="@color/white"-->
+<!--                        android:textSize="12sp" />-->
+<!--                </LinearLayout>-->
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/home_fragment_containerViewForShowDetails"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="4dp"
-            android:visibility="gone"
-            android:layout_marginRight="4dp" />
+<!--     <androidx.core.widget.NestedScrollView-->
+<!--         android:layout_width="match_parent"-->
+<!--         android:layout_height="wrap_content">-->
+         <androidx.fragment.app.FragmentContainerView
+             android:id="@+id/home_fragment_containerViewForShowDetails"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:layout_marginLeft="4dp"
+             android:visibility="gone"
+             android:layout_marginRight="4dp" />
+<!--     </androidx.core.widget.NestedScrollView>-->
     </LinearLayout>
         <com.google.android.material.navigation.NavigationView
             android:layout_width="wrap_content"

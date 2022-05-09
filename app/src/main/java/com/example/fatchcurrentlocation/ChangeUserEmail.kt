@@ -12,9 +12,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.example.fatchcurrentlocation.DataClasses.MyDataClass
 import com.example.fatchcurrentlocation.DataClasses.ResponseDataClass
-import com.example.fatchcurrentlocation.databinding.FragmentAccountDetailsBinding
 import com.example.fatchcurrentlocation.databinding.FragmentChangeUserEmailBinding
-import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -68,7 +66,7 @@ binding.changeUserEmailGoBackBtn.setOnClickListener(object :View.OnClickListener
                                                 if (response.isSuccessful) {
                                                     progressBar.dismiss()
                                                     Log.d("TAG","${response.body()?.me?.avatar_urls?.o}")
-                                                    MyDataClass.responseDataClass.user.email=
+                                                    MyDataClass.responseDataClass?.user?.email=
                                                         response.body()?.me?.email.toString()
                                                     progressBar.dismiss()
                                                     Toast.makeText(context,"Email changed successfully",Toast.LENGTH_LONG).show()

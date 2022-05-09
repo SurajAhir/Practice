@@ -11,6 +11,13 @@ data class Posts(
     val is_reacted_to: Boolean,
     val visitor_reaction_id: Int,
     val reaction_score: Int,
-    val User:User
-
+    val User:User,
+    val Attachments:List<AttachmentDataResponse>,
+    val conversation_id:Int,
+    val message_id:Int,
+val attach_count:Int,
+    val is_staff:Boolean,
+    val is_admin:Boolean,
+    val is_super_admin:Boolean,
+    val Thread:Threads
 )

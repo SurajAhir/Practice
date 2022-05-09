@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/showAndReplyConversation_NestedScrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Fragments.ShowAndReplyConversation">
+<androidx.core.widget.NestedScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/showAndReplyConversation_goBack_btn"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/update_status_bg"
+                android:drawableLeft="@drawable/ic_arrow_back_ios_24"
+                android:gravity="center|start"
+                android:paddingLeft="8dp"
+                android:text="Conversations"
+                android:textColor="@color/black" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/showAndReplyConversation_title_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="title"
+                    android:textColor="@color/black" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp">
+
+                    <TextView
+                        android:id="@+id/showAndReplyConversation_recipientName_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_group"
+                        android:drawablePadding="8dp"
+                        android:drawableTint="#C2B9B9"
+                        android:maxLines="1" />
+
+                    <TextView
+                        android:id="@+id/showAndReplyConversation_lastTime_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="6dp"
+                        android:drawableLeft="@drawable/ic_time_24"
+                        android:drawablePadding="8dp"
+                        android:drawableTint="#C2B9B9"
+                        android:maxLines="1" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="vertical"
+                    android:padding="8dp">
+
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:background="@drawable/update_status_bg"-->
+<!--                        android:orientation="vertical"-->
+<!--                        android:padding="3dp">-->
+
+<!--&lt;!&ndash;                        <HorizontalScrollView&ndash;&gt;-->
+<!--&lt;!&ndash;                            android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                            android:layout_height="wrap_content">&ndash;&gt;-->
+
+<!--                            <LinearLayout-->
+<!--                                android:layout_width="match_parent"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:orientation="horizontal"-->
+<!--                                android:weightSum="16"-->
+<!--                                android:padding="4dp">-->
+
+<!--                                <ImageButton-->
+<!--                                    android:id="@+id/showAndReplyConversation_undo"-->
+<!--                                    android:layout_width="0dp"-->
+<!--                                    android:layout_weight="2"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:layout_margin="6dp"-->
+<!--                                    android:background="@drawable/undo"-->
+<!--                                    android:contentDescription="@null" />-->
+
+<!--                                <ImageButton-->
+<!--                                    android:id="@+id/showAndReplyConversation_redo"-->
+<!--                                    android:layout_width="0dp"-->
+<!--                                    android:layout_weight="2"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:layout_margin="6dp"-->
+<!--                                    android:background="@drawable/redo"-->
+<!--                                    android:contentDescription="@null" />-->
+
+<!--                                <ImageButton-->
+<!--                                    android:id="@+id/showAndReplyConversation_bold"-->
+<!--                                    android:layout_width="0dp"-->
+<!--                                    android:layout_weight="2"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:layout_margin="6dp"-->
+<!--                                    android:background="@drawable/ic_b"-->
+<!--                                    android:contentDescription="@null" />-->
+<!--                                <ImageButton-->
+<!--                                    android:id="@+id/showAndReplyConversation_insert_numbers"-->
+<!--                                    android:layout_width="0dp"-->
+<!--                                    android:layout_weight="2"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:layout_margin="6dp"-->
+<!--                                    android:backgroundTint="@color/black"-->
+<!--                                    android:background="@drawable/numbers"-->
+<!--                                    />-->
+<!--                                <ImageButton-->
+<!--                                    android:id="@+id/showAndReplyConversation_italic"-->
+<!--                                    android:layout_width="0dp"-->
+<!--                                    android:layout_weight="2"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:layout_margin="6dp"-->
+<!--                                    android:background="@drawable/ic_i"-->
+<!--                                    android:backgroundTint="@color/black"-->
+<!--                                    android:contentDescription="@null" />-->
+
+<!--                                <ImageButton-->
+<!--                                    android:id="@+id/showAndReplyConversation_underline"-->
+<!--                                    android:layout_width="0dp"-->
+<!--                                    android:layout_weight="2"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:layout_margin="6dp"-->
+<!--                                    android:backgroundTint="@color/black"-->
+<!--                                    android:background="@drawable/underline"-->
+<!--                                    android:contentDescription="@null" />-->
+
+<!--                                <ImageButton-->
+<!--                                    android:id="@+id/showAndReplyConversation_font_size_btn"-->
+<!--                                    android:layout_width="0dp"-->
+<!--                                    android:layout_weight="2"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:layout_margin="6dp"-->
+<!--                                    android:background="@drawable/font_size" />-->
+
+
+<!--                                <ImageButton-->
+<!--                                    android:id="@+id/showAndReplyConversation_insert_link"-->
+<!--                                    android:layout_width="0dp"-->
+<!--                                    android:layout_weight="2"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:layout_margin="6dp"-->
+<!--                                    android:backgroundTint="@color/black"-->
+<!--                                    android:background="@drawable/insert_link"-->
+<!--                                    android:contentDescription="@null" />-->
+
+<!--                            </LinearLayout>-->
+<!--&lt;!&ndash;                        </HorizontalScrollView>&ndash;&gt;-->
+
+<!--                        <View-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="1dp"-->
+<!--                            android:layout_marginTop="2dp"-->
+<!--                            android:background="#B2ABAB" />-->
+
+<!--                        <LinearLayout-->
+<!--                            android:id="@+id/showAndReplyConversation_insert_link_Layout"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:orientation="vertical"-->
+<!--                            android:padding="3dp"-->
+<!--                            android:visibility="gone">-->
+
+<!--                            <EditText-->
+<!--                                android:id="@+id/showAndReplyConversation_Url_et"-->
+<!--                                android:layout_width="match_parent"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:background="@drawable/update_status_bg"-->
+<!--                                android:hint="URL"-->
+<!--                                android:padding="3dp" />-->
+
+<!--                            <EditText-->
+<!--                                android:id="@+id/showAndReplyConversation_Text_et"-->
+<!--                                android:layout_width="match_parent"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_marginTop="3dp"-->
+<!--                                android:background="@drawable/update_status_bg"-->
+<!--                                android:hint="Text"-->
+<!--                                android:padding="3dp" />-->
+
+<!--                            <TextView-->
+<!--                                android:id="@+id/showAndReplyConversation_insert_link_btn"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_gravity="right"-->
+<!--                                android:layout_marginTop="3dp"-->
+<!--                                android:layout_marginRight="8dp"-->
+<!--                                android:background="@color/black"-->
+<!--                                android:padding="3dp"-->
+<!--                                android:text="Insert"-->
+<!--                                android:textColor="@color/white" />-->
+<!--                        </LinearLayout>-->
+
+<!--                        <jp.wasabeef.richeditor.RichEditor-->
+<!--                            android:id="@+id/showAndReplyConversation_RichEditor"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginLeft="2dp"-->
+<!--                            android:layout_marginTop="3dp"-->
+<!--                            android:minHeight="130dp" />-->
+<!--                    </LinearLayout>-->
+                                <EditText
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="10dp"
+                                    android:background="@drawable/update_status_bg"
+                                    android:minHeight="100dp"
+                                    android:hint="Write here..."
+                                    android:gravity="start"
+                                    android:paddingRight="10dp"
+                                    android:id="@+id/showAndReplyConversation_message_et"
+                                    android:textColor="@color/black"/>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/showAndReplyConversation_recyclerViewForAttachments"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:visibility="gone" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="horizontal"
+                        android:weightSum="10">
+
+                        <TextView
+                            android:id="@+id/showAndReplyConversation_attach_file_btn"
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginRight="15dp"
+                            android:layout_weight="5"
+                            android:background="@drawable/update_status_bg"
+                            android:drawableLeft="@drawable/ic_attach_file"
+                            android:drawablePadding="4dp"
+                            android:elevation="8dp"
+                            android:gravity="center|start"
+                            android:paddingLeft="8dp"
+                            android:text="Attach files" />
+
+                        <TextView
+                            android:id="@+id/showAndReplyConversation_post_Reply_btn"
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginRight="15dp"
+                            android:layout_weight="5"
+                            android:background="@color/black"
+                            android:drawableLeft="@drawable/ic_post"
+                            android:drawablePadding="4dp"
+                            android:drawableTint="@color/white"
+                            android:elevation="8dp"
+                            android:gravity="center|start"
+                            android:paddingLeft="18dp"
+                            android:text="Post reply"
+                            android:textColor="@color/white" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!--            <LinearLayout-->
+                <!--                android:layout_width="match_parent"-->
+                <!--                android:layout_height="wrap_content"-->
+                <!--                android:layout_marginTop="10dp"-->
+                <!--                android:gravity="center">-->
+
+                <!--                <TextView-->
+                <!--                    android:id="@+id/showAndReplyConversation_star_btn"-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:background="@drawable/update_status_bg"-->
+                <!--                    android:padding="6dp"-->
+                <!--                    android:text="Star" />-->
+
+                <!--                <TextView-->
+                <!--                    android:id="@+id/showAndReplyConversation_markUnread_btn"-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:background="@drawable/update_status_bg"-->
+                <!--                    android:padding="6dp"-->
+                <!--                    android:text="Mark unread" />-->
+
+                <!--                <TextView-->
+                <!--                    android:id="@+id/showAndReplyConversation_leave_btn"-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:background="@drawable/update_status_bg"-->
+                <!--                    android:padding="6dp"-->
+                <!--                    android:text="Leave" />-->
+                <!--            </LinearLayout>-->
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/showAndReplyConversation_recyclerViewForThreads"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="10dp"
+                tools:listitem="@layout/show_posts_of_threads_custom_layout" />
+
+            <ProgressBar
+                android:id="@+id/showAndReplyConversation_progressBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/black"
+            android:drawableLeft="@drawable/ic_double_arrow_right_24"
+            android:drawablePadding="6dp"
+            android:drawableTint="@color/white"
+            android:padding="10dp"
+            android:text="Conversation participants"
+            android:textColor="@color/white" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/showAndReplyConversation_recyclerViewForParticipants"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="10dp"
+            tools:listitem="@layout/show_participants_custom_layout" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#F1EDED" />
+
+        <TextView
+            android:id="@+id/showAndReplyConversation_inviteMore_Btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="10dp"
+            android:padding="6dp"
+            android:text="Invite more"
+            android:textColor="@color/black" />
+
+        <LinearLayout
+            android:id="@+id/showAndReplyConversation_inviteLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#8FF1E8E8"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:padding="8dp"
+                    android:text="Invite members to conversation"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <ImageButton
+                    android:id="@+id/showAndReplyConversation_closeInviteDialog_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_close_24" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="Invite members:"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:background="@drawable/update_status_bg"
+                android:orientation="vertical"
+                android:padding="1dp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/showAndReplyConversation_recyclerViewForShowSelectUsersName"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="4dp"
+                    android:layout_weight="1"
+                    tools:listitem="@layout/show_selected_users_name_custom_layuot" />
+
+                <EditText
+                    android:id="@+id/showAndReplyConversation_findRecipient_Et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:minHeight="40dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp" />
+
+                <ListView
+                    android:id="@+id/showAndReplyConversation_listView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/update_status_bg"
+                    tools:listitem="@layout/show_recipients_user_name_custom_layout" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:text="@string/invite" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                android:background="#D3D1D1" />
+
+            <Button
+                android:id="@+id/showAndReplyConversation_invite_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="6dp"
+                android:backgroundTint="@color/black"
+                android:text="Invite"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
+</LinearLayout>

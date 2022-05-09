@@ -7,5 +7,10 @@ data class ResponseThread(
     val sticky: List<Threads>,
     var success: Boolean,
     val attachment: AttachmentDataResponse,
-    val alerts:List<Alerts>
+    val alerts:List<Alerts>,
+    val conversations:List<Conversations>,
+    val conversation:Conversations,
+    val recommendations:List<User>,
+    val exact:User,
+    val post:Posts
 )

@@ -7,5 +7,7 @@ data class Threads(
     val post_date: Long,
     val User: User,
     val thread_id: Int,
-    val Forum:ForumUser
+    val Forum:ForumUser,
+    val last_post_date:Long,
+    val username:String
 )

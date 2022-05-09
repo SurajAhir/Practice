@@ -1,13 +1,15 @@
 package com.example.fatchcurrentlocation
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.Picture
 import android.graphics.Typeface
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.View
+import android.view.*
 import android.widget.DatePicker
 import android.widget.ImageButton
 import android.widget.Toast
@@ -18,22 +20,23 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.fatchcurrentlocation.AdaptersClasses.NodesAdatperClass
+import com.example.fatchcurrentlocation.AdaptersClasses.ShowNodesAdapter
 import com.example.fatchcurrentlocation.AdaptersClasses.ShowPostsOfThreadsAdapter
 import com.example.fatchcurrentlocation.AdaptersClasses.UserProfileAdapter
-import com.example.fatchcurrentlocation.DataClasses.MyDataClass
-import com.example.fatchcurrentlocation.DataClasses.Node
-import com.example.fatchcurrentlocation.DataClasses.NodesData1
-import com.example.fatchcurrentlocation.DataClasses.ResponseDataClass
-import com.example.fatchcurrentlocation.Fragments.AccountDetails
-import com.example.fatchcurrentlocation.Fragments.Notification
-import com.example.fatchcurrentlocation.Fragments.SelectThreadToPost
-import com.example.fatchcurrentlocation.Fragments.YourAccount
+import com.example.fatchcurrentlocation.DataClasses.*
+import com.example.fatchcurrentlocation.Fragments.*
 import com.example.fatchcurrentlocation.ReactionDialogWork.ReactionDialogClass
 import com.example.fatchcurrentlocation.ReactionDialogWork.ReactionListener
 import com.example.fatchcurrentlocation.databinding.ActivityHomeBinding
+import com.google.android.gms.ads.*
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.material.navigation.NavigationView
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import retrofit2.Call
@@ -42,47 +45,62 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import java.text.DateFormat
 import java.util.*
+import kotlin.concurrent.thread
+
 
 class Home : AppCompatActivity(),
-    ReactionListener,DatePickerDialog.OnDateSetListener {
+    ReactionListener, DatePickerDialog.OnDateSetListener {
+    private var mInterstitialAd: InterstitialAd? = null
+    var adRequest: AdRequest? = null
+    var TAG = "TAG"
+    lateinit var mInterstitialAdLoadCallback: InterstitialAdLoadCallback
     lateinit var binding: ActivityHomeBinding
     var responseDataObject: ResponseDataClass? = null
     lateinit var goUserProfile: CircleImageView
-    lateinit var goUserEmail: ImageButton
     lateinit var goUserNotification: ImageButton
-    lateinit var goUserElectric: ImageButton
-    lateinit var goUserSearch: ImageButton
     lateinit var drawerLayout: DrawerLayout
     lateinit var navigationView: NavigationView
     lateinit var toolbar: Toolbar
     lateinit var toggle: ActionBarDrawerToggle
-    lateinit var listGeneral: LinkedList<NodesData1>
+    var isClickedList: ArrayList<Boolean> = ArrayList()
     lateinit var list: List<NodesData1>
-    lateinit var listBanking: LinkedList<NodesData1>
-    lateinit var listOffer: LinkedList<NodesData1>
-    lateinit var listPersonal: LinkedList<NodesData1>
-    lateinit var listTravelling: LinkedList<NodesData1>
-    lateinit var listForeign: LinkedList<NodesData1>
-    lateinit var recyclerViewGeneral: RecyclerView
-    lateinit var recyclerViewBanking: RecyclerView
-    lateinit var recyclerViewOffers: RecyclerView
-    lateinit var recyclerViewPersonalFinance: RecyclerView
-    lateinit var recyclerViewTravelling: RecyclerView
-    lateinit var recyclerViewForeignCredit: RecyclerView
+    lateinit var treeMap: TreeMap<String, List<Int>>
     var goProfile: Boolean = false
-    var goNotification:Boolean=false
-    var valid1: Boolean = false
-    var valid2: Boolean = false
-    var valid3: Boolean = false
-    var valid4: Boolean = false
-    var valid5: Boolean = false
-    var valid6: Boolean = false
+    var goNotification: Boolean = false
+    var goConversation: Boolean = false
+
+    @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
+        savedInstanceState?.clear()
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        checkDevicePermission()
         initialize()
-       fetchDatFromApi()
+        mobileAdInitialize()
+        initializeAddObject()
+        fetchDatFromApi()
+        binding.homeUserAccountProfileTv.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(p0: View?) {
+                if (goProfile) {
+                    goProfile = false
+                    MyDataClass.homeFragmentContainerView.visibility = View.GONE
+                    MyDataClass.homeNestedScrollView.visibility = View.VISIBLE
+                    startActivity(Intent(this@Home, Home().javaClass))
+                } else {
+                    goProfile = true
+                    MyDataClass.homeFragmentContainerView.visibility = View.VISIBLE
+                    MyDataClass.homeNestedScrollView.visibility = View.GONE
+                    var fragmentTransaction: FragmentTransaction =
+                        supportFragmentManager.beginTransaction()
+                    MyDataClass.responseDataClass?.let { YourAccount(it) }?.let {
+                        fragmentTransaction.replace(R.id.home_fragment_containerViewForShowDetails,
+                            it)
+                    }
+                    fragmentTransaction.addToBackStack(null).commit()
+                }
+            }
+        })
         goUserProfile.setOnClickListener(object : View.OnClickListener {
             override fun onClick(p0: View?) {
                 if (goProfile) {
@@ -96,151 +114,26 @@ class Home : AppCompatActivity(),
                     MyDataClass.homeNestedScrollView.visibility = View.GONE
                     var fragmentTransaction: FragmentTransaction =
                         supportFragmentManager.beginTransaction()
-                    fragmentTransaction.replace(R.id.home_fragment_containerViewForShowDetails,
-                        YourAccount(MyDataClass.responseDataClass))
-                    fragmentTransaction.commit()
+                    MyDataClass.responseDataClass?.let { YourAccount(it) }?.let {
+                        fragmentTransaction.replace(R.id.home_fragment_containerViewForShowDetails,
+                            it)
+                    }
+                    fragmentTransaction.addToBackStack(null).commit()
                 }
             }
         })
-        binding.homeGeneralRightArrowBtn.setOnClickListener(object : View.OnClickListener {
+        binding.homePostThread.setOnClickListener(object : View.OnClickListener {
             override fun onClick(p0: View?) {
-                if (valid1) {
-                    recyclerViewGeneral.visibility = View.GONE
-                    binding.homeGeneralRightArrowBtn.setBackgroundResource(R.drawable.ic_arrow_right_24)
-                    valid1 = false
-                } else {
-                    binding.homeGeneralRightArrowBtn.setBackgroundResource(R.drawable.ic_arrow_drop_down_24)
-                    valid1 = true
-                    recyclerViewGeneral.visibility = View.VISIBLE
-                    recyclerViewGeneral.adapter = NodesAdatperClass(this@Home,
-                        listGeneral,
-                        15,
-                        binding.linearLayout,
-                        binding.homeFragmentContainerViewForShowDetails,
-                        binding.homeGeneralTv.text.toString(),
-                        binding.homeScrollBar)
-                    recyclerViewGeneral.layoutManager = LinearLayoutManager(this@Home)
-                }
+                MyDataClass.homeNestedScrollView.visibility = View.GONE
+                MyDataClass.homeFragmentContainerView.visibility = View.VISIBLE
+                Log.d("TAG", "POSTTHREAD BUTTON")
+                var transaction = MyDataClass.getTransaction()
+                transaction.replace(R.id.home_fragment_containerViewForShowDetails,
+                    SelectThreadToPost())
+                transaction.addToBackStack(null).commit()
             }
         })
-        binding.homeBankingRightArrowBtn.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(p0: View?) {
-                if (valid2) {
-                    valid2 = false
-                    binding.homeBankingRightArrowBtn.setBackgroundResource(R.drawable.ic_arrow_right_24)
-                    recyclerViewBanking.visibility = View.GONE
-                } else {
-                    valid2 = true
-                    binding.homeBankingRightArrowBtn.setBackgroundResource(R.drawable.ic_arrow_drop_down_24)
-                    recyclerViewBanking.visibility = View.VISIBLE
-                    recyclerViewBanking.adapter = NodesAdatperClass(this@Home,
-                        listBanking,
-                        1,
-                        binding.linearLayout,
-                        binding.homeFragmentContainerViewForShowDetails,
-                        binding.homeGeneralTv.text.toString(),
-                        binding.homeScrollBar
-                    )
-                    recyclerViewBanking.layoutManager = LinearLayoutManager(this@Home)
-                }
-            }
-        })
-        binding.homeOffersRightArrowBtn.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(p0: View?) {
-                if (valid3) {
-                    valid3 = false
-                    binding.homeOffersRightArrowBtn.setBackgroundResource(R.drawable.ic_arrow_right_24)
-                    recyclerViewOffers.visibility = View.GONE
-                } else {
-                    valid3 = true
-                    binding.homeOffersRightArrowBtn.setBackgroundResource(R.drawable.ic_arrow_drop_down_24)
-                    recyclerViewOffers.visibility = View.VISIBLE
-                    recyclerViewOffers.adapter = NodesAdatperClass(this@Home,
-                        listOffer,
-                        3,
-                        binding.linearLayout,
-                        binding.homeFragmentContainerViewForShowDetails,
-                        binding.homeGeneralTv.text.toString(),
-                        binding.homeScrollBar)
-                    recyclerViewOffers.layoutManager = LinearLayoutManager(this@Home)
-                }
-            }
-        })
-        binding.homePersonalFinaceRightArrowBtn.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(p0: View?) {
-                if (valid4) {
-                    valid4 = false
-                    recyclerViewPersonalFinance.visibility = View.GONE
-                    binding.homePersonalFinaceRightArrowBtn.setBackgroundResource(R.drawable.ic_arrow_right_24)
-                } else {
-                    valid4 = true
-                    binding.homePersonalFinaceRightArrowBtn.setBackgroundResource(R.drawable.ic_arrow_drop_down_24)
-                    recyclerViewPersonalFinance.visibility = View.VISIBLE
-                    recyclerViewPersonalFinance.adapter =
-                        NodesAdatperClass(this@Home,
-                            listPersonal,
-                            11,
-                            binding.linearLayout,
-                            binding.homeFragmentContainerViewForShowDetails,
-                            binding.homeGeneralTv.text.toString(),
-                            binding.homeScrollBar)
-                    recyclerViewPersonalFinance.layoutManager = LinearLayoutManager(this@Home)
-                }
-            }
-        })
-        binding.homeTravellingRightArrowBtn.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(p0: View?) {
-                if (valid5) {
-                    valid5 = false
-                    recyclerViewTravelling.visibility = View.GONE
-                    binding.homeTravellingRightArrowBtn.setBackgroundResource(R.drawable.ic_arrow_right_24)
-                } else {
-                    valid5 = true
-                    binding.homeTravellingRightArrowBtn.setBackgroundResource(R.drawable.ic_arrow_drop_down_24)
-                    recyclerViewTravelling.visibility = View.VISIBLE
-                    recyclerViewTravelling.adapter =
-                        NodesAdatperClass(this@Home,
-                            listTravelling,
-                            18,
-                            binding.linearLayout,
-                            binding.homeFragmentContainerViewForShowDetails,
-                            binding.homeGeneralTv.text.toString(),
-                            binding.homeScrollBar)
-                    recyclerViewTravelling.layoutManager = LinearLayoutManager(this@Home)
-                }
-            }
-        })
-        binding.homeForeignCreditArrowbtn.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(p0: View?) {
-                if (valid6) {
-                    valid6 = false
-                    recyclerViewForeignCredit.visibility = View.GONE
-                    binding.homeForeignCreditArrowbtn.setBackgroundResource(R.drawable.ic_arrow_right_24)
-                } else {
-                    valid6 = true
-                    binding.homeForeignCreditArrowbtn.setBackgroundResource(R.drawable.ic_arrow_drop_down_24)
-                    recyclerViewForeignCredit.visibility = View.VISIBLE
-                    recyclerViewForeignCredit.adapter =
-                        NodesAdatperClass(this@Home,
-                            listForeign,
-                            21,
-                            binding.linearLayout,
-                            binding.homeFragmentContainerViewForShowDetails,
-                            binding.homeGeneralTv.text.toString(), binding.homeScrollBar)
-                    recyclerViewForeignCredit.layoutManager = LinearLayoutManager(this@Home)
-                }
-            }
-        })
-binding.homePostThread.setOnClickListener(object :View.OnClickListener{
-    override fun onClick(p0: View?) {
-        MyDataClass.homeNestedScrollView.visibility=View.GONE
-        MyDataClass.homeFragmentContainerView.visibility=View.VISIBLE
-        var transaction=MyDataClass.getTransaction()
-        transaction.replace(R.id.home_fragment_containerViewForShowDetails,SelectThreadToPost())
-        transaction.commit()
-    }
-})
-        binding.homeNotification.setOnClickListener(object :View.OnClickListener{
+        binding.homeNotification.setOnClickListener(object : View.OnClickListener {
             override fun onClick(p0: View?) {
                 if (goNotification) {
                     goNotification = false
@@ -255,42 +148,203 @@ binding.homePostThread.setOnClickListener(object :View.OnClickListener{
                         supportFragmentManager.beginTransaction()
                     fragmentTransaction.replace(R.id.home_fragment_containerViewForShowDetails,
                         Notification())
-                    fragmentTransaction.commit()
+                    fragmentTransaction.addToBackStack(null).commit()
                 }
             }
         })
-
+        binding.homeEmail.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(p0: View?) {
+                if (goConversation) {
+                    goConversation = false
+                    MyDataClass.homeFragmentContainerView.visibility = View.GONE
+                    MyDataClass.homeNestedScrollView.visibility = View.VISIBLE
+                    startActivity(Intent(this@Home, Home().javaClass))
+                } else {
+                    goConversation = true
+                    MyDataClass.homeFragmentContainerView.visibility = View.VISIBLE
+                    MyDataClass.homeNestedScrollView.visibility = View.GONE
+                    var fragmentTransaction: FragmentTransaction =
+                        supportFragmentManager.beginTransaction()
+                    fragmentTransaction.replace(R.id.home_fragment_containerViewForShowDetails,
+                        ShowConversations())
+                    fragmentTransaction.addToBackStack(null).commit()
+                }
+            }
+        })
+        navigationView.setNavigationItemSelectedListener(object :
+            NavigationView.OnNavigationItemSelectedListener {
+            override fun onNavigationItemSelected(item: MenuItem): Boolean {
+                when (item.itemId) {
+                    R.id.whatsNew -> {
+                        var transaction = supportFragmentManager.beginTransaction()
+                        MyDataClass.homeFragmentContainerView.visibility = View.VISIBLE
+                        MyDataClass.homeNestedScrollView.visibility = View.GONE
+                        transaction.replace(R.id.home_fragment_containerViewForShowDetails,
+                            ShowLatestPosts())
+                        transaction.addToBackStack(null).commit()
+                        drawerLayout.closeDrawer(Gravity.LEFT)
+                    }
+                    R.id.youtube -> {
+                        val url = "https://www.youtube.com/"
+                        val i = Intent(Intent.ACTION_VIEW)
+                        i.data = Uri.parse(url)
+                        startActivity(i)
+                        drawerLayout.closeDrawer(Gravity.LEFT)
+                    }
+                    R.id.messages -> {
+                        goConversation = true
+                        MyDataClass.homeFragmentContainerView.visibility = View.VISIBLE
+                        MyDataClass.homeNestedScrollView.visibility = View.GONE
+                        var fragmentTransaction: FragmentTransaction =
+                            supportFragmentManager.beginTransaction()
+                        fragmentTransaction.replace(R.id.home_fragment_containerViewForShowDetails,
+                            ShowConversations())
+                        fragmentTransaction.addToBackStack(null).commit()
+                        drawerLayout.closeDrawer(Gravity.LEFT)
+                    }
+                    R.id.home -> {
+                        startActivity(Intent(this@Home, Home()::class.java))
+                        finish()
+                        drawerLayout.closeDrawer(Gravity.LEFT)
+                    }
+                }
+                return true
+            }
+        })
     }
 
+    private fun checkDevicePermission() {
+        Dexter.withActivity(this)
+            .withPermissions(android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            .withListener(object : MultiplePermissionsListener {
+                override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+                    if (report?.areAllPermissionsGranted() == false) {
+                        Toast.makeText(this@Home, "Allow Storage Permission!", Toast.LENGTH_LONG)
+                            .show()
+                    }
+                }
+
+                override fun onPermissionRationaleShouldBeShown(
+                    permissions: MutableList<PermissionRequest>?,
+                    token: PermissionToken?,
+                ) {
+                    token?.continuePermissionRequest()
+                }
+
+            }).check()
+    }
+
+    @SuppressLint("RestrictedApi")
+    private fun initializeAddObject() {
+        mInterstitialAdLoadCallback =
+            object : InterstitialAdLoadCallback() {
+                override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                    super.onAdFailedToLoad(loadAdError)
+                    InterstitialAd.load(this@Home,
+                        "ca-app-pub-3940256099942544/1033173712",
+                        adRequest,
+                        this)
+                }
+
+                override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                    super.onAdLoaded(interstitialAd)
+                    mInterstitialAd = interstitialAd
+//                    if (mInterstitialAd != null) {
+//                        mInterstitialAd!!.show(getActivity(this@Home))
+//                    } else {
+//                        Log.d("TAG", "The interstitial ad wasn't ready yet.")
+//                    }
+                    mInterstitialAd!!.setFullScreenContentCallback(object :
+                        FullScreenContentCallback() {
+                        override fun onAdDismissedFullScreenContent() {
+                            // Called when fullscreen content is dismissed.
+                            Log.d("TAG", "The ad was dismissed.")
+                        }
+
+                        override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                            // Called when fullscreen content failed to show.
+                            Log.d("TAG", "The ad failed to show.")
+                        }
+
+                        override fun onAdShowedFullScreenContent() {
+                            // Called when fullscreen content is shown.
+                            // Make sure to set your reference to null so you don't
+                            // show it a second time.
+                            mInterstitialAd = null
+                            Log.d("TAG", "The ad was shown.")
+                        }
+                    })
+                }
+            }
+        loadAd()
+    }
 
     private fun fetchDatFromApi() {
-
+        var list1ForChildNode: LinkedHashMap<Int, ArrayList<NodesData1>> = LinkedHashMap()
+        var list1ForParentNode: LinkedHashMap<Int, ArrayList<NodesData1>> = LinkedHashMap()
+        var list1ForChildSubNode: LinkedHashMap<Int, ArrayList<NodesData1>> = LinkedHashMap()
+        var arrayListForChildNode: ArrayList<NodesData1>
+        var arrayListForParentNode: ArrayList<NodesData1>
+        var arrayListForChildSubNode: ArrayList<NodesData1>
+        var index = 0
+        var indexForSubNode = 0
         var retrofit: Retrofit = RetrofitManager.getRetrofit1()
         var api: HitApi = retrofit.create(HitApi::class.java)
         api.getNodesResponse("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4").enqueue(object : Callback<Node> {
             override fun onResponse(call: Call<Node>, response: Response<Node>) {
-                Log.d("TAG", "Suraj$response.code().toString()")
                 list = response.body()!!.nodes
-                for (i in 0..list.size - 1) {
-                    if (list[i].parent_node_id.equals(15)) {
-                        listGeneral.add(list[i])
+                treeMap = response.body()!!.tree_map
+                for (j in treeMap.get("0")!!) {
+                    index = j
+                    arrayListForChildNode = ArrayList()
+                    arrayListForParentNode = ArrayList()
+                    arrayListForChildSubNode = ArrayList()
+                    var listForSubNodeId: ArrayList<Int> = ArrayList()
+                    for (i in 0..list.size - 1) {
+                        if (list.get(i).parent_node_id.equals(j)) {
+                            arrayListForChildNode.add(list.get(i))
+                            listForSubNodeId.add(list.get(i).node_id)
+                        }
+                        if (list.get(i).node_id.equals(j)) {
+                            arrayListForParentNode.add(list.get(i))
+                        }
                     }
-                    if (list[i].parent_node_id.equals(1)) {
-                        listBanking.add(list[i])
+                    for (id in listForSubNodeId) {
+                        for (i in 0..list.size - 1) {
+                            if (list.get(i).parent_node_id == id) {
+                                arrayListForChildSubNode.add(list.get(i))
+                                indexForSubNode = id
+                            }
+                        }
+                        if (!arrayListForChildSubNode.isEmpty()) {
+                            list1ForChildSubNode.put(indexForSubNode, arrayListForChildSubNode)
+                        }
                     }
-                    if (list[i].parent_node_id.equals(3)) {
-                        listOffer.add(list[i])
-                    }
-                    if (list[i].parent_node_id.equals(11)) {
-                        listPersonal.add(list[i])
-                    }
-                    if (list[i].parent_node_id.equals(18)) {
-                        listTravelling.add(list[i])
-                    }
-                    if (list[i].parent_node_id.equals(21)) {
-                        listForeign.add(list[i])
+                    list1ForChildNode.put(index, arrayListForChildNode)
+                    list1ForParentNode.put(index, arrayListForParentNode)
+
+                }
+                var parentNodeId = treeMap.get("0")
+                for (i in 0..(parentNodeId?.size!! - 1)) {
+                    if(i<2){
+                        isClickedList.add(true)
+                    }else{
+                    isClickedList.add(false)
                     }
                 }
+              if(MyDataClass.isClickedValueForBtn==false){
+                  MyDataClass.isClickedList=isClickedList
+              }
+
+                binding.homeRecyclerView.adapter =
+                    treeMap.get("0")?.let {
+                        ShowNodesAdapter(this@Home,
+                            it,
+                            list1ForChildNode,
+                            list1ForParentNode, MyDataClass.isClickedList, list1ForChildSubNode)
+                    }
+                binding.homeRecyclerView.layoutManager = LinearLayoutManager(this@Home)
 
             }
 
@@ -302,32 +356,70 @@ binding.homePostThread.setOnClickListener(object :View.OnClickListener{
     }
 
     private fun initialize() {
+        var progressDialog = ProgressDialog(this)
+        progressDialog.setMessage("Please wait...")
+        var sharedPreferences = getSharedPreferences("LoginUserDetails", MODE_PRIVATE)
+//        val gson = Gson()
+//        val json: String = sharedPreferences.getString("MyObject", "").toString()
+//        val responseDataObject:ResponseDataClass = gson.fromJson(json, ResponseDataClass::class.java)
+//        MyDataClass.responseDataClass=responseDataObject
+//        MyDataClass.myUserId= responseDataObject?.user?.user_id!!
+//        val adMobInitialzer = AdMobInitialzer(getContext(), root.findViewById(R.id.adView))
         MyDataClass.homeFragmentContainerView = binding.homeFragmentContainerViewForShowDetails
         MyDataClass.homeNestedScrollView = binding.homeScrollBar
         MyDataClass.getTransaction = ::getFragmentTransaction
         MyDataClass.onBack = ::onBackPressed
         MyDataClass.reactionDialog = ::getReactionsDialog
-        responseDataObject = intent.getSerializableExtra("responseDataObject") as ResponseDataClass?
-        Picasso.get().load(MyDataClass.responseDataClass?.user?.avatar_urls?.o).placeholder(R.drawable.ic_no_image).into(binding.homeUserAccountProfile)
-        goUserElectric = findViewById(R.id.home_electric)
-        goUserEmail = findViewById(R.id.home_email)
+        if (MyDataClass.responseDataClass == null) {
+            binding.homeScrollBar.visibility = View.VISIBLE
+            binding.homeFragmentContainerViewForShowDetails.visibility = View.GONE
+            var retrofit = RetrofitManager.getRetrofit1()
+            var api = retrofit.create(HitApi::class.java)
+            var sharedPreferences = getSharedPreferences("LoginUserDetails", MODE_PRIVATE)
+            var userId = sharedPreferences.getInt("userId", 1)
+            progressDialog.show()
+            thread {
+                api.getUsersProfileResponse("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4", userId)
+                    .enqueue(object : Callback<ResponseDataClass> {
+                        override fun onResponse(
+                            call: Call<ResponseDataClass>,
+                            response: Response<ResponseDataClass>,
+                        ) {
+                            if (response.isSuccessful) {
+
+                                MyDataClass.responseDataClass = response.body()!!
+                                progressDialog.dismiss()
+                            }
+                        }
+
+                        override fun onFailure(call: Call<ResponseDataClass>, t: Throwable) {
+
+                        }
+                    })
+            }
+
+        }
+
+        var editor = sharedPreferences.edit()
+        editor.putBoolean("valid", true)
+        editor.commit()
+        if (MyDataClass.responseDataClass?.user?.avatar_urls?.o == null) {
+            binding.homeUserAccountProfileTv.visibility = View.VISIBLE
+            binding.homeUserAccountProfile.visibility = View.GONE
+            binding.homeUserAccountProfileTv.gravity = Gravity.CENTER
+            binding.homeUserAccountProfileTv.setText(MyDataClass.responseDataClass?.user?.username?.get(
+                0).toString())
+        } else {
+            Picasso.get().load(MyDataClass.responseDataClass?.user?.avatar_urls?.o)
+                .placeholder(R.drawable.person)
+                .into(binding.homeUserAccountProfile)
+        }
+        Picasso.get().load(MyDataClass.responseDataClass?.user?.avatar_urls?.o)
+            .placeholder(R.drawable.ic_no_image).into(binding.homeUserAccountProfile)
         goUserNotification = findViewById(R.id.home_notification)
-        goUserSearch = findViewById(R.id.home_search)
         goUserProfile = findViewById(R.id.home_userAccountProfile)
         drawerLayout = findViewById(R.id.home_drawer)
-        recyclerViewGeneral = findViewById(R.id.home_general_recyclerView)
-        recyclerViewBanking = findViewById(R.id.home_banking_recyclerView)
-        recyclerViewOffers = findViewById(R.id.home_offers_recyclerView)
-        recyclerViewPersonalFinance = findViewById(R.id.home_personalFinace_recyclerView)
-        recyclerViewTravelling = findViewById(R.id.home_travelling_recyclerView)
-        recyclerViewForeignCredit = findViewById(R.id.home_foreign_credit_recyclerView)
         navigationView = findViewById(R.id.home_navigation_view)
-        listGeneral = LinkedList()
-        listBanking = LinkedList()
-        listOffer = LinkedList()
-        listPersonal = LinkedList()
-        listTravelling = LinkedList()
-        listForeign = LinkedList()
         toolbar = findViewById(R.id.home_toolbar)
         toggle = ActionBarDrawerToggle(this@Home,
             drawerLayout,
@@ -338,28 +430,80 @@ binding.homePostThread.setOnClickListener(object :View.OnClickListener{
         toggle.syncState()
     }
 
+    private fun mobileAdInitialize() {
+        MobileAds.initialize(this
+        ) { }
+    }
+
+
+    @SuppressLint("RestrictedApi")
+    private fun loadAd() {
+        adRequest = AdRequest.Builder().build()
+        InterstitialAd.load(this,
+            "ca-app-pub-3940256099942544/1033173712",
+            adRequest,
+            mInterstitialAdLoadCallback)
+    }
+
     override fun onBackPressed() {
         val count = supportFragmentManager.backStackEntryCount
-        if (goProfile) {
-            goProfile = false
+        Log.d("TAG", "count $count")
+        if (drawerLayout.isOpen) {
+            drawerLayout.closeDrawer(Gravity.LEFT)
+        } else if (count == 0) {
+            super.onBackPressed()
+        } else if (MyDataClass.isEnteredInShowDetails) {
+            Log.d("TAG", "isEnteredShowDetails")
+            MyDataClass.isEnteredInShowDetails = false
+            supportFragmentManager.popBackStack()
             startActivity(Intent(this, Home().javaClass))
             finish()
-        } else if (count == 0) {
-            if (MyDataClass.countFrag == -1) {
-                super.onBackPressed()
-            } else {
-                MyDataClass.countFrag--
-                startActivity(Intent(this, Home().javaClass))
-                finish()
-            }
-
+        } else if (MyDataClass.isGoConversation) {
+            Log.d("TAG", "isGoconversation")
+            MyDataClass.isGoConversation = false
+            supportFragmentManager.popBackStack()
+            startActivity(Intent(this, Home().javaClass))
+            finish()
+        } else if (MyDataClass.isGoNotification) {
+            Log.d("TAG", "goNotification")
+            MyDataClass.isGoNotification = false
+            supportFragmentManager.popBackStack()
+            startActivity(Intent(this, Home().javaClass))
+            finish()
+        } else if (MyDataClass.isGoProfile) {
+            Log.d("TAG", "goProfile")
+            MyDataClass.isGoProfile = false
+            supportFragmentManager.popBackStack()
+            startActivity(Intent(this, Home().javaClass))
+            finish()
+        } else if (MyDataClass.isPostThread) {
+            Log.d("TAG", "isPostThread")
+            MyDataClass.isPostThread = false
+            supportFragmentManager.popBackStack()
+            startActivity(Intent(this, Home().javaClass))
+            finish()
+        } else if (MyDataClass.isGoForLatestPosts) {
+            Log.d("TAG", "isForLatestPosts")
+            MyDataClass.isGoForLatestPosts = false
+            supportFragmentManager.popBackStack()
+            startActivity(Intent(this, Home().javaClass))
+            finish()
         } else {
+            Log.d("TAG", "poped from stack")
             supportFragmentManager.popBackStack()
         }
     }
 
     fun getFragmentTransaction(): FragmentTransaction {
-        return supportFragmentManager.beginTransaction()
+        var fragmentManager: FragmentTransaction? = null
+        if (!supportFragmentManager.isDestroyed) {
+            fragmentManager = supportFragmentManager.beginTransaction()
+            return fragmentManager
+        } else {
+            startActivity(Intent(this, Home()::class.java))
+            finish()
+        }
+        return fragmentManager!!
     }
 
 
@@ -646,17 +790,27 @@ binding.homePostThread.setOnClickListener(object :View.OnClickListener{
             }
         }
     }
+
     override fun onDateSet(p0: DatePicker?, p1: Int, p2: Int, p3: Int) {
-        var c=Calendar.getInstance()
-        c.set(Calendar.YEAR,p1)
-        c.set(Calendar.MONTH,p2)
-        c.set(Calendar.DATE,p3)
-        var string= DateFormat.getDateInstance().format(c.time)
-        Log.d("TAG","date $p1 $p2 $p3")
-        var list=LinkedList<Int>()
+        var c = Calendar.getInstance()
+        c.set(Calendar.YEAR, p1)
+        c.set(Calendar.MONTH, p2)
+        c.set(Calendar.DATE, p3)
+        var string = DateFormat.getDateInstance().format(c.time)
+        Log.d("TAG", "date $p1 $p2 $p3")
+        var list = LinkedList<Int>()
         list.add(p3)
-        list.add(p2+1)
+        list.add(p2 + 1)
         list.add(p1)
         MyDataClass.datePick(list)
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1002) {
+            var uri1 = FileUtils.getPath(this, data?.data)
+            MyDataClass.onReceiveData(uri1)
+        }
+    }
+
 }

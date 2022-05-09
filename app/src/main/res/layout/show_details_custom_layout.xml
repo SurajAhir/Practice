@@ -16,6 +16,13 @@
         android:src="@drawable/person"
         app:civ_border_color="#AAAAAA"
         app:civ_border_width="2dp"/>
+        <TextView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:textAllCaps="true"
+            android:background="@drawable/custom_circle_shape"
+            android:id="@+id/show_details_custom_layout_UserProfileImage_tv"
+            android:visibility="gone"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

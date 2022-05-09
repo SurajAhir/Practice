@@ -1,15 +1,14 @@
 package com.example.fatchcurrentlocation.Fragments
 
-import android.app.DatePickerDialog
 import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.DatePicker
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.fatchcurrentlocation.*
@@ -25,7 +24,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import java.io.File
-import java.text.DateFormat
 import java.util.*
 
 
@@ -60,6 +58,13 @@ class AccountDetails : Fragment() {
             }
         })
         binding.accountDetailsUserProfileImage.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(p0: View?) {
+                var intent = Intent(Intent.ACTION_PICK)
+                intent.setType("image/*")
+                startActivityForResult(intent, 1001)
+            }
+        })
+        binding.accountDetailsUserProfileImageTv.setOnClickListener(object :View.OnClickListener{
             override fun onClick(p0: View?) {
                 var intent = Intent(Intent.ACTION_PICK)
                 intent.setType("image/*")
@@ -139,19 +144,19 @@ class AccountDetails : Fragment() {
                                                 Toast.makeText(context,
                                                     "Your profile updated successfully",
                                                     Toast.LENGTH_LONG).show()
-                                                MyDataClass.responseDataClass.me =
+                                                MyDataClass.responseDataClass?.me =
                                                     response.body()?.me!!
-                                                MyDataClass.responseDataClass.me.show_dob_year =
+                                                MyDataClass.responseDataClass?.me?.show_dob_year =
                                                     response.body()?.me!!.show_dob_year!!
-                                                MyDataClass.responseDataClass.me.show_dob_date =
+                                                MyDataClass.responseDataClass?.me?.show_dob_date =
                                                     response.body()?.me!!.show_dob_date!!
-                                                MyDataClass.responseDataClass.me.receive_admin_email =
+                                                MyDataClass.responseDataClass?.me?.receive_admin_email =
                                                     response.body()?.me!!.receive_admin_email!!
-                                                MyDataClass.responseDataClass.me.location =
+                                                MyDataClass.responseDataClass?.me?.location =
                                                     response.body()?.me!!.location!!
-                                                MyDataClass.responseDataClass.me.website =
+                                                MyDataClass.responseDataClass?.me?.website =
                                                     response.body()?.me!!.website!!
-                                                MyDataClass.responseDataClass.me.about =
+                                                MyDataClass.responseDataClass?.me?.about =
                                                     response.body()?.me!!.about!!
                                                 MyDataClass.onBack()
                                             } else {
@@ -185,26 +190,34 @@ class AccountDetails : Fragment() {
     }
 
     private fun initializeData() {
+        MyDataClass.isGoProfile=false
         MyDataClass.datePick = ::pickDate
         progressBar = ProgressDialog(context)
-        binding.accountDetailsUserNameTv.setText(MyDataClass.responseDataClass.user.username)
-        binding.accountDetailsUserEmailTv.setText(MyDataClass.responseDataClass.user.email)
-        Picasso.get().load(MyDataClass.responseDataClass.user.avatar_urls.o)
-            .placeholder(R.drawable.ic_no_image).into(binding.accountDetailsUserProfileImage)
-        binding.accountDetailsLocationEt.setText(MyDataClass.responseDataClass.user.location)
-        binding.accountDetailsWebsiteEt.setText(MyDataClass.responseDataClass.user.website)
-        binding.accountDetailsAboutMessageEt.setText(MyDataClass.responseDataClass.user.about)
-        if (MyDataClass.responseDataClass.user.show_dob_year == true) {
+        binding.accountDetailsUserNameTv.setText(MyDataClass.responseDataClass?.user?.username)
+        binding.accountDetailsUserEmailTv.setText(MyDataClass.responseDataClass?.user?.email)
+        if(MyDataClass.responseDataClass!!.user.avatar_urls.o==null){
+            binding.accountDetailsUserProfileImageTv.visibility=View.VISIBLE
+           binding.accountDetailsUserProfileImage.visibility=View.GONE
+            binding.accountDetailsUserProfileImageTv.gravity= Gravity.CENTER
+            binding.accountDetailsUserProfileImageTv.setText(MyDataClass.responseDataClass!!.user.username.get(0).toString())
+        }else{
+            Picasso.get().load(MyDataClass.responseDataClass!!.user.avatar_urls.o).placeholder(R.drawable.person)
+                .into(binding.accountDetailsUserProfileImage)
+        }
+        binding.accountDetailsLocationEt.setText(MyDataClass.responseDataClass?.user?.location)
+        binding.accountDetailsWebsiteEt.setText(MyDataClass.responseDataClass!!.user.website)
+        binding.accountDetailsAboutMessageEt.setText(MyDataClass.responseDataClass!!.user.about)
+        if (MyDataClass.responseDataClass!!.user.show_dob_year == true) {
             binding.accountDetailsShowYearOfBirthCheckbox.isChecked = true
         } else {
             binding.accountDetailsShowYearOfBirthCheckbox.isChecked = false
         }
-        if (MyDataClass.responseDataClass.user.show_dob_date == true) {
+        if (MyDataClass.responseDataClass!!.user.show_dob_date == true) {
             binding.accountDetailsShowDayAndMonthOfBirthCheckbox.isChecked = true
         } else {
             binding.accountDetailsShowDayAndMonthOfBirthCheckbox.isChecked = false
         }
-        if (MyDataClass.responseDataClass.user.receive_admin_email == true) {
+        if (MyDataClass.responseDataClass!!.user.receive_admin_email == true) {
             binding.accountDetailsReceiveNewsAndUpdateEmailsCheckbox.isChecked = true
         } else {
             binding.accountDetailsReceiveNewsAndUpdateEmailsCheckbox.isChecked = false
@@ -239,8 +252,10 @@ class AccountDetails : Fragment() {
                                         if (response.isSuccessful) {
                                             progressBar.dismiss()
                                             Log.d("TAG", "${response.body()?.me?.avatar_urls?.o}")
-                                            MyDataClass.responseDataClass.user.avatar_urls.o =
+                                            MyDataClass.responseDataClass!!.user.avatar_urls.o =
                                                 response.body()?.me?.avatar_urls?.o!!
+                                            binding.accountDetailsUserProfileImageTv.visibility=View.GONE
+                                            binding.accountDetailsUserProfileImage.visibility=View.VISIBLE
                                             Picasso.get().load(response.body()!!.me.avatar_urls.o)
                                                 .placeholder(R.drawable.ic_no_image)
                                                 .into(binding.accountDetailsUserProfileImage)

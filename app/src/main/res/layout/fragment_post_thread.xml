@@ -50,91 +50,216 @@
            android:layout_height="wrap_content"
            android:background="@drawable/update_status_bg"
            android:layout_margin="10dp"
+           android:padding="3dp"
            android:orientation="vertical">
            <LinearLayout
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
-               android:background="#68EAE4E4"
-               android:padding="10dp"
-               android:orientation="horizontal"
-               android:weightSum="27">
-               <ImageButton
-                   android:layout_width="0dp"
-                   android:layout_weight="3"
-                   android:layout_marginRight="4dp"
+               android:visibility="gone"
+               android:orientation="vertical">
+               <HorizontalScrollView
+                   android:layout_width="match_parent"
                    android:layout_height="wrap_content"
-                   android:background="@drawable/ic_b"
-                   android:backgroundTint="#5D5858"
-                   android:id="@+id/post_comments_b_btn"/>
-               <ImageButton
-                   android:layout_width="0dp"
-                   android:layout_weight="3"
-                   android:backgroundTint="#5D5858"
-                   android:layout_marginRight="4dp"
+                   >
+
+                   <LinearLayout
+                       android:orientation="horizontal"
+                       android:layout_width="wrap_content"
+                       android:padding="4dp"
+                       android:layout_height="wrap_content">
+
+                       <ImageButton
+                           android:id="@+id/post_thread_undo"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:background="@drawable/undo"
+                           android:layout_margin="6dp"
+                           android:contentDescription="@null"
+                           />
+
+                       <ImageButton
+                           android:id="@+id/post_thread_redo"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:layout_margin="6dp"
+                           android:background="@drawable/redo"
+                           android:contentDescription="@null"
+                           />
+
+                       <ImageButton
+                           android:id="@+id/post_thread_bold"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:layout_margin="6dp"
+                           android:background="@drawable/ic_b"
+                           android:contentDescription="@null" />
+
+                       <ImageButton
+                           android:id="@+id/post_thread_italic"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:layout_margin="6dp"
+                           android:background="@drawable/ic_i"
+                           android:contentDescription="@null" />
+
+                       <ImageButton
+                           android:id="@+id/post_thread_underline"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:layout_margin="6dp"
+                           android:background="@drawable/underline"
+                           android:contentDescription="@null" />
+
+                       <ImageButton
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:background="@drawable/font_size"
+                           android:layout_margin="6dp"
+                           android:id="@+id/post_thread_font_size_btn"/>
+<!--                       <ImageButton-->
+<!--                           android:id="@+id/post_thread_indent"-->
+<!--                           android:layout_width="wrap_content"-->
+<!--                           android:layout_height="wrap_content"-->
+<!--                           android:layout_margin="6dp"-->
+<!--                           android:background="@drawable/indent"-->
+<!--                           android:contentDescription="@null"-->
+<!--                           />-->
+
+<!--                       <ImageButton-->
+<!--                           android:id="@+id/post_thread_outdent"-->
+<!--                           android:layout_width="wrap_content"-->
+<!--                           android:layout_height="wrap_content"-->
+<!--                           android:layout_margin="6dp"-->
+<!--                           android:background="@drawable/outdent"-->
+<!--                           android:contentDescription="@null" />-->
+
+                       <ImageButton
+                           android:id="@+id/post_thread_align_left"
+                           android:layout_width="wrap_content"
+                           android:layout_margin="6dp"
+                           android:layout_height="wrap_content"
+                           android:background="@drawable/justify_left"
+                           android:contentDescription="@null"
+                           />
+
+                       <ImageButton
+                           android:id="@+id/post_thread_align_center"
+                           android:layout_width="wrap_content"
+                           android:layout_margin="6dp"
+                           android:layout_height="wrap_content"
+                           android:background="@drawable/justify_center"
+                           android:contentDescription="@null" />
+
+                       <ImageButton
+                           android:id="@+id/post_thread_align_right"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:layout_margin="6dp"
+                           android:background="@drawable/justify_right"
+                           android:contentDescription="@null" />
+
+                       <ImageButton
+                           android:id="@+id/post_thread_insert_bullets"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:background="@drawable/bullets"
+                           android:layout_margin="6dp"
+                           android:contentDescription="@null" />
+
+                       <ImageButton
+                           android:id="@+id/post_thread_insert_numbers"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:background="@drawable/numbers"
+                           android:layout_margin="6dp"
+                           android:contentDescription="@null" />
+
+
+<!--                       <ImageButton-->
+<!--                           android:id="@+id/post_thread_insert_image"-->
+<!--                           android:layout_width="wrap_content"-->
+<!--                           android:layout_margin="6dp"-->
+<!--                           android:layout_height="wrap_content"-->
+<!--                           android:background="@drawable/ic_add_image"-->
+<!--                           android:contentDescription="@null" />-->
+
+                       <ImageButton
+                           android:id="@+id/post_thread_insert_link"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:layout_margin="6dp"
+                           android:background="@drawable/insert_link"
+                           android:contentDescription="@null" />
+
+                   </LinearLayout>
+               </HorizontalScrollView>
+               <View
+                   android:layout_width="match_parent"
+                   android:layout_height="1dp"
+                   android:background="#B2ABAB"
+                   android:layout_marginTop="2dp"/>
+               <LinearLayout
+                   android:layout_width="match_parent"
                    android:layout_height="wrap_content"
-                   android:background="@drawable/ic_i"
-                   android:id="@+id/post_comments_i_btn"/>
-               <ImageButton
-                   android:layout_width="0dp"
-                   android:layout_weight="3"
-                   android:layout_marginRight="4dp"
+                   android:padding="3dp"
+                   android:id="@+id/post_thread_insert_link_Layout"
+                   android:visibility="gone"
+                   android:orientation="vertical">
+                   <EditText
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:background="@drawable/update_status_bg"
+                       android:hint="URL"
+                       android:padding="3dp"
+                       android:id="@+id/post_thread_Url_et"/>
+                   <EditText
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:background="@drawable/update_status_bg"
+                       android:hint="Text"
+                       android:layout_marginTop="3dp"
+                       android:padding="3dp"
+                       android:id="@+id/post_thread_Text_et"/>
+                   <TextView
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:background="@color/black"
+                       android:textColor="@color/white"
+                       android:text="Insert"
+                       android:layout_gravity="right"
+                       android:padding="3dp"
+                       android:id="@+id/post_thread_insert_link_btn"
+                       android:layout_marginRight="8dp"
+                       android:layout_marginTop="3dp"/>
+               </LinearLayout>
+               <jp.wasabeef.richeditor.RichEditor
+                   android:id="@+id/post_thread_RichEditor"
+                   android:layout_width="match_parent"
                    android:layout_height="wrap_content"
-                   android:background="@drawable/ic_menu_toolbar"
-                   android:id="@+id/post_comments_menu_toolbar_btn1"/>
-               <ImageButton
-                   android:layout_width="0dp"
-                   android:layout_weight="3"
-                   android:layout_height="wrap_content"
-                   android:layout_marginRight="8dp"
-                   android:background="@drawable/ic_link"
-                   android:id="@+id/post_comments_link_btn"/>
-               <ImageButton
-                   android:layout_width="0dp"
-                   android:layout_weight="3"
-                   android:layout_height="wrap_content"
-                   android:background="@drawable/ic_photo"
-                   android:layout_marginRight="4dp"
-                   android:layout_marginLeft="4dp"
-                   android:backgroundTint="#030303"
-                   android:id="@+id/post_comments_photo_btn"/>
-               <ImageButton
-                   android:layout_width="0dp"
-                   android:layout_weight="3"
-                   android:layout_height="wrap_content"
-                   android:background="@drawable/ic_menu_toolbar"
-                   android:layout_marginRight="4dp"
-                   android:id="@+id/post_comments_menu_toolbar_btn2"/>
-               <ImageButton
-                   android:layout_width="0dp"
-                   android:layout_weight="3"
-                   android:layout_height="wrap_content"
-                   android:layout_marginRight="4dp"
-                   android:background="@drawable/ic_undo_24"
-                   android:id="@+id/post_comments_undo_btn"/>
-               <ImageButton
-                   android:layout_width="0dp"
-                   android:layout_weight="3"
-                   android:layout_height="wrap_content"
-                   android:layout_marginRight="4dp"
-                   android:background="@drawable/ic_menu_toolbar"
-                   android:id="@+id/post_comments_menu_toolbar_btn3"/>
-               <ImageButton
-                   android:layout_width="0dp"
-                   android:layout_weight="3"
-                   android:layout_marginRight="4dp"
-                   android:layout_height="wrap_content"
-                   android:background="@drawable/ic_page_search"
-                   android:id="@+id/post_comments_search_page_btn"/>
+                   android:layout_marginTop="3dp"
+                   android:visibility="gone"
+                   android:minHeight="150dp"
+                   />
            </LinearLayout>
            <EditText
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:paddingLeft="10dp"
+               android:background="@drawable/update_status_bg"
+               android:minHeight="100dp"
+               android:hint="Write here..."
+               android:gravity="start"
                android:paddingRight="10dp"
-               android:minHeight="200dp"
-               android:id="@+id/postThread_message_et"
+               android:id="@+id/post_thread_message_et"
                android:textColor="@color/black"/>
        </LinearLayout>
+       <androidx.recyclerview.widget.RecyclerView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_marginRight="15dp"
+           android:layout_marginLeft="15dp"
+           android:id="@+id/post_thread_recyclerView"
+           android:visibility="gone"/>
        <TextView
            android:layout_width="wrap_content"
            android:layout_height="40dp"

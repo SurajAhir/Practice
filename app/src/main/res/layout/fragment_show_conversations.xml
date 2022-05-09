@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/show_conversations_NestedScrollView"
+    tools:context=".Fragments.ShowConversations">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Conversations"
+            android:background="#6FF9F7F7"
+            android:layout_marginTop="4dp"
+            android:textSize="18sp"
+            android:paddingLeft="10dp"
+            android:gravity="center|start"
+            android:textColor="@color/black" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start a new conversation"
+            android:layout_margin="15dp"
+            android:id="@+id/show_conversations_startNewConversation_btn"
+            android:textColor="@color/black"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            tools:listitem="@layout/show_conversation_custom_layout"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:id="@+id/show_conversations_recyclerView"/>
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/show_conversations_progressBar"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/show_conversations_noConversation_tv"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+
+</androidx.core.widget.NestedScrollView>

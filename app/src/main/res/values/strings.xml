@@ -12,4 +12,5 @@
     <string name="reason">For security reasons,you must verify your existing password before you may set a new password.</string>
     <string name="may_change_username">You may next change your username on or after Apr 21,2022</string>
     <string name="keep_update_you">We will keep you updated about new content when you haven\'t visited for a while.</string>
+    <string name="invite">You may enter multiple names here. Invited members will be able to see the entire conversation from the beginning. You may invite up to 4 member(s).</string>
 </resources>

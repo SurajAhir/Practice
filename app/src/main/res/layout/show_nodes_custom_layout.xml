@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#242525"
+            android:gravity="center"
+            android:padding="10dp"
+            android:weightSum="10">
+<LinearLayout
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="9"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/show_nodes_custom_layout_title_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Title"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+    <TextView
+        android:id="@+id/show_nodes_custom_layout_description_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+      android:maxLines="1"
+        android:gravity="top"
+        android:visibility="gone"
+        android:textColor="@color/white" />
+</LinearLayout>
+
+
+            <ImageButton
+                android:id="@+id/show_nodes_custom_layout_rightArrow_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/ic_arrow_right_24"
+                android:backgroundTint="@color/white" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/show_nodes_custom_layout_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_marginTop="8dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+    </LinearLayout>
+</LinearLayout>

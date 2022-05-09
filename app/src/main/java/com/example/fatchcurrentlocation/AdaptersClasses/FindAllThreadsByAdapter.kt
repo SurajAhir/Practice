@@ -3,13 +3,13 @@ package com.example.fatchcurrentlocation.AdaptersClasses
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fatchcurrentlocation.DataClasses.MyDataClass
-import com.example.fatchcurrentlocation.DataClasses.Pagination
 import com.example.fatchcurrentlocation.DataClasses.Threads
 import com.example.fatchcurrentlocation.Fragments.ShowPostsOfThreads
 import com.example.fatchcurrentlocation.R
@@ -45,8 +45,15 @@ class FindAllThreadsByAdapter(
         holder.date.setText("${DateFormatSymbols().getShortMonths()[date.month]} ${
             simple.format(date)
         }")
-        Picasso.get().load(list?.get(position)?.User?.avatar_urls?.o).placeholder(R.drawable.person)
-            .into(holder.ProfileImage)
+     if(list.get(position).User.avatar_urls.o==null){
+         holder.profileImage_tv.visibility=View.VISIBLE
+         holder.ProfileImage.visibility=View.GONE
+         holder.profileImage_tv.gravity= Gravity.CENTER
+         holder.profileImage_tv.setText(list.get(position).User.username.get(0).toString())
+     }else{
+         Picasso.get().load(list?.get(position)?.User?.avatar_urls?.o).placeholder(R.drawable.person)
+             .into(holder.ProfileImage)
+     }
         holder.title.setOnClickListener(object : View.OnClickListener {
             override fun onClick(p0: View?) {
                 Log.d("TAG", "clicked ${list[position].title}")
@@ -58,7 +65,9 @@ class FindAllThreadsByAdapter(
                         list.get(position).title,
                         list.get(position).Forum.title,
                         list.get(position).thread_id,
-                        "${DateFormatSymbols().getShortMonths()[date.month]} ${simple.format(date)}"))
+                        "${DateFormatSymbols().getShortMonths()[date.month]} ${simple.format(date)}",
+                        0,
+                        1002))
                 transaction.addToBackStack(null).commit()
             }
         })
@@ -72,6 +81,8 @@ class FindAllThreadsByAdapter(
     class FindAllThreadsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var ProfileImage: CircleImageView =
             itemView.findViewById(R.id.show_details_custom_layout_UserProfileImage)
+        var profileImage_tv: TextView =
+            itemView.findViewById(R.id.show_details_custom_layout_UserProfileImage_tv)
         var title: TextView = itemView.findViewById(R.id.show_details_custom_layout_title_Tv)
         var lastPostUserName: TextView =
             itemView.findViewById(R.id.show_details_custom_layout_lastPostUserName_Tv)

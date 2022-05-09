@@ -9,14 +9,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewStructure
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.recyclerview.widget.SortedList
 import com.example.fatchcurrentlocation.DataClasses.MyDataClass
 import com.example.fatchcurrentlocation.HitApi
 import com.example.fatchcurrentlocation.MainActivity
-import com.example.fatchcurrentlocation.R
 import com.example.fatchcurrentlocation.RetrofitManager
 import com.example.fatchcurrentlocation.databinding.FragmentChangePasswordBinding
 import retrofit2.Call
@@ -33,6 +30,7 @@ class ChangePassword : Fragment() {
         binding= FragmentChangePasswordBinding.inflate(layoutInflater, container, false)
         progressBar= ProgressDialog(context)
         progressBar.setTitle("Wait...")
+        MyDataClass.isGoProfile=false
 binding.changePasswordGoBackBtn.setOnClickListener(object :View.OnClickListener{
     override fun onClick(p0: View?) {
         MyDataClass.onBack()

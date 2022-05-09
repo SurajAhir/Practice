@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Fragments.PostReplyForConversation">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Back"
+        android:layout_marginTop="4dp"
+        android:drawableLeft="@drawable/ic_arrow_back_ios_24"
+        android:paddingLeft="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:gravity="center|start"
+        android:textColor="@color/black"
+        android:background="@drawable/update_status_bg"
+        android:id="@+id/postReplyForConversation_goBack_btn"/>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/update_status_bg"
+                android:layout_margin="10dp"
+                android:padding="3dp"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:orientation="vertical">
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:paddingLeft="8dp"
+                        android:textSize="12sp"
+                        android:paddingRight="8dp"
+                        android:background="@drawable/update_status_bg"
+                        android:backgroundTint="#8CEAE4E4"
+                        android:id="@+id/postReplyForConversation_message_et"
+                        />
+                </LinearLayout>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:background="@drawable/update_status_bg"
+                    android:minHeight="100dp"
+                    android:gravity="start"
+                    android:paddingRight="10dp"
+                    android:id="@+id/postReplyForConversation_reply_message_et"
+                    android:textColor="@color/black"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:orientation="vertical">
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#B2ABAB"
+                        android:layout_marginTop="2dp"/>
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="wrap_content"
+                            android:padding="4dp"
+                            android:layout_height="wrap_content">
+
+                            <ImageButton
+                                android:id="@+id/postReplyForConversation_undo"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/undo"
+                                android:layout_margin="6dp"
+                                android:contentDescription="@null"
+                                />
+
+                            <ImageButton
+                                android:id="@+id/postReplyForConversation_redo"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="6dp"
+                                android:background="@drawable/redo"
+                                android:contentDescription="@null"
+                                />
+
+                            <ImageButton
+                                android:id="@+id/postReplyForConversation_bold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="6dp"
+                                android:background="@drawable/ic_b"
+                                android:contentDescription="@null" />
+
+                            <ImageButton
+                                android:id="@+id/postReplyForConversation_italic"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="6dp"
+                                android:background="@drawable/ic_i"
+                                android:contentDescription="@null" />
+
+                            <ImageButton
+                                android:id="@+id/postReplyForConversation_underline"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="6dp"
+                                android:background="@drawable/underline"
+                                android:contentDescription="@null" />
+
+                            <ImageButton
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/font_size"
+                                android:layout_margin="6dp"
+                                android:id="@+id/postReplyForConversation_font_size_btn"/>
+<!--                            <ImageButton-->
+<!--                                android:id="@+id/postReplyForConversation_indent"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_margin="6dp"-->
+<!--                                android:background="@drawable/indent"-->
+<!--                                android:contentDescription="@null"-->
+<!--                                />-->
+
+<!--                            <ImageButton-->
+<!--                                android:id="@+id/postReplyForConversation_outdent"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_margin="6dp"-->
+<!--                                android:background="@drawable/outdent"-->
+<!--                                android:contentDescription="@null" />-->
+
+                            <ImageButton
+                                android:id="@+id/postReplyForConversation_align_left"
+                                android:layout_width="wrap_content"
+                                android:layout_margin="6dp"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/justify_left"
+                                android:contentDescription="@null"
+                                />
+
+                            <ImageButton
+                                android:id="@+id/postReplyForConversation_align_center"
+                                android:layout_width="wrap_content"
+                                android:layout_margin="6dp"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/justify_center"
+                                android:contentDescription="@null" />
+
+                            <ImageButton
+                                android:id="@+id/postReplyForConversation_align_right"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="6dp"
+                                android:background="@drawable/justify_right"
+                                android:contentDescription="@null" />
+
+                            <ImageButton
+                                android:id="@+id/postReplyForConversation_insert_bullets"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bullets"
+                                android:layout_margin="6dp"
+                                android:contentDescription="@null" />
+
+                            <ImageButton
+                                android:id="@+id/postReplyForConversation_insert_numbers"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/numbers"
+                                android:layout_margin="6dp"
+                                android:contentDescription="@null" />
+
+
+<!--                            <ImageButton-->
+<!--                                android:id="@+id/postReplyForConversation_insert_image"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_margin="6dp"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:background="@drawable/ic_add_image"-->
+<!--                                android:contentDescription="@null" />-->
+
+                            <ImageButton
+                                android:id="@+id/postReplyForConversation_insert_link"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="6dp"
+                                android:background="@drawable/insert_link"
+                                android:contentDescription="@null" />
+
+                        </LinearLayout>
+                    </HorizontalScrollView>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#B2ABAB"
+                        android:layout_marginTop="2dp"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="3dp"
+                        android:id="@+id/postReplyForConversation_insert_link_Layout"
+                        android:visibility="gone"
+                        android:orientation="vertical">
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/update_status_bg"
+                            android:hint="URL"
+                            android:padding="3dp"
+                            android:id="@+id/postReplyForConversation_Url_et"/>
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/update_status_bg"
+                            android:hint="Text"
+                            android:layout_marginTop="3dp"
+                            android:padding="3dp"
+                            android:id="@+id/postReplyForConversation_Text_et"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@color/black"
+                            android:textColor="@color/white"
+                            android:text="Insert"
+                            android:layout_gravity="right"
+                            android:padding="3dp"
+                            android:id="@+id/postReplyForConversation_insert_link_btn"
+                            android:layout_marginRight="8dp"
+                            android:layout_marginTop="3dp"/>
+                    </LinearLayout>
+                    <jp.wasabeef.richeditor.RichEditor
+                        android:id="@+id/postReplyForConversation_RichEditor"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:visibility="gone"
+                        android:minHeight="150dp"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+            <!--            <TextView-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:id="@+id/postReplyForConversation_attachedFileName_tv"-->
+            <!--                android:maxLines="1"-->
+            <!--                android:padding="5dp"-->
+            <!--                android:layout_marginLeft="10dp"-->
+            <!--                android:layout_marginRight="10dp"-->
+            <!--               android:visibility="gone"-->
+            <!--                />-->
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp"
+                android:id="@+id/postReplyForConversation_recyclerView"
+                android:visibility="gone"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="10">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="5"
+                    android:layout_height="50dp"
+                    android:drawableLeft="@drawable/ic_attach_file"
+                    android:paddingLeft="8dp"
+                    android:elevation="8dp"
+                    android:text="Attach files"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:gravity="center|start"
+                    android:background="@drawable/update_status_bg"
+                    android:drawablePadding="4dp"
+                    android:id="@+id/postReplyForConversation_attach_file_btn"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="5"
+                    android:layout_height="50dp"
+                    android:elevation="8dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:drawableLeft="@drawable/ic_post"
+                    android:background="@color/black"
+                    android:textColor="@color/white"
+                    android:drawableTint="@color/white"
+                    android:paddingLeft="18dp"
+                    android:text="Post reply"
+                    android:gravity="center|start"
+                    android:drawablePadding="4dp"
+                    android:id="@+id/postReplyForConversation_post_Reply_btn"/>
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>
