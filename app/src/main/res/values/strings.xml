@@ -1,10 +1,11 @@
 <resources>
     <string name="app_name">Technofino</string>
-    <string name="apiKey"> 4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4</string>
+    <string name="apiKey">p-rQmDsW41tBC768faylyvJcd8KOnp3g</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
     <string name="selected_item">Selected item:</string>
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="com.twitter.sdk.android.CONSUMER_KEY">xWugqm0o2EmNggAsRor3M0OXP</string>
+    <string name="com.twitter.sdk.android.CONSUMER_SECRET">9v4vizvRP42Z21BoHNfbO57gMl5g7ATEJioOiCe7Q2WDfzNyZS</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="card_banking_experts"><![CDATA[Card & Banking Experts]]></string>
     <string name="foreign_credit_card_bank_a_c"><![CDATA[Foreign Credit Card & Bank A/C]]></string>

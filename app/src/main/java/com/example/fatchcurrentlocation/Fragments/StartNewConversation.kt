@@ -25,9 +25,9 @@ import com.example.fatchcurrentlocation.AdaptersClasses.ShowAttachmentFilesAdapt
 import com.example.fatchcurrentlocation.AdaptersClasses.ShowSelectedUsersNameAdapter
 import com.example.fatchcurrentlocation.DataClasses.*
 import com.example.fatchcurrentlocation.FileUtils
-import com.example.fatchcurrentlocation.HitApi
+import com.example.fatchcurrentlocation.services.HitApi
 import com.example.fatchcurrentlocation.R
-import com.example.fatchcurrentlocation.RetrofitManager
+import com.example.fatchcurrentlocation.services.RetrofitManager
 import com.example.fatchcurrentlocation.databinding.FragmentStartNewConversationBinding
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
@@ -381,20 +381,24 @@ class StartNewConversation() : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         progressBar.show()
         if (requestCode == PICKFILE_REQUEST_CODE) {
-            var uri1 = FileUtils.getPath(context, data?.data)
-            Log.d("TAG", uri1)
-            var file: File = File(uri1)
-            val requestBody: RequestBody =
-                RequestBody.create(MediaType.parse("multipart/form-data"), file)
-            val fileToUpload =
-                MultipartBody.Part.createFormData("attachment", file.getName(), requestBody)
-            var retrofit: Retrofit = RetrofitManager.getRetrofit1()
-            var api: HitApi = retrofit.create(HitApi::class.java)
-            if (isGeneratedAttachmentKey) {
-                postAttachmentFile(fileToUpload, attachmentRequestBodyKey, api)
-            } else {
-                generateAttachmentKey(api, fileToUpload)
-            }
+          if(data?.data!=null){
+              var uri1 = FileUtils.getPath(context, data?.data)
+              Log.d("TAG", uri1)
+              var file: File = File(uri1)
+              val requestBody: RequestBody =
+                  RequestBody.create(MediaType.parse("multipart/form-data"), file)
+              val fileToUpload =
+                  MultipartBody.Part.createFormData("attachment", file.getName(), requestBody)
+              var retrofit: Retrofit = RetrofitManager.getRetrofit1()
+              var api: HitApi = retrofit.create(HitApi::class.java)
+              if (isGeneratedAttachmentKey) {
+                  postAttachmentFile(fileToUpload, attachmentRequestBodyKey, api)
+              } else {
+                  generateAttachmentKey(api, fileToUpload)
+              }
+          }else{
+              progressBar.dismiss()
+          }
 
         }
 
@@ -406,7 +410,7 @@ class StartNewConversation() : Fragment() {
         attachmentKey: RequestBody,
         api: HitApi,
     ) {
-        api.postAttachmentFile("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4",
+        api.postAttachmentFile(MyDataClass.api_key,
             MyDataClass.myUserId, fileToUpload, attachmentKey
         ).enqueue(object : Callback<ResponseThread> {
             override fun onResponse(
@@ -461,7 +465,7 @@ class StartNewConversation() : Fragment() {
 
     private fun generateAttachmentKey(api: HitApi, fileToUpload: MultipartBody.Part) {
         isGeneratedAttachmentKey = true
-        api.generateAttachmentKeyForConversation("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4",
+        api.generateAttachmentKeyForConversation(MyDataClass.api_key,
             MyDataClass.myUserId,
             "conversation_message")
             .enqueue(object : Callback<Map<String, String>> {

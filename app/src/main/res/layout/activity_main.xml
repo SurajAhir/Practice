@@ -116,17 +116,41 @@
                 android:textAllCaps="false"
                 android:id="@+id/login_jumpToSignUp"/>
         </LinearLayout>
-<TextView
-    android:layout_width="100dp"
-    android:layout_height="40dp"
-    android:drawableLeft="@drawable/ic_google"
-    android:text="Google"
-    android:background="@drawable/login_button_bg"
-    android:padding="8dp"
-    android:drawablePadding="4dp"
-    android:backgroundTint="@color/white"
-    android:gravity="center"
-    android:layout_marginTop="8dp"
-    android:id="@+id/login_google_btn"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:drawableLeft="@drawable/ic_google"
+                android:textAllCaps="false"
+                android:text="Google"
+                android:background="@drawable/login_button_bg"
+                android:padding="8dp"
+                android:drawablePadding="4dp"
+                android:backgroundTint="@color/white"
+                android:gravity="center"
+                android:layout_marginRight="6dp"
+                android:layout_marginTop="8dp"
+                android:id="@+id/login_google_btn"/>
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:drawableLeft="@drawable/ic_twitter"
+                android:text="Twitter"
+                android:background="@drawable/login_button_bg"
+                android:padding="8dp"
+                android:drawablePadding="4dp"
+                android:backgroundTint="@color/white"
+                android:gravity="center"
+                android:layout_marginRight="6dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:id="@+id/login_twitter_btn"/>
+
+        </LinearLayout>
+
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

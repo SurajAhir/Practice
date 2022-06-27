@@ -13,9 +13,9 @@ import com.example.fatchcurrentlocation.AdaptersClasses.ConversationAdatper
 import com.example.fatchcurrentlocation.DataClasses.Conversations
 import com.example.fatchcurrentlocation.DataClasses.MyDataClass
 import com.example.fatchcurrentlocation.DataClasses.ResponseThread
-import com.example.fatchcurrentlocation.HitApi
+import com.example.fatchcurrentlocation.services.HitApi
 import com.example.fatchcurrentlocation.R
-import com.example.fatchcurrentlocation.RetrofitManager
+import com.example.fatchcurrentlocation.services.RetrofitManager
 import com.example.fatchcurrentlocation.databinding.FragmentShowConversationsBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -105,6 +105,11 @@ var conversationList:LinkedList<Conversations> = LinkedList()
         MyDataClass.isJumpedToImage=false
         MyDataClass.JumpedToImagePageNum=0
         MyDataClass.isGoConversation=true
+
+        MyDataClass.isGoNotification=false
+        MyDataClass.isGoProfile=false
+        MyDataClass.isGoForLatestPosts=false
+        MyDataClass.isPostThread=false
         conversationList.clear()
     }
 
@@ -136,7 +141,7 @@ var conversationList:LinkedList<Conversations> = LinkedList()
                             context?.let { ConversationAdatper(it, conversationList) }
                         binding.showConversationsRecyclerView.layoutManager =
                             LinearLayoutManager(context)
-//                        binding.showConversationsProgressBar.visibility=View.GONE
+                        binding.showConversationsProgressBar.visibility=View.GONE
                     }
                 }else{
                     binding.showConversationsProgressBar.visibility=View.GONE

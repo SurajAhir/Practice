@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#97EDEBEB"
+    tools:context=".ShowGridImageView">
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="#313641"
+    android:paddingLeft="5dp"
+    android:id="@+id/showGridImageViewBackBtn"
+    android:drawableLeft="@drawable/ic_arrow_back_ios_24"
+    android:drawableTint="@color/white"
+    android:text="Back"
+    android:textColor="@color/white"
+    android:gravity="center|start"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/showGridImageViewRecyclerView"
+        android:layout_width="match_parent"
+        android:padding="8dp"
+        android:layout_marginTop="6dp"
+        tools:listitem="@layout/custom_show_grid_image_layout"
+        android:layout_height="wrap_content"/>
+
+    <ProgressBar
+        android:id="@+id/showGridImageViewProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

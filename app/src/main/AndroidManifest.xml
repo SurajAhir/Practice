@@ -8,6 +8,7 @@
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -15,13 +16,25 @@
         android:theme="@style/Theme.FatchCurrentLocation"
         android:usesCleartextTraffic="true">
         <activity
-            android:name="com.example.fatchcurrentlocation.GoogleSignUp"
+            android:name=".ShowGridImageInFullView"
             android:exported="false" />
         <activity
-            android:name="com.example.fatchcurrentlocation.WebActivity"
+            android:name=".ShowGridImageView"
             android:exported="false" />
         <activity
-            android:name="com.example.fatchcurrentlocation.SplashActivity"
+            android:name=".JustPractice"
+            android:exported="true">
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+        </activity>
+        <activity
+            android:name=".WebActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,10 +54,10 @@
         </provider>
 
         <activity
-            android:name="com.example.fatchcurrentlocation.Home"
+            android:name=".Home"
             android:exported="false" />
         <activity
-            android:name="com.example.fatchcurrentlocation.MainActivity"
+            android:name=".MainActivity"
             android:exported="true" />
 
         <meta-data

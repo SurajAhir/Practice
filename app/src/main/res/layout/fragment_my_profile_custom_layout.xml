@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
@@ -49,11 +50,19 @@
 <!--        android:textColor="@color/black"-->
 <!--        android:padding="10dp"/>-->
     <org.sufficientlysecure.htmltextview.HtmlTextView
+        android:id="@+id/fragment_My_profile_custom_layout_htmlTextviewDown"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/fragment_My_profile_custom_layout_htmlTextview"
-        android:textColor="@color/black"
-        android:padding="10dp"/>
+        android:fontFamily="@font/aguafina_script"
+        android:padding="10dp"
+        android:textColor="#E8222020"
+        android:textColorHighlight="@color/black"
+        android:textSize="16sp" />
+    <WebView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/fragment_My_profile_custom_layout_webviewForTable"
+        tools:ignore="WebViewLayout" />
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

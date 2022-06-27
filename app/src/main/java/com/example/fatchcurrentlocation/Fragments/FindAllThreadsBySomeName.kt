@@ -11,8 +11,8 @@ import com.example.fatchcurrentlocation.AdaptersClasses.FindAllThreadsByAdapter
 import com.example.fatchcurrentlocation.DataClasses.MyDataClass
 import com.example.fatchcurrentlocation.DataClasses.ResponseThread
 import com.example.fatchcurrentlocation.DataClasses.Threads
-import com.example.fatchcurrentlocation.HitApi
-import com.example.fatchcurrentlocation.RetrofitManager
+import com.example.fatchcurrentlocation.services.HitApi
+import com.example.fatchcurrentlocation.services.RetrofitManager
 import com.example.fatchcurrentlocation.databinding.FragmentFindAllThreadsBySomeNameBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -53,7 +53,6 @@ class FindAllThreadsBySomeName(val profileUserId: Int) : Fragment() {
                 if (response.isSuccessful) {
                     if (response.body()?.threads?.isEmpty()!!) {
                         binding.fragmentFindAllThreadsBySearchResultsTv.setText("No results found!")
-                        return
                     } else {
                         dataList.addAll(response.body()!!.threads)
                         binding.fragmentFindAllThreadsByRecyclerView.adapter =

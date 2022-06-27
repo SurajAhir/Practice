@@ -16,6 +16,10 @@
         android:title="Youtube"
         android:icon="@drawable/ic_youtube_icon2"
         android:id="@+id/youtube"/>
+    <item
+        android:title="Contact us"
+        android:icon="@drawable/email"
+        android:id="@+id/contactsUs"/>
 <!--<item-->
 <!--    android:id="@+id/menu_home"-->
 <!--    android:title="Home"-->

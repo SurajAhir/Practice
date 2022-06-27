@@ -12,9 +12,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.example.fatchcurrentlocation.DataClasses.MyDataClass
-import com.example.fatchcurrentlocation.HitApi
+import com.example.fatchcurrentlocation.services.HitApi
 import com.example.fatchcurrentlocation.MainActivity
-import com.example.fatchcurrentlocation.RetrofitManager
+import com.example.fatchcurrentlocation.services.RetrofitManager
 import com.example.fatchcurrentlocation.databinding.FragmentChangePasswordBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -57,8 +57,8 @@ binding.changePasswordGoBackBtn.setOnClickListener(object :View.OnClickListener{
                 }
                 else{
                     progressBar.show()
-                    var retrofit=RetrofitManager.getRetrofit1()
-                    var api:HitApi=retrofit.create(HitApi::class.java)
+                    var retrofit= RetrofitManager.getRetrofit1()
+                    var api: HitApi =retrofit.create(HitApi::class.java)
                     api.updateUserPassword(MyDataClass.api_key,MyDataClass.myUserId,oldPassword,confirmPassword).enqueue(object :Callback<Map<String,Boolean>>{
                         override fun onResponse(
                             call: Call<Map<String, Boolean>>,

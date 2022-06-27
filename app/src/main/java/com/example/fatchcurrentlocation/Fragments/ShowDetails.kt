@@ -1,6 +1,7 @@
 package com.example.fatchcurrentlocation.Fragments
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.Color
@@ -9,22 +10,21 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Toast
+import android.view.*
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.fatchcurrentlocation.*
 import com.example.fatchcurrentlocation.AdaptersClasses.ShowAttachmentFilesAdapter
 import com.example.fatchcurrentlocation.AdaptersClasses.ShowDetailsAdapter
 import com.example.fatchcurrentlocation.DataClasses.*
 import com.example.fatchcurrentlocation.databinding.FragmentShowDetailsBinding
+import com.example.fatchcurrentlocation.services.HitApi
+import com.example.fatchcurrentlocation.services.RetrofitManager
 import jp.wasabeef.richeditor.RichEditor
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -122,7 +122,8 @@ class ShowDetails() : Fragment(), AdapterView.OnItemSelectedListener {
                 }
             }
         })
-        binding.showDetailsTitleBtn.setOnClickListener { binding.showDetailsPostLinearLayout.visibility=View.VISIBLE
+        binding.showDetailsTitleBtn.setOnClickListener {
+            binding.showDetailsPostLinearLayout.visibility=View.VISIBLE
             binding.showDetailsTitleBtn.visibility=View.GONE
       }
         binding.showDetailsAttachFileBtn.setOnClickListener(object :View.OnClickListener{
@@ -165,9 +166,12 @@ class ShowDetails() : Fragment(), AdapterView.OnItemSelectedListener {
             }
         })
         binding.showDetailsFiltersBtn.setOnClickListener {
-            binding.showDetailsLinearLayoutForDetails.visibility = View.GONE
-            binding.showDetailsLinearLayoutForFileter.visibility = View.VISIBLE
+//            binding.showDetailsLinearLayoutForDetails.visibility = View.GONE
+//            binding.showDetailsLinearLayoutForFileter.visibility = View.VISIBLE
+            showFilterDialog()
         }
+
+        /*
         binding.showDetailsFilterBtn.setOnClickListener(object : View.OnClickListener {
             override fun onClick(p0: View?) {
                 var retrofit = RetrofitManager.getRetrofit1()
@@ -183,10 +187,6 @@ class ShowDetails() : Fragment(), AdapterView.OnItemSelectedListener {
                         call: Call<ResponseThread>,
                         response: Response<ResponseThread>,
                     ) {
-                        Log.d("TAG",
-                            "$path and $ascendingOrDesc and $lastMessage and ${
-                                selectedUserLinkedList.get(0).user_id
-                            } and $lastUpdated")
                         if (response.isSuccessful && response.body() != null) {
                             list1.clear()
                             binding.showDetailsLinearLayoutForDetails.visibility = View.VISIBLE
@@ -210,6 +210,8 @@ class ShowDetails() : Fragment(), AdapterView.OnItemSelectedListener {
                                 binding.showRecyclerView.adapter = showDetailsAdapter
                                 binding.showRecyclerView.layoutManager =
                                     LinearLayoutManager(context)
+                            }else{
+                                binding.showProgressBar.visibility=View.GONE
                             }
                         } else {
                             binding.showDetailsLinearLayoutForDetails.visibility = View.VISIBLE
@@ -224,6 +226,7 @@ class ShowDetails() : Fragment(), AdapterView.OnItemSelectedListener {
                 })
             }
         })
+
         binding.startNewConversationFindRecipientEt.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
@@ -284,6 +287,10 @@ class ShowDetails() : Fragment(), AdapterView.OnItemSelectedListener {
             selectedUserLinkedList.add(recommendedAndExactLinkedList.get(position))
             binding.startNewConversationFindRecipientEt.setText(selectedUserLinkedList.get(position).username)
         })
+        */
+
+
+
 //        binding.showDetailsIBtn.setOnClickListener(object : View.OnClickListener {
 //            override fun onClick(p0: View?) {
 //                if (isChangedTextStyleItalic) {
@@ -525,6 +532,162 @@ class ShowDetails() : Fragment(), AdapterView.OnItemSelectedListener {
         return binding.root
     }
 
+    private fun showFilterDialog() {
+        val invoicedialog = context?.let { Dialog(it) }
+        invoicedialog?.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        invoicedialog?.setContentView(R.layout.custom_dialog_filter_layout) //custom dialog layout
+
+        invoicedialog?.setCancelable(true)
+//        val window: Window? = invoicedialog?.getWindow()
+//        val wlp: WindowManager.LayoutParams? = window?.getAttributes()
+//        wlp?.gravity = Gravity.TOP //position of dialog
+//
+//        wlp?.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND.inv()
+//        window?.setAttributes(wlp)
+        val lp = WindowManager.LayoutParams()
+        lp.copyFrom(invoicedialog?.getWindow()?.getAttributes())
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT
+        invoicedialog?.getWindow()?.setAttributes(lp)
+        val showDetailsFilterBtn = invoicedialog?.findViewById<Button>(R.id.show_details__custom_Filter_btn)
+        val startNewConversationFindRecipientEt = invoicedialog?.findViewById<EditText>(R.id.startNewConversation_findRecipient_Et)
+        val startNewConversationListView = invoicedialog?.findViewById<ListView>(R.id.startNewConversation_listView)
+        invoicedialog?.findViewById<Spinner>(R.id.show_details_LastUpdatedSpinnerView)?.adapter = context?.let {
+           ArrayAdapter(it,
+               android.R.layout.simple_spinner_dropdown_item,
+               listForLastUpdate)
+       }
+       invoicedialog?.findViewById<Spinner>(R.id.show_details_LastMessageSpinnerView)?.adapter = context?.let {
+           ArrayAdapter(it,
+               android.R.layout.simple_spinner_dropdown_item,
+               listForLastMessage)
+       }
+        invoicedialog?.findViewById<Spinner>(R.id.show_details_AscendingSpinnerView)?.adapter = context?.let {
+           ArrayAdapter(it,
+               android.R.layout.simple_spinner_dropdown_item,
+               listForAscOrDesc)
+       }
+        invoicedialog?.show()
+       showDetailsFilterBtn?.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(p0: View?) {
+                invoicedialog.dismiss()
+                Log.d("TAG","clicked")
+                var retrofit = RetrofitManager.getRetrofit1()
+                var api = retrofit.create(HitApi::class.java)
+               if(selectedUserLinkedList.size>0){
+                   api.getForumsResponseByFilter(
+                       MyDataClass.api_key,
+                       path,
+                       ascendingOrDesc,
+                       lastMessage,
+                       selectedUserLinkedList.get(0).user_id, lastUpdated
+                   ).enqueue(object : Callback<ResponseThread> {
+                       override fun onResponse(
+                           call: Call<ResponseThread>,
+                           response: Response<ResponseThread>,
+                       ) {
+                           if (response.isSuccessful && response.body() != null) {
+                               list1.clear()
+                               var list = response.body()?.threads?.toMutableList()
+                               var sticky = response.body()?.sticky?.toMutableList()
+                               if (!list?.isEmpty()!!) {
+                                   MyDataClass.paginationForShowDetails = response.body()!!.pagination
+                                   binding.showProgressBar.visibility = View.GONE
+                                   list?.let { list1.addAll(it) }
+                                   sticky?.let { list1.addAll(it) }
+                                   binding.showCategory.setText(btn_text)
+                                   binding.showDescription.setText(description)
+                                   binding.showTitle.setText(title)
+                                   var showDetailsAdapter =
+                                       ShowDetailsAdapter(list1,
+                                           context,
+                                           response?.body()!!.pagination,
+                                           title,
+                                           1001)
+                                   binding.showRecyclerView.adapter = showDetailsAdapter
+                                   binding.showRecyclerView.layoutManager =
+                                       LinearLayoutManager(context)
+                               }else{
+                                   binding.showProgressBar.visibility=View.GONE
+                               }
+                           } else {
+                               invoicedialog.dismiss()
+                           }
+                       }
+
+                       override fun onFailure(call: Call<ResponseThread>, t: Throwable) {
+                           invoicedialog.dismiss()
+                       }
+                   })
+               }else{
+                   invoicedialog.dismiss()
+               }
+            }
+        })
+
+        startNewConversationFindRecipientEt?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                var retrofit = RetrofitManager.getRetrofit1()
+                var api = retrofit.create(HitApi::class.java)
+                if (p0.toString().length > 2) {
+                    api.findUserName(MyDataClass.api_key, MyDataClass.myUserId, p0.toString())
+                        .enqueue(object : Callback<ResponseThread> {
+                            override fun onResponse(
+                                call: Call<ResponseThread>,
+                                response: Response<ResponseThread>,
+                            ) {
+                                if (response.isSuccessful) {
+                                    var recommendesList = response.body()?.recommendations
+                                    var exactList = response.body()?.exact
+                                    if (!recommendesList?.isEmpty()!!) {
+                                        recommendedAndExactLinkedList.clear()
+                                        recommendedAndExactLinkedList.addAll(recommendesList)
+                                        startNewConversationListView?.visibility =
+                                            View.VISIBLE
+                                       startNewConversationListView?.adapter =
+                                            context?.let {
+                                                StartNewConversation.CustomList(it,
+                                                    recommendedAndExactLinkedList)
+                                            }
+
+                                    } else if (exactList != null) {
+                                        recommendedAndExactLinkedList.clear()
+                                        recommendedAndExactLinkedList.add(exactList)
+                                        startNewConversationListView?.visibility =
+                                            View.VISIBLE
+                                        startNewConversationListView?.adapter =
+                                            context?.let {
+                                                StartNewConversation.CustomList(it,
+                                                    recommendedAndExactLinkedList)
+                                            }
+                                    }
+                                }
+                            }
+
+                            override fun onFailure(call: Call<ResponseThread>, t: Throwable) {
+
+                            }
+                        })
+                } else {
+                    startNewConversationListView?.visibility = View.GONE
+                }
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+        })
+
+      startNewConversationListView?.setOnItemClickListener(AdapterView.OnItemClickListener { adapterView, view, position, l ->
+            selectedUserLinkedList.clear()
+            selectedUserLinkedList.add(recommendedAndExactLinkedList.get(position))
+           startNewConversationFindRecipientEt?.setText(selectedUserLinkedList.get(position).username)
+        })
+    }
+
     private fun initializeData() {
         MyDataClass.isJumpedToImage=false
         MyDataClass.JumpToImagePosition=0
@@ -550,7 +713,7 @@ class ShowDetails() : Fragment(), AdapterView.OnItemSelectedListener {
         progressBar= ProgressDialog(context)
         MyDataClass.attachmentFileListItem.clear()
         MyDataClass.attachmentFileListAttachmentId.clear()
-        binding.showDetailsLastUpdatedSpinnerView.adapter = context?.let {
+      /*  binding.showDetailsLastUpdatedSpinnerView.adapter = context?.let {
             ArrayAdapter(it,
                 android.R.layout.simple_spinner_dropdown_item,
                 listForLastUpdate)
@@ -564,13 +727,13 @@ class ShowDetails() : Fragment(), AdapterView.OnItemSelectedListener {
             ArrayAdapter(it,
                 android.R.layout.simple_spinner_dropdown_item,
                 listForAscOrDesc)
-        }
+        }*/
     }
 
     fun fetchDataFromApi(path: Int, page: Int = 1) {
         var retrofit = RetrofitManager.getRetrofit1()
         var api: HitApi = retrofit.create(HitApi::class.java)
-        api.getForumsResponse("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4",
+        api.getForumsResponse(MyDataClass.api_key,
             path,
             page,
             "desc",
@@ -586,8 +749,8 @@ class ShowDetails() : Fragment(), AdapterView.OnItemSelectedListener {
                         var sticky = response.body()?.sticky?.toMutableList()
                         MyDataClass.paginationForShowDetails = response.body()!!.pagination
 //                        binding.showProgressBar.visibility = View.GONE
-                        list?.let { list1.addAll(it) }
                         sticky?.let { list1.addAll(it) }
+                        list?.let { list1.addAll(it) }
                         binding.showCategory.setText(btn_text)
                         binding.showDescription.setText(description)
                         binding.showTitle.setText(title)
@@ -631,19 +794,23 @@ class ShowDetails() : Fragment(), AdapterView.OnItemSelectedListener {
         super.onActivityResult(requestCode, resultCode, data)
         progressBar.show()
         if (requestCode == PICKFILE_REQUEST_CODE) {
-            var uri1 = FileUtils.getPath(context, data?.data)
-            Log.d("TAG", uri1)
-            var file: File = File(uri1)
-            val requestBody: RequestBody =
-                RequestBody.create(MediaType.parse("multipart/form-data"), file)
-            val fileToUpload =
-                MultipartBody.Part.createFormData("attachment", file.getName(), requestBody)
-            var retrofit: Retrofit = RetrofitManager.getRetrofit1()
-            var api: HitApi = retrofit.create(HitApi::class.java)
-            if (isGeneratedAttachmentKey) {
-                postAttachmentFile(fileToUpload, attachmentRequestBodyKey, api)
-            } else {
-                generateAttachmentKey(api, fileToUpload)
+            if(data?.data!=null){
+                var uri1 = FileUtils.getPath(context, data?.data)
+                Log.d("TAG", uri1)
+                var file: File = File(uri1)
+                val requestBody: RequestBody =
+                    RequestBody.create(MediaType.parse("multipart/form-data"), file)
+                val fileToUpload =
+                    MultipartBody.Part.createFormData("attachment", file.getName(), requestBody)
+                var retrofit: Retrofit = RetrofitManager.getRetrofit1()
+                var api: HitApi = retrofit.create(HitApi::class.java)
+                if (isGeneratedAttachmentKey) {
+                    postAttachmentFile(fileToUpload, attachmentRequestBodyKey, api)
+                } else {
+                    generateAttachmentKey(api, fileToUpload)
+                }
+            }else{
+                progressBar.dismiss()
             }
 
         }
@@ -671,7 +838,7 @@ class ShowDetails() : Fragment(), AdapterView.OnItemSelectedListener {
         attachmentKey: RequestBody,
         api: HitApi,
     ) {
-        api.postAttachmentFile("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4",
+        api.postAttachmentFile(MyDataClass.api_key,
             MyDataClass.myUserId, fileToUpload, attachmentKey
         ).enqueue(object : Callback<ResponseThread> {
             override fun onResponse(
@@ -704,7 +871,7 @@ class ShowDetails() : Fragment(), AdapterView.OnItemSelectedListener {
 
     private fun generateAttachmentKey(api: HitApi, fileToUpload: MultipartBody.Part) {
         isGeneratedAttachmentKey = true
-        api.generateAttachmentKeyForPostThread("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4",
+        api.generateAttachmentKeyForPostThread(MyDataClass.api_key,
             MyDataClass.myUserId,
             path,
             "post")

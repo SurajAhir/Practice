@@ -15,6 +15,8 @@ import com.example.fatchcurrentlocation.*
 import com.example.fatchcurrentlocation.DataClasses.MyDataClass
 import com.example.fatchcurrentlocation.DataClasses.ResponseDataClass
 import com.example.fatchcurrentlocation.databinding.FragmentAccountDetailsBinding
+import com.example.fatchcurrentlocation.services.HitApi
+import com.example.fatchcurrentlocation.services.RetrofitManager
 import com.squareup.picasso.Picasso
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -226,58 +228,62 @@ class AccountDetails : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 1001 && data != null) {
-            progressBar.show()
-            var uri: Uri? = data.data
-            var destination = RealPathUtil.getRealPath(context, uri)
-            var file = File(destination)
-            var requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file)
-            var multiPartFile = MultipartBody.Part.createFormData("avatar", file.name, requestBody)
-            var retrofit: Retrofit = RetrofitManager.getRetrofit1()
-            var api: HitApi = retrofit.create(HitApi::class.java)
-            api.updateUserProfileImage(MyDataClass.api_key, MyDataClass.myUserId, multiPartFile)
-                .enqueue(object : Callback<Map<String, Boolean>> {
-                    override fun onResponse(
-                        call: Call<Map<String, Boolean>>,
-                        response: Response<Map<String, Boolean>>,
-                    ) {
-                        if (response.isSuccessful) {
-                            api.getUsersProfileResponse(MyDataClass.api_key, MyDataClass.myUserId)
-                                .enqueue(object : Callback<ResponseDataClass> {
-                                    override fun onResponse(
-                                        call: Call<ResponseDataClass>,
-                                        response: Response<ResponseDataClass>,
-                                    ) {
-                                        Log.d("TAG", "code${response.code()}")
-                                        if (response.isSuccessful) {
-                                            progressBar.dismiss()
-                                            Log.d("TAG", "${response.body()?.me?.avatar_urls?.o}")
-                                            MyDataClass.responseDataClass!!.user.avatar_urls.o =
-                                                response.body()?.me?.avatar_urls?.o!!
-                                            binding.accountDetailsUserProfileImageTv.visibility=View.GONE
-                                            binding.accountDetailsUserProfileImage.visibility=View.VISIBLE
-                                            Picasso.get().load(response.body()!!.me.avatar_urls.o)
-                                                .placeholder(R.drawable.ic_no_image)
-                                                .into(binding.accountDetailsUserProfileImage)
+        progressBar.show()
+        if (requestCode == 1001) {
+            if(data?.data!=null){
+                var uri: Uri? = data.data
+                var destination = RealPathUtil.getRealPath(context, uri)
+                var file = File(destination)
+                var requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file)
+                var multiPartFile = MultipartBody.Part.createFormData("avatar", file.name, requestBody)
+                var retrofit: Retrofit = RetrofitManager.getRetrofit1()
+                var api: HitApi = retrofit.create(HitApi::class.java)
+                api.updateUserProfileImage(MyDataClass.api_key, MyDataClass.myUserId, multiPartFile)
+                    .enqueue(object : Callback<Map<String, Boolean>> {
+                        override fun onResponse(
+                            call: Call<Map<String, Boolean>>,
+                            response: Response<Map<String, Boolean>>,
+                        ) {
+                            if (response.isSuccessful) {
+                                api.getUsersProfileResponse(MyDataClass.api_key, MyDataClass.myUserId)
+                                    .enqueue(object : Callback<ResponseDataClass> {
+                                        override fun onResponse(
+                                            call: Call<ResponseDataClass>,
+                                            response: Response<ResponseDataClass>,
+                                        ) {
+                                            Log.d("TAG", "code${response.code()}")
+                                            if (response.isSuccessful) {
+                                                progressBar.dismiss()
+                                                Log.d("TAG", "${response.body()?.me?.avatar_urls?.o}")
+                                                MyDataClass.responseDataClass!!.user.avatar_urls.o =
+                                                    response.body()?.me?.avatar_urls?.o!!
+                                                binding.accountDetailsUserProfileImageTv.visibility=View.GONE
+                                                binding.accountDetailsUserProfileImage.visibility=View.VISIBLE
+                                                Picasso.get().load(response.body()!!.me.avatar_urls.o)
+                                                    .placeholder(R.drawable.ic_no_image)
+                                                    .into(binding.accountDetailsUserProfileImage)
+                                            }
+
                                         }
 
-                                    }
-
-                                    override fun onFailure(
-                                        call: Call<ResponseDataClass>,
-                                        t: Throwable,
-                                    ) {
-                                        progressBar.dismiss()
-                                    }
-                                })
+                                        override fun onFailure(
+                                            call: Call<ResponseDataClass>,
+                                            t: Throwable,
+                                        ) {
+                                            progressBar.dismiss()
+                                        }
+                                    })
+                            }
                         }
-                    }
 
-                    override fun onFailure(call: Call<Map<String, Boolean>>, t: Throwable) {
-                        Log.d("TAG", "errror ${t.localizedMessage}")
-                        progressBar.dismiss()
-                    }
-                })
+                        override fun onFailure(call: Call<Map<String, Boolean>>, t: Throwable) {
+                            Log.d("TAG", "errror ${t.localizedMessage}")
+                            progressBar.dismiss()
+                        }
+                    })
+            }else{
+                progressBar.dismiss()
+            }
         }
 
     }

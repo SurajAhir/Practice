@@ -1,4 +1,4 @@
-package com.example.fatchcurrentlocation
+package com.example.fatchcurrentlocation.services
 
 import com.example.fatchcurrentlocation.DataClasses.Node
 import com.example.fatchcurrentlocation.DataClasses.ResponseDataClass
@@ -364,8 +364,48 @@ interface HitApi {
     fun getLatestPosts(
         @Header("XF-Api-Key") key: String,
         @Header("XF-Api-User") userId: Int,
-        @Query("page") page: Int,
-        @Query("order") order: String,
-        @Query("direction") direction: String,
     ):Call<ResponseThread>
+//    @Query("page") page: Int,
+//    @Query("order") order: String,
+//    @Query("direction") direction: String,
+    @GET("users/find-email")
+    fun findUserEmail(
+        @Header("XF-Api-Key") key: String,
+        @Header("XF-Api-User") userId: Int,
+        @Query("email") email:String
+    ):Call<ResponseDataClass>
+
+    @GET("alerts/")
+    fun getUnViewedAlerts(
+        @Header("XF-Api-Key") key: String,
+        @Header("XF-Api-User") userId: Int,
+        @Query("unread") unread: Boolean,
+    ): Call<ResponseDataClass>
+
+    @GET("conversations/")
+    fun getUnViewedConversations(
+        @Header("XF-Api-Key") key: String,
+        @Header("XF-Api-User") userId: Int,
+        @Query("unread") unread: Boolean,
+    ): Call<ResponseDataClass>
+    @POST("conversations/{id}/mark-read")
+    fun markReadConversation(
+        @Header("XF-Api-Key") key: String,
+        @Header("XF-Api-User") userId: Int,
+        @Path("id")conversation_id: Int
+    ):Call<Map<String,Boolean>>
+    @POST("alerts/{id}/mark")
+    @FormUrlEncoded
+    fun markReadAlerts(
+        @Header("XF-Api-Key") key: String,
+        @Header("XF-Api-User") userId: Int,
+        @Path("id")conversation_id: Int,
+        @Field("read")read:Boolean
+    ):Call<Map<String,Boolean>>
+
+    @POST("api.php")
+    @FormUrlEncoded
+    fun getUserEmailFromTwitterId(
+        @Field("provider_id")provider_id:Long
+    ):Call<Map<String,Any>>
 }

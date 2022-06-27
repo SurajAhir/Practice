@@ -27,14 +27,29 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:orientation="vertical">
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/show_conversations_custom_layout_title_tv"
-                android:textColor="@color/black"
+                android:orientation="horizontal"
                 android:paddingRight="8dp"
-                android:text="title "
-                android:paddingLeft="5dp"/>
+                android:weightSum="8"
+                android:paddingLeft="5dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="7.7"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/show_conversations_custom_layout_title_tv"
+                    android:textColor="@color/black"
+                    android:text="title " />
+                <TextView
+                    android:layout_width="10dp"
+                    android:background="@drawable/custom_circle_shape"
+                    android:backgroundTint="#313641"
+                    android:visibility="gone"
+                    android:id="@+id/show_conversations_custom_layout_isRead"
+                    android:layout_height="10dp" />
+            </LinearLayout>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

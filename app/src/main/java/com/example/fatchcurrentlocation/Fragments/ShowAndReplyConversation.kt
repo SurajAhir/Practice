@@ -23,9 +23,9 @@ import com.example.fatchcurrentlocation.AdaptersClasses.ShowParticipantsAdapter
 import com.example.fatchcurrentlocation.AdaptersClasses.ShowSelectedUsersNameAdapter
 import com.example.fatchcurrentlocation.DataClasses.*
 import com.example.fatchcurrentlocation.FileUtils
-import com.example.fatchcurrentlocation.HitApi
+import com.example.fatchcurrentlocation.services.HitApi
 import com.example.fatchcurrentlocation.R
-import com.example.fatchcurrentlocation.RetrofitManager
+import com.example.fatchcurrentlocation.services.RetrofitManager
 import com.example.fatchcurrentlocation.databinding.FragmentShowAndReplyConversationBinding
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -77,6 +77,7 @@ class ShowAndReplyConversation(val conversation: Conversations) : Fragment() {
     ): View? {
         binding = FragmentShowAndReplyConversationBinding.inflate(layoutInflater, container, false)
         initializeData()
+        markRead()
         putDataOnFields(conversation)
         if(MyDataClass.isJumpedToImage){
             Log.d("TAGA","position ${MyDataClass.JumpToImagePosition}")
@@ -520,6 +521,25 @@ class ShowAndReplyConversation(val conversation: Conversations) : Fragment() {
         return binding.root
     }
 
+    private fun markRead() {
+        var retrofit= RetrofitManager.getRetrofit1()
+        var api=retrofit.create(HitApi::class.java)
+        api.markReadConversation(MyDataClass.api_key,MyDataClass.myUserId,conversation.conversation_id).enqueue(object :Callback<Map<String,Boolean>>{
+            override fun onResponse(
+                call: Call<Map<String, Boolean>>,
+                response: Response<Map<String, Boolean>>
+            ) {
+                if(response.isSuccessful){
+                    MyDataClass.getTotalConversationsCount()
+                }
+            }
+
+            override fun onFailure(call: Call<Map<String, Boolean>>, t: Throwable) {
+              Log.d("TAG",t.localizedMessage)
+            }
+        })
+    }
+
     private fun showUsersOnAdapter() {
         binding.showAndReplyConversationRecyclerViewForShowSelectUsersName.adapter =
             context?.let {
@@ -667,7 +687,7 @@ class ShowAndReplyConversation(val conversation: Conversations) : Fragment() {
         Log.d("TAG", "string ${attachmentFileString}")
         var retrofit: Retrofit = RetrofitManager.getRetrofit1()
         var api: HitApi = retrofit.create(HitApi::class.java)
-        api.postConversationReply("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4",
+        api.postConversationReply(MyDataClass.api_key,
             MyDataClass.myUserId,
             conversation.conversation_id,
             binding.showAndReplyConversationMessageEt.text.toString() + attachmentFileString,
@@ -706,20 +726,24 @@ class ShowAndReplyConversation(val conversation: Conversations) : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         progressBar.show()
         if (requestCode == PICKFILE_REQUEST_CODE) {
-            var uri1 = FileUtils.getPath(context, data?.data)
-            Log.d("TAG", uri1)
-            var file: File = File(uri1)
-            val requestBody: RequestBody =
-                RequestBody.create(MediaType.parse("multipart/form-data"), file)
-            val fileToUpload =
-                MultipartBody.Part.createFormData("attachment", file.getName(), requestBody)
-            var retrofit: Retrofit = RetrofitManager.getRetrofit1()
-            var api: HitApi = retrofit.create(HitApi::class.java)
-            if (isGeneratedAttachmentKey) {
-                postAttachmentFile(fileToUpload, attachmentRequestBodyKey, api)
-            } else {
-                generateAttachmentKey(api, fileToUpload)
-            }
+         if(data?.data!=null){
+             var uri1 = FileUtils.getPath(context, data?.data)
+             Log.d("TAG", uri1)
+             var file: File = File(uri1)
+             val requestBody: RequestBody =
+                 RequestBody.create(MediaType.parse("multipart/form-data"), file)
+             val fileToUpload =
+                 MultipartBody.Part.createFormData("attachment", file.getName(), requestBody)
+             var retrofit: Retrofit = RetrofitManager.getRetrofit1()
+             var api: HitApi = retrofit.create(HitApi::class.java)
+             if (isGeneratedAttachmentKey) {
+                 postAttachmentFile(fileToUpload, attachmentRequestBodyKey, api)
+             } else {
+                 generateAttachmentKey(api, fileToUpload)
+             }
+         }else{
+             progressBar.dismiss()
+         }
 
         }
 
@@ -774,7 +798,7 @@ class ShowAndReplyConversation(val conversation: Conversations) : Fragment() {
         attachmentKey: RequestBody,
         api: HitApi,
     ) {
-        api.postAttachmentFile("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4",
+        api.postAttachmentFile(MyDataClass.api_key,
             MyDataClass.myUserId, fileToUpload, attachmentKey
         ).enqueue(object : Callback<ResponseThread> {
             override fun onResponse(

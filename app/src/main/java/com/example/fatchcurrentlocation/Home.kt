@@ -28,6 +28,8 @@ import com.example.fatchcurrentlocation.Fragments.*
 import com.example.fatchcurrentlocation.ReactionDialogWork.ReactionDialogClass
 import com.example.fatchcurrentlocation.ReactionDialogWork.ReactionListener
 import com.example.fatchcurrentlocation.databinding.ActivityHomeBinding
+import com.example.fatchcurrentlocation.services.HitApi
+import com.example.fatchcurrentlocation.services.RetrofitManager
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
@@ -80,6 +82,8 @@ class Home : AppCompatActivity(),
         mobileAdInitialize()
         initializeAddObject()
         fetchDatFromApi()
+        fetchTotalAlertsCounts()
+        fetchTotalConversationsCounts()
         binding.homeUserAccountProfileTv.setOnClickListener(object : View.OnClickListener {
             override fun onClick(p0: View?) {
                 if (goProfile) {
@@ -174,6 +178,7 @@ class Home : AppCompatActivity(),
         navigationView.setNavigationItemSelectedListener(object :
             NavigationView.OnNavigationItemSelectedListener {
             override fun onNavigationItemSelected(item: MenuItem): Boolean {
+
                 when (item.itemId) {
                     R.id.whatsNew -> {
                         var transaction = supportFragmentManager.beginTransaction()
@@ -185,7 +190,7 @@ class Home : AppCompatActivity(),
                         drawerLayout.closeDrawer(Gravity.LEFT)
                     }
                     R.id.youtube -> {
-                        val url = "https://www.youtube.com/"
+                        val url = "http://YouTube.com/c/Technofino"
                         val i = Intent(Intent.ACTION_VIEW)
                         i.data = Uri.parse(url)
                         startActivity(i)
@@ -207,8 +212,66 @@ class Home : AppCompatActivity(),
                         finish()
                         drawerLayout.closeDrawer(Gravity.LEFT)
                     }
+                    R.id.contactsUs->{
+                        val url = "https://www.technofino.in/community/misc/contact"
+                        val i = Intent(Intent.ACTION_VIEW)
+                        i.data = Uri.parse(url)
+                        startActivity(i)
+                        drawerLayout.closeDrawer(Gravity.LEFT)
+                    }
+
                 }
                 return true
+            }
+        })
+    }
+
+    private fun fetchTotalConversationsCounts() {
+var retrofit= RetrofitManager.getRetrofit1()
+        var api=retrofit.create(HitApi::class.java)
+        api.getUnViewedConversations(MyDataClass.api_key,MyDataClass.myUserId,true).enqueue(object :Callback<ResponseDataClass>{
+            override fun onResponse(
+                call: Call<ResponseDataClass>,
+                response: Response<ResponseDataClass>
+            ) {
+                if(response.isSuccessful){
+                    var pagination:Pagination?=response.body()?.pagination
+                    if(pagination?.total!!>0){
+                        binding.homeShowTotalConversationsTv.visibility=View.VISIBLE
+                        binding.homeShowTotalConversationsTv.setText(pagination.total.toString())
+                    }else{
+                        binding.homeShowTotalConversationsTv.visibility=View.GONE
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseDataClass>, t: Throwable) {
+               Log.d("TAG",t.localizedMessage)
+            }
+        })
+    }
+
+    private fun fetchTotalAlertsCounts() {
+        var retrofit= RetrofitManager.getRetrofit1()
+        var api=retrofit.create(HitApi::class.java)
+        api.getUnViewedAlerts(MyDataClass.api_key,MyDataClass.myUserId,true).enqueue(object :Callback<ResponseDataClass>{
+            override fun onResponse(
+                call: Call<ResponseDataClass>,
+                response: Response<ResponseDataClass>
+            ) {
+                if(response.isSuccessful){
+                    var pagination:Pagination?=response.body()?.pagination
+                    if(pagination?.total!!>0){
+                        binding.homeShowTotatAlertsTv.visibility=View.VISIBLE
+                        binding.homeShowTotatAlertsTv.setText(pagination.total.toString())
+                    }else{
+                        binding.homeShowTotatAlertsTv.visibility=View.GONE
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseDataClass>, t: Throwable) {
+                Log.d("TAG",t.localizedMessage)
             }
         })
     }
@@ -242,7 +305,7 @@ class Home : AppCompatActivity(),
                 override fun onAdFailedToLoad(loadAdError: LoadAdError) {
                     super.onAdFailedToLoad(loadAdError)
                     InterstitialAd.load(this@Home,
-                        "ca-app-pub-3940256099942544/1033173712",
+                        MyDataClass.api_key,
                         adRequest,
                         this)
                 }
@@ -291,7 +354,7 @@ class Home : AppCompatActivity(),
         var indexForSubNode = 0
         var retrofit: Retrofit = RetrofitManager.getRetrofit1()
         var api: HitApi = retrofit.create(HitApi::class.java)
-        api.getNodesResponse("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4").enqueue(object : Callback<Node> {
+        api.getNodesResponse(MyDataClass.api_key).enqueue(object : Callback<Node> {
             override fun onResponse(call: Call<Node>, response: Response<Node>) {
                 list = response.body()!!.nodes
                 treeMap = response.body()!!.tree_map
@@ -369,6 +432,8 @@ class Home : AppCompatActivity(),
         MyDataClass.homeNestedScrollView = binding.homeScrollBar
         MyDataClass.getTransaction = ::getFragmentTransaction
         MyDataClass.onBack = ::onBackPressed
+        MyDataClass.getTotalConversationsCount=::fetchTotalConversationsCounts
+        MyDataClass.getTotalAlertsCount=::fetchTotalAlertsCounts
         MyDataClass.reactionDialog = ::getReactionsDialog
         if (MyDataClass.responseDataClass == null) {
             binding.homeScrollBar.visibility = View.VISIBLE
@@ -379,7 +444,7 @@ class Home : AppCompatActivity(),
             var userId = sharedPreferences.getInt("userId", 1)
             progressDialog.show()
             thread {
-                api.getUsersProfileResponse("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4", userId)
+                api.getUsersProfileResponse(MyDataClass.api_key, userId)
                     .enqueue(object : Callback<ResponseDataClass> {
                         override fun onResponse(
                             call: Call<ResponseDataClass>,

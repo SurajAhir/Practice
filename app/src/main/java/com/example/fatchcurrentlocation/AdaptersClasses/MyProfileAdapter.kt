@@ -10,26 +10,35 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Build
+import android.text.Spannable
+import android.text.method.LinkMovementMethod
+import android.text.style.ImageSpan
+import android.text.style.URLSpan
 import android.util.Base64
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebView
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fatchcurrentlocation.DataClasses.MyDataClass
 import com.example.fatchcurrentlocation.DataClasses.ProfilePosts
 import com.example.fatchcurrentlocation.DataClasses.ResponseThread
-import com.example.fatchcurrentlocation.HitApi
+import com.example.fatchcurrentlocation.HtmlmageWork.ImageGetter
+import com.example.fatchcurrentlocation.services.HitApi
 import com.example.fatchcurrentlocation.R
-import com.example.fatchcurrentlocation.RetrofitManager
+import com.example.fatchcurrentlocation.ShowGridImageView
+import com.example.fatchcurrentlocation.services.RetrofitManager
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import jp.wasabeef.richeditor.RichEditor
@@ -37,6 +46,9 @@ import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
+import org.jsoup.Jsoup
+import org.sufficientlysecure.htmltextview.ClickableTableSpan
+import org.sufficientlysecure.htmltextview.DrawTableLinkSpan
 import org.sufficientlysecure.htmltextview.HtmlTextView
 import org.sufficientlysecure.htmltextview.OnClickATagListener
 import retrofit2.Call
@@ -262,17 +274,90 @@ class MyProfileAdapter(
                 .into(holder.ProfileImage)
         }
         holder.userName.setText(list.get(position).username)
-        holder.htmlTextView.blockQuoteStripWidth=0f
-        holder.htmlTextView.blockQuoteGap=20f
-        holder.htmlTextView.blockQuoteBackgroundColor= Color.parseColor("#E7E1E1" +
-                "")
-        holder.htmlTextView.setHtml(list.get(position).message_parsed)
-        holder.htmlTextView.setLayerType(HtmlTextView.LAYER_TYPE_NONE, null)
         holder.htmlTextView.setOnClickATagListener(object : OnClickATagListener {
             override fun onClick(widget: View?, spannedText: String?, href: String?): Boolean {
                 return false
             }
         })
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            holder.webViewDown.settings.setMixedContentMode(0);
+            holder.webViewDown.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            holder.webViewDown.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+        } else {
+            holder.webViewDown.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
+        }
+        holder.htmlTextView.setLayerType(HtmlTextView.LAYER_TYPE_NONE, null)
+        holder.htmlTextView.setClickableTableSpan(
+            MyProfileAdapter.ClickableTableSpanImpl(
+                holder.webViewDown
+            )
+        )
+        val drawTableLinkSpan = DrawTableLinkSpan()
+        drawTableLinkSpan.tableLinkText = "[Show table]"
+        holder.htmlTextView.setDrawTableLinkSpan(drawTableLinkSpan)
+        val metrics = DisplayMetrics()
+        holder.htmlTextView.setListIndentPx(metrics.density * 10)
+        var string: String = list.get(position).message_parsed.replace("(<(/)img>)|(<img. +?>)", "")
+        var string1: String =
+            list.get(position).message_parsed.replace("(<(/)img>)|(<img. +?>)", "")
+        var upMessage: String = ""
+        holder.htmlTextView.blockQuoteBackgroundColor = Color.parseColor("#BCE7E1E1")
+        holder.htmlTextView.blockQuoteStripWidth = 0f
+        holder.htmlTextView.blockQuoteGap = 20f
+        holder.htmlTextView.setLineSpacing(0f, 1.6f)
+        if (list.get(position).message_parsed.contains("<img")) {
+            if(list.get(position).attach_count>0){
+                var data = Jsoup.parse(list.get(position).message_parsed)
+                var message=list.get(position).message_parsed
+                var imagTag = data.select("img")
+                var imageList:ArrayList<String> =ArrayList()
+                for (image in list.get(position).Attachments){
+                    imageList.add(image.thumbnail_url)
+                }
+                for (i in 0..imagTag.size-1){
+                    var img=imagTag[i].toString().replace(">", " />")
+                    var imageUrl="<img src='${imageList.get(i)}'/>"
+                    message=message.replace(img, imageUrl)
+                    val imageGetter = context?.resources?.let { ImageGetter(it, holder.htmlTextView) }
+
+                    val styledText =
+                        HtmlCompat.fromHtml(message, HtmlCompat.FROM_HTML_MODE_LEGACY, imageGetter,null)
+
+//                    replaceQuoteSpans(styledText as Spannable)
+                    ImageClick(styledText as Spannable,position)
+                    // setting the text after formatting html and downloading and setting images
+                    holder.htmlTextView.text = styledText
+                    holder.htmlTextView.movementMethod = LinkMovementMethod.getInstance()
+                }
+            }
+        } else {
+            if(list.get(position).attach_count>0){
+                var message=list.get(position).message_parsed
+                var imageList:ArrayList<String> =ArrayList()
+                for (image in list.get(position).Attachments){
+                    imageList.add(image.thumbnail_url)
+                }
+                for (i in 0..imageList.size-1){
+                    var imageUrl="<br /><img src='${imageList.get(i)}'/>"
+                    message=message+imageUrl
+                }
+                val imageGetter = context?.resources?.let { ImageGetter(it, holder.htmlTextView) }
+
+                val styledText =
+                    HtmlCompat.fromHtml(message, HtmlCompat.FROM_HTML_MODE_LEGACY, imageGetter,null)
+
+//                replaceQuoteSpans(styledText as Spannable)
+                ImageClick(styledText as Spannable,position)
+                // setting the text after formatting html and downloading and setting images
+                holder.htmlTextView.text = styledText
+                holder.htmlTextView.movementMethod = LinkMovementMethod.getInstance()
+            }else{
+
+                holder.htmlTextView.setHtml(list.get(position).message_parsed)
+            }
+        }
 //        holder.message.setText(Jsoup.parse(list.get(position).message_parsed).text())
         var date = Date((list.get(position).post_date as Long) * 1000)
         var simple = SimpleDateFormat("dd yyyy")
@@ -367,65 +452,49 @@ class MyProfileAdapter(
                 activity?.startActivityForResult(intent, 1002)
             }
         })
-        if (list.get(position).Attachments!=null) {
-//            var document: Document = Jsoup.parse(tags)
-//            var elements: Elements = document.select("img")
-//            var list: LinkedList<String> = LinkedList()
-//            for (i in elements) {
-//                var src = i.attr("src")
-//                var src1 = src.replace("https://www.technofino.in/community/attachments/", "")
-//                var alt = i.attr("alt")
-//                var image = "https://www.technofino.in/community/attachments/" + alt + "." + src1
-//                list.add(image)
-//            }
-            callGetAttachmentPicApi(position,holder)
-
-        } else {
-            holder.recyclerView.visibility = View.GONE
-        }
     }
-    private fun callGetAttachmentPicApi(position: Int, holder: MyProfileHolder) {
-        var listOfAttachmentPics: LinkedList<Bitmap> = LinkedList()
-        var retrofit = RetrofitManager.getRetrofit1()
-        var api = retrofit.create(HitApi::class.java)
-        for (i in list.get(position).Attachments) {
-            Log.d("TAG","id ${i.attachment_id}")
-            api.getAttachments(MyDataClass.api_key, MyDataClass.myUserId, i.attachment_id)
-                .enqueue(object : Callback<ResponseBody> {
-                    override fun onResponse(
-                        call: Call<ResponseBody>,
-                        response: Response<ResponseBody>,
-                    ) {
-                        Log.d("TAG", "url ${response.code()}")
-                        if (response.isSuccessful) {
-                            Log.d("TAG", "${response.body()}")
-                            var byteArray = response.body()?.bytes()
-                            var base64 = Base64.encodeToString(byteArray, Base64.DEFAULT)
-                            var decodedString = Base64.decode(base64, Base64.DEFAULT)
-                            var bitmap = BitmapFactory.decodeByteArray(decodedString,
-                                0,
-                                decodedString.size)
-                            listOfAttachmentPics.add(bitmap)
-                            holder.recyclerView.visibility = View.VISIBLE
-                            holder.recyclerView.adapter = context?.let { ShowAttachmentImageAdapter(
-                                listOfAttachmentPics,
-                                it,
-                                position) }
-                            holder.recyclerView.layoutManager = LinearLayoutManager(context)
-//                                Log.d("TAG", bitmap.toString())
-//                                var path = saveBitmap(bitmap)
-//                                Log.d("TAG", "saved in $path")
-                        }
-                    }
-
-                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                        Log.d("TAG", "${t.localizedMessage}")
-                    }
-                })
-//                Log.d("TAG","${i.thumbnail_url}")
-//                list1.add(i.thumbnail_url)
-        }
-    }
+//    private fun callGetAttachmentPicApi(position: Int, holder: MyProfileHolder) {
+//        var listOfAttachmentPics: LinkedList<Bitmap> = LinkedList()
+//        var retrofit = RetrofitManager.getRetrofit1()
+//        var api = retrofit.create(HitApi::class.java)
+//        for (i in list.get(position).Attachments) {
+//            Log.d("TAG","id ${i.attachment_id}")
+//            api.getAttachments(MyDataClass.api_key, MyDataClass.myUserId, i.attachment_id)
+//                .enqueue(object : Callback<ResponseBody> {
+//                    override fun onResponse(
+//                        call: Call<ResponseBody>,
+//                        response: Response<ResponseBody>,
+//                    ) {
+//                        Log.d("TAG", "url ${response.code()}")
+//                        if (response.isSuccessful) {
+//                            Log.d("TAG", "${response.body()}")
+//                            var byteArray = response.body()?.bytes()
+//                            var base64 = Base64.encodeToString(byteArray, Base64.DEFAULT)
+//                            var decodedString = Base64.decode(base64, Base64.DEFAULT)
+//                            var bitmap = BitmapFactory.decodeByteArray(decodedString,
+//                                0,
+//                                decodedString.size)
+//                            listOfAttachmentPics.add(bitmap)
+//                            holder.recyclerView.visibility = View.VISIBLE
+//                            holder.recyclerView.adapter = context?.let { ShowAttachmentImageAdapter(
+//                                listOfAttachmentPics,
+//                                it,
+//                                position) }
+//                            holder.recyclerView.layoutManager = LinearLayoutManager(context)
+////                                Log.d("TAG", bitmap.toString())
+////                                var path = saveBitmap(bitmap)
+////                                Log.d("TAG", "saved in $path")
+//                        }
+//                    }
+//
+//                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+//                        Log.d("TAG", "${t.localizedMessage}")
+//                    }
+//                })
+////                Log.d("TAG","${i.thumbnail_url}")
+////                list1.add(i.thumbnail_url)
+//        }
+//    }
 //    private fun isReactedTo(holder: MyProfileHolder, position: Int) {
 //        if (list.get(position).is_reacted_to) {
 //            if (list.get(position).reaction_score > 0) {
@@ -541,7 +610,7 @@ class MyProfileAdapter(
         attachmentKey: RequestBody,
         api: HitApi,
     ) {
-        api.postAttachmentFile("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4",
+        api.postAttachmentFile(MyDataClass.api_key,
             MyDataClass.myUserId, fileToUpload, attachmentKey
         ).enqueue(object : Callback<ResponseThread> {
             override fun onResponse(
@@ -575,7 +644,7 @@ class MyProfileAdapter(
 
     private fun generateAttachmentKey(api: HitApi, fileToUpload: MultipartBody.Part) {
         isGeneratedAttachmentKey = true
-        api.generateAttachmentKeyForUserProfileOfComments("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4",
+        api.generateAttachmentKeyForUserProfileOfComments(MyDataClass.api_key,
             MyDataClass.myUserId,
             list.get(position).profile_post_id,
             "profile_post_comment")
@@ -649,7 +718,20 @@ class MyProfileAdapter(
             generateAttachmentKey(api, fileToUpload)
         }
     }
+    internal class ClickableTableSpanImpl(val webView: WebView) : ClickableTableSpan() {
 
+
+        override fun newInstance(): ClickableTableSpan {
+            return ClickableTableSpanImpl(webView)
+        }
+
+        override fun onClick(widget: View) {
+            val tableHtml = getTableHtml()
+            Log.d("TAG", tableHtml.toString())
+            webView.loadData(tableHtml!!, "text/html", "UTF-8")
+
+        }
+    }
     class MyProfileHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var ProfileImage: CircleImageView =
             itemView.findViewById(R.id.fragment_My_profile_custom_layout_UserProfileImage)
@@ -662,7 +744,7 @@ class MyProfileAdapter(
 //        var message: TextView =
 //            itemView.findViewById(R.id.fragment_My_profile_custom_layout_message_tv)
         var htmlTextView: HtmlTextView =
-            itemView.findViewById(R.id.fragment_My_profile_custom_layout_htmlTextview)
+            itemView.findViewById(R.id.fragment_My_profile_custom_layout_htmlTextviewDown)
         var postComment: TextView =
             itemView.findViewById(R.id.fragment_My_profile_custom_layout_writeSomething_tv)
         var postCommentLayout: LinearLayout =
@@ -712,7 +794,27 @@ class MyProfileAdapter(
             itemView.findViewById(R.id.fragment_My_profile_custom_layout_attach_file_btn)
         var attachRecyclerView: RecyclerView =
             itemView.findViewById(R.id.fragment_My_profile_custom_layout_showAttachmentsRecyclerView)
+        var webViewDown:WebView=itemView.findViewById(R.id.fragment_My_profile_custom_layout_webviewForTable)
 
     }
-
+    // Function to parse image tags and enable click events
+    fun ImageClick(html: Spannable, position: Int) {
+        for (span in html.getSpans(0, html.length, ImageSpan::class.java)) {
+            val flags = html.getSpanFlags(span)
+            val start = html.getSpanStart(span)
+            val end = html.getSpanEnd(span)
+            html.setSpan(object : URLSpan(span.source) {
+                override fun onClick(v: View) {
+                    Log.d("TAG", "onClick: url is ${span.source}")
+                    var intent=Intent(context, ShowGridImageView::class.java)
+                    var listOfAttachment:ArrayList<Int> = ArrayList()
+                    for (i in list.get(position).Attachments){
+                        listOfAttachment.add(i.attachment_id)
+                    }
+                    intent.putIntegerArrayListExtra("listOfAttachment",listOfAttachment)
+                    context?.startActivity(intent)
+                }
+            }, start, end, flags)
+        }
+    }
 }

@@ -16,6 +16,7 @@ data class Conversations(
     val Starter:User,
     val title:String,
     val user_id:Int,
-    val username:String
+    val username:String,
+    val is_unread:Boolean
 
 )

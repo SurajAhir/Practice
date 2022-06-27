@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="preloaded_fonts" translatable="false">
+        <item>@font/aguafina_script</item>
+        <item>@font/cormorant_sc_medium</item>
+        <item>@font/libre_franklin</item>
         <item>@font/montserrat_extrabold</item>
     </array>
 </resources>

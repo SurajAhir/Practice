@@ -12,8 +12,8 @@ import com.example.fatchcurrentlocation.AdaptersClasses.NotificationAdapter
 import com.example.fatchcurrentlocation.DataClasses.Alerts
 import com.example.fatchcurrentlocation.DataClasses.MyDataClass
 import com.example.fatchcurrentlocation.DataClasses.ResponseThread
-import com.example.fatchcurrentlocation.HitApi
-import com.example.fatchcurrentlocation.RetrofitManager
+import com.example.fatchcurrentlocation.services.HitApi
+import com.example.fatchcurrentlocation.services.RetrofitManager
 import com.example.fatchcurrentlocation.databinding.FragmentNotificationBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -28,9 +28,7 @@ class Notification : Fragment() {
         savedInstanceState: Bundle?,
     ): View? {
         binding = FragmentNotificationBinding.inflate(layoutInflater, container, false)
-        MyDataClass.page = 1
-        MyDataClass.isGoNotification=true
-        notificationList.clear()
+        initializeData()
         fetchDataFromApi()
         binding.notificationNestedScrollView.setOnScrollChangeListener(object :
             NestedScrollView.OnScrollChangeListener {
@@ -56,6 +54,16 @@ class Notification : Fragment() {
         })
 
         return binding.root
+    }
+
+    private fun initializeData() {
+        MyDataClass.page = 1
+        notificationList.clear()
+        MyDataClass.isGoNotification=true
+        MyDataClass.isGoProfile=false
+        MyDataClass.isGoConversation=false
+        MyDataClass.isGoForLatestPosts=false
+        MyDataClass.isPostThread=false
     }
 
     private fun fetchDataFromApi(page: Int = 1) {

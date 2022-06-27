@@ -15,9 +15,9 @@ import com.example.fatchcurrentlocation.DataClasses.MyDataClass
 import com.example.fatchcurrentlocation.DataClasses.Node
 import com.example.fatchcurrentlocation.DataClasses.NodesData1
 import com.example.fatchcurrentlocation.DataClasses.ResponseDataClass
-import com.example.fatchcurrentlocation.HitApi
+import com.example.fatchcurrentlocation.services.HitApi
 import com.example.fatchcurrentlocation.Home
-import com.example.fatchcurrentlocation.RetrofitManager
+import com.example.fatchcurrentlocation.services.RetrofitManager
 import com.example.fatchcurrentlocation.databinding.FragmentSelectThreadToPostBinding
 import de.hdodenhof.circleimageview.CircleImageView
 import retrofit2.Call
@@ -74,7 +74,7 @@ lateinit var binding:FragmentSelectThreadToPostBinding
         var indexForSubNode = 0
         var retrofit: Retrofit = RetrofitManager.getRetrofit1()
         var api: HitApi = retrofit.create(HitApi::class.java)
-        api.getNodesResponse("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4").enqueue(object : Callback<Node> {
+        api.getNodesResponse(MyDataClass.api_key).enqueue(object : Callback<Node> {
             override fun onResponse(call: Call<Node>, response: Response<Node>) {
                 list = response.body()!!.nodes
                 treeMap = response.body()!!.tree_map

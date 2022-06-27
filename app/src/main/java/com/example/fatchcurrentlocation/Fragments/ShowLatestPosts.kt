@@ -12,8 +12,8 @@ import com.example.fatchcurrentlocation.AdaptersClasses.ShowDetailsAdapter
 import com.example.fatchcurrentlocation.DataClasses.MyDataClass
 import com.example.fatchcurrentlocation.DataClasses.ResponseThread
 import com.example.fatchcurrentlocation.DataClasses.Threads
-import com.example.fatchcurrentlocation.HitApi
-import com.example.fatchcurrentlocation.RetrofitManager
+import com.example.fatchcurrentlocation.services.HitApi
+import com.example.fatchcurrentlocation.services.RetrofitManager
 import com.example.fatchcurrentlocation.databinding.FragmentShowLatestPostsBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -54,13 +54,14 @@ class ShowLatestPosts : Fragment() {
                 }
             }
         })
+        binding.showLatestPostsGoBackBtn.setOnClickListener { MyDataClass.onBack() }
         return binding.root
     }
 
     private fun fetchDataFromApi(page: Int = 1) {
         var retrofit = RetrofitManager.getRetrofit1()
         var api = retrofit.create(HitApi::class.java)
-        api.getLatestPosts(MyDataClass.api_key, MyDataClass.myUserId, page, "post_date", "desc")
+        api.getLatestPosts(MyDataClass.api_key, MyDataClass.myUserId)
             .enqueue(object : Callback<ResponseThread> {
                 override fun onResponse(
                     call: Call<ResponseThread>,

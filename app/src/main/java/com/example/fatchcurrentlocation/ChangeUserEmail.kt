@@ -13,6 +13,8 @@ import androidx.annotation.RequiresApi
 import com.example.fatchcurrentlocation.DataClasses.MyDataClass
 import com.example.fatchcurrentlocation.DataClasses.ResponseDataClass
 import com.example.fatchcurrentlocation.databinding.FragmentChangeUserEmailBinding
+import com.example.fatchcurrentlocation.services.HitApi
+import com.example.fatchcurrentlocation.services.RetrofitManager
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -47,7 +49,7 @@ binding.changeUserEmailGoBackBtn.setOnClickListener(object :View.OnClickListener
                     binding.changeUserEmailConfirmPasswordEt.focusable=View.FOCUSABLE
                 }else{
                     progressBar.show()
-                    var retrofit=RetrofitManager.getRetrofit1()
+                    var retrofit= RetrofitManager.getRetrofit1()
                     var api=retrofit.create(HitApi::class.java)
                     api.updateUserEmailId(MyDataClass.api_key,MyDataClass.myUserId,password,email).enqueue(object :Callback<Map<String,Boolean>>{
                         override fun onResponse(

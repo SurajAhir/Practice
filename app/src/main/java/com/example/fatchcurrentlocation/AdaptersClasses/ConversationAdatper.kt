@@ -108,6 +108,11 @@ class ConversationAdatper(val context: Context, val list: List<Conversations>) :
                 }
             }
         })
+        if (list.get(position).is_unread){
+            holder.isRead.visibility=View.VISIBLE
+        }else{
+            holder.isRead.visibility=View.GONE
+        }
     }
 
     override fun getItemCount(): Int {
@@ -125,6 +130,8 @@ class ConversationAdatper(val context: Context, val list: List<Conversations>) :
             itemView.findViewById(R.id.show_conversations_custom_layout_postDate_tv)
         var recipient: TextView =
             itemView.findViewById(R.id.show_conversations_custom_layout_recipientName_tv)
+        var isRead: TextView =
+            itemView.findViewById(R.id.show_conversations_custom_layout_isRead)
     }
 
 }

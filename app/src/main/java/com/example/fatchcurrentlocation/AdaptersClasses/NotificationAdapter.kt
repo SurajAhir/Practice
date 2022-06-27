@@ -15,9 +15,9 @@ import com.example.fatchcurrentlocation.DataClasses.Alerts
 import com.example.fatchcurrentlocation.DataClasses.MyDataClass
 import com.example.fatchcurrentlocation.DataClasses.ResponseThread
 import com.example.fatchcurrentlocation.Fragments.ShowPostsOfThreads
-import com.example.fatchcurrentlocation.HitApi
+import com.example.fatchcurrentlocation.services.HitApi
 import com.example.fatchcurrentlocation.R
-import com.example.fatchcurrentlocation.RetrofitManager
+import com.example.fatchcurrentlocation.services.RetrofitManager
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import retrofit2.Call
@@ -86,6 +86,7 @@ class NotificationAdapter(val context: Context, val list: List<Alerts>) :
                                         it)
                                 }
                                 transaction.addToBackStack(null).commit()
+                                markRead(position)
                             }
                         }
 
@@ -98,7 +99,24 @@ class NotificationAdapter(val context: Context, val list: List<Alerts>) :
             }
         })
     }
+    private fun markRead(position: Int) {
+        var retrofit= RetrofitManager.getRetrofit1()
+        var api=retrofit.create(HitApi::class.java)
+        api.markReadAlerts(MyDataClass.api_key,MyDataClass.myUserId,list.get(position).alert_id,true).enqueue(object :Callback<Map<String,Boolean>>{
+            override fun onResponse(
+                call: Call<Map<String, Boolean>>,
+                response: Response<Map<String, Boolean>>
+            ) {
+                if(response.isSuccessful){
+                    MyDataClass.getTotalAlertsCount
+                }
+            }
 
+            override fun onFailure(call: Call<Map<String, Boolean>>, t: Throwable) {
+                Log.d("TAG",t.localizedMessage)
+            }
+        })
+    }
     private fun convertTimeIntoSimpleMinuts(
         lastActivityDate: Date,
         holder: NotificationViewHolder,

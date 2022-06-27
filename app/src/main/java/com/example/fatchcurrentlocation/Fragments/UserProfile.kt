@@ -23,6 +23,8 @@ import com.example.fatchcurrentlocation.AdaptersClasses.ShowAttachmentFilesAdapt
 import com.example.fatchcurrentlocation.AdaptersClasses.UserProfileAdapter
 import com.example.fatchcurrentlocation.DataClasses.*
 import com.example.fatchcurrentlocation.databinding.FragmentUserProfileBinding
+import com.example.fatchcurrentlocation.services.HitApi
+import com.example.fatchcurrentlocation.services.RetrofitManager
 import com.squareup.picasso.Picasso
 import jp.wasabeef.richeditor.RichEditor
 import okhttp3.MediaType
@@ -38,6 +40,7 @@ import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
+import kotlin.collections.ArrayList
 
 class UserProfile(val list: LinkedList<Posts>, val position: Int) : Fragment(),
     AdapterView.OnItemSelectedListener {
@@ -46,7 +49,7 @@ class UserProfile(val list: LinkedList<Posts>, val position: Int) : Fragment(),
     var isChangedTextStyleBold: Boolean = false
     var isChangedTextStyleItalic: Boolean = false
     lateinit var progressBar: ProgressDialog
-    var spinneList = arrayOf("Find", "Find all threads by ${list.get(position).User.username}")
+    var spinneList = ArrayList<String>()
     var spinner: Spinner? = null
     var attachmentId: Int = 0
     var PICKFILE_REQUEST_CODE = 1001
@@ -322,6 +325,8 @@ class UserProfile(val list: LinkedList<Posts>, val position: Int) : Fragment(),
     }
 
     private fun initializeData() {
+        spinneList.add("Find")
+        spinneList.add("Find all threads by ${list.get(position).User.username}")
         alertDialog = context?.let { AlertDialog.Builder(it) }
         binding.fragmentUserProfileRichEditor.setEditorHeight(100)
         binding.fragmentUserProfileRichEditor.setEditorFontSize(15)
@@ -411,7 +416,7 @@ class UserProfile(val list: LinkedList<Posts>, val position: Int) : Fragment(),
         var lastActivityDate = Date((list.get(position).User.last_activity as Long) * 1000)
         convertTimeIntoSimpleMinuts(lastActivityDate)
         binding.fragmentUserProfileMessagesTv.setText(list.get(position).User.message_count.toString())
-        binding.fragmentUserProfileReactionScoreTv.setText(list.get(position).reaction_score.toString())
+        binding.fragmentUserProfileReactionScoreTv.setText(list.get(position).User.reaction_score.toString())
         binding.fragmentUserProfilePointsTv.setText(list.get(position).User.trophy_points.toString())
 
     }
@@ -460,13 +465,6 @@ class UserProfile(val list: LinkedList<Posts>, val position: Int) : Fragment(),
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun getCurrentDate(): Int {
-        val dtf: DateTimeFormatter = DateTimeFormatter.ofPattern("d")
-        val now: LocalDateTime = LocalDateTime.now()
-        return dtf.format(now) as Int
-    }
-
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
         if (spinneList.get(p2).equals("Find")) {
             return
@@ -477,6 +475,9 @@ class UserProfile(val list: LinkedList<Posts>, val position: Int) : Fragment(),
             transaction.replace(R.id.home_fragment_containerViewForShowDetails,
                 FindAllThreadsBySomeName(list.get(position).user_id))
             transaction.addToBackStack(null).commit()
+            spinneList.clear()
+            list1.clear()
+            spinner?.adapter=null
         }
     }
 
@@ -506,20 +507,25 @@ class UserProfile(val list: LinkedList<Posts>, val position: Int) : Fragment(),
         super.onActivityResult(requestCode, resultCode, data)
         progressBar.show()
         if (requestCode == PICKFILE_REQUEST_CODE) {
-            var uri1 = FileUtils.getPath(context, data?.data)
-            Log.d("TAG", uri1)
-            var file: File = File(uri1)
-            val requestBody: RequestBody =
-                RequestBody.create(MediaType.parse("multipart/form-data"), file)
-            val fileToUpload =
-                MultipartBody.Part.createFormData("attachment", file.getName(), requestBody)
-            var retrofit: Retrofit = RetrofitManager.getRetrofit1()
-            var api: HitApi = retrofit.create(HitApi::class.java)
-            if (isGeneratedAttachmentKey) {
-                postAttachmentFile(fileToUpload, attachmentRequestBodyKey, api)
-            } else {
-                generateAttachmentKey(api, fileToUpload)
-            }
+          if(data?.data!=null){
+              var uri1 = FileUtils.getPath(context, data?.data)
+              Log.d("TAG", uri1)
+              var file: File = File(uri1)
+              val requestBody: RequestBody =
+                  RequestBody.create(MediaType.parse("multipart/form-data"), file)
+              val fileToUpload =
+                  MultipartBody.Part.createFormData("attachment", file.getName(), requestBody)
+              var retrofit: Retrofit = RetrofitManager.getRetrofit1()
+              var api: HitApi = retrofit.create(HitApi::class.java)
+              if (isGeneratedAttachmentKey) {
+                  postAttachmentFile(fileToUpload, attachmentRequestBodyKey, api)
+              } else {
+                  generateAttachmentKey(api, fileToUpload)
+              }
+          }else{
+              binding.fragmentUserProfileProgressBar.visibility=View.GONE
+              progressBar.dismiss()
+          }
 
         }
 
@@ -531,7 +537,7 @@ class UserProfile(val list: LinkedList<Posts>, val position: Int) : Fragment(),
         attachmentKey: RequestBody,
         api: HitApi,
     ) {
-        api.postAttachmentFile("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4",
+        api.postAttachmentFile(MyDataClass.api_key,
             MyDataClass.myUserId, fileToUpload, attachmentKey
         ).enqueue(object : Callback<ResponseThread> {
             override fun onResponse(
@@ -564,7 +570,7 @@ class UserProfile(val list: LinkedList<Posts>, val position: Int) : Fragment(),
 
     private fun generateAttachmentKey(api: HitApi, fileToUpload: MultipartBody.Part) {
         isGeneratedAttachmentKey = true
-        api.generateAttachmentKeyForUserProfile("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4",
+        api.generateAttachmentKeyForUserProfile(MyDataClass.api_key,
             MyDataClass.myUserId,
             list.get(position).user_id,
             "profile_post")

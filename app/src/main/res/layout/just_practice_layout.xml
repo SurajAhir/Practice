@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#D8E1DDDD"
+    android:padding="10dp"
+    android:orientation="vertical">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/just_practice_layout_UserProfileImage"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:src="@drawable/person"
+        android:layout_gravity="start"
+        app:civ_border_color="#AAAAAA"
+        app:civ_border_width="2dp"/>
+    <org.sufficientlysecure.htmltextview.HtmlTextView
+        android:id="@+id/just_practice_layout_htmlTextviewDown"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/aguafina_script"
+        android:padding="10dp"
+        android:layout_marginLeft="9dp"
+        android:background="@drawable/just_practice_bg"
+        android:textColor="#E8222020"
+        android:textColorHighlight="@color/teal_200"
+        android:textSize="16sp" />
+</LinearLayout>
+</LinearLayout>

@@ -250,7 +250,7 @@
         android:layout_height="wrap_content"
         android:paddingLeft="10dp"
         android:background="@drawable/update_status_bg"
-        android:minHeight="100dp"
+        android:minHeight="150dp"
         android:hint="Write here..."
         android:gravity="start"
         android:paddingRight="10dp"
@@ -278,6 +278,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:padding="5dp"
         android:weightSum="10">
         <TextView
             android:layout_width="0dp"
@@ -310,6 +311,9 @@
             android:drawablePadding="4dp"
             android:id="@+id/post_comments_post_Reply_btn"/>
     </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="20dp"/>
 <!--    <TextView-->
 <!--        android:layout_width="wrap_content"-->
 <!--        android:layout_height="wrap_content"-->

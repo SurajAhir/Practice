@@ -15,14 +15,21 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.android.volley.Request
+import com.android.volley.VolleyError
+import com.android.volley.toolbox.StringRequest
 import com.example.fatchcurrentlocation.*
 import com.example.fatchcurrentlocation.AdaptersClasses.ShowAttachmentFilesAdapter
 import com.example.fatchcurrentlocation.AdaptersClasses.ShowPostsOfThreadsAdapter
 import com.example.fatchcurrentlocation.DataClasses.MyDataClass
+import com.example.fatchcurrentlocation.DataClasses.Pagination
 import com.example.fatchcurrentlocation.DataClasses.Posts
 import com.example.fatchcurrentlocation.DataClasses.ResponseThread
 import com.example.fatchcurrentlocation.databinding.FragmentShowPostsOfThreadsBinding
-import jp.wasabeef.richeditor.RichEditor
+import com.example.fatchcurrentlocation.services.HitApi
+import com.example.fatchcurrentlocation.services.RetrofitManager
+import kotlinx.coroutines.*
+import okhttp3.Headers
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -70,7 +77,7 @@ class ShowPostsOfThreads(
     ): View? {
         binding = FragmentShowPostsOfThreadsBinding.inflate(layoutInflater, container, false)
         val adMobInitialzer = AdMobInitialzer(context, binding.adView1)
-        Log.d("TAGA","vapis aagaya")
+        Log.d("TAGA","name $threadId")
         initializeData()
         if(MyDataClass.isJumpedToImage){
             MyDataClass.page=MyDataClass.JumpedToImagePageNum
@@ -319,176 +326,176 @@ class ShowPostsOfThreads(
                 startActivity(Intent(context, Home().javaClass))
             }
         })
-        binding.showPostsOfThreadsBold.setOnClickListener { binding.showPostsOfThreadsRichEditor.setBold() }
-        binding.showPostsOfThreadsItalic.setOnClickListener { binding.showPostsOfThreadsRichEditor.setItalic() }
-        binding.showPostsOfThreadsUndo.setOnClickListener { binding.showPostsOfThreadsRichEditor.undo() }
-        binding.showPostsOfThreadsRedo.setOnClickListener { binding.showPostsOfThreadsRichEditor.redo() }
-        binding.showPostsOfThreadsUnderline.setOnClickListener { binding.showPostsOfThreadsRichEditor.setUnderline() }
-//        binding.showPostsOfThreadsIndent.setOnClickListener { binding.showPostsOfThreadsRichEditor.setIndent() }
-//        binding.showPostsOfThreadsOutdent.setOnClickListener { binding.showPostsOfThreadsRichEditor.setOutdent() }
-        binding.showPostsOfThreadsAlignLeft.setOnClickListener { binding.showPostsOfThreadsRichEditor.setAlignLeft() }
-        binding.showPostsOfThreadsAlignRight.setOnClickListener { binding.showPostsOfThreadsRichEditor.setAlignRight() }
-        binding.showPostsOfThreadsAlignCenter.setOnClickListener { binding.showPostsOfThreadsRichEditor.setAlignCenter() }
-        binding.showPostsOfThreadsInsertBullets.setOnClickListener { binding.showPostsOfThreadsRichEditor.setBullets() }
-        binding.showPostsOfThreadsInsertNumbers.setOnClickListener { binding.showPostsOfThreadsRichEditor.setNumbers() }
-//        binding.showPostsOfThreadsIndent.setOnClickListener { binding.showPostsOfThreadsRichEditor.setIndent() }
-//        binding.showPostsOfThreadsOutdent.setOnClickListener { binding.showPostsOfThreadsRichEditor.setOutdent() }
-        binding.showPostsOfThreadsRichEditor.setOnTextChangeListener(RichEditor.OnTextChangeListener { text -> //                Log.d("TAG", text);
-            val center = ""
-            var right = ""
-            gettedTextFromEditor = text.replace("<", "[")
-            gettedTextFromEditor = gettedTextFromEditor.replace(">", "]")
-            gettedTextFromEditor =
-                gettedTextFromEditor.replace("&nbsp;", "").replace("[/li]", "")
-                    .replace("[ol", "[List=1")
-                    .replace("[li", "[*")
-                    .replace("/ol", "/List").replace(" style=\"\"", "").replace(" style=\"\"", "")
-                    .replace("[br]", "").replace("[i style=\"font-weight: bold;\"]", "[i]")
-                    .replace("[ul", "[List").replace("[/ul", "[/List")
-                    .replace("[span style=\"font-size: 22px;\"]", "[SIZE=6]")
-                    .replace("[/span]", "[/SIZE]").replace("[font size=\"7\"]", "[SIZE=26]")
-                    .replace("[font size=\"6\"]", "[SIZE=22]")
-                    .replace("[font size=\"5\"]", "[SIZE=18]")
-                    .replace("[font size=\"4\"]", "[SIZE=15]")
-                    .replace("[font size=\"3\"]", "[SIZE=12]")
-                    .replace("[font size=\"2\"]", "[SIZE=10]")
-                    .replace("[font size=\"1\"]", "[SIZE=9]").replace("[/font]", "[/SIZE]")
-                    .replace("[a href=", "[URL=").replace("[/a]", "[/URL]")
-                    .replace("[blockquote style=\"margin: 0 0 0 40px; border: none; padding: 0px;\"]",
-                        "[INDENT=2]")
-                    .replace("[/blockquote]", "[/INDENT]")
-                    .replace("[span style=\"font-size: 15px;\"]", "[SIZE=12]")
-            if (gettedTextFromEditor.contains("[div style=\"text-align: center;\"]")) {
-                while (gettedTextFromEditor.contains("[div style=\"text-align: center;\"]")) {
-                    centername = gettedTextFromEditor
-                    centername = centername.substring(centername.indexOf("center;\"]") + 9)
-                    if (centername.contains("[/div]")) {
-                        centername = centername.substring(0, centername.indexOf("[/div]"))
-                        gettedTextFromEditor =
-                            gettedTextFromEditor.replace("[div style=\"text-align: center;\"]$centername",
-                                "[CENTER]$centername")
-                                .replace(centername + "[/div]", centername + "[/CENTER]")
-                                .replace("[CENTER][/CENTER]", "")
-                    } else {
-                        Log.d("TAG", "center $centername")
-                        if (gettedTextFromEditor.contains("[div style=\"text-align: center;\"]")) {
-                            centername = centername.substring(0, centername.indexOf("[/RIGHT]"))
-                            gettedTextFromEditor =
-                                gettedTextFromEditor.replace("[div style=\"text-align: center;\"]$centername",
-                                    "[CENTER]$centername")
-                                    .replace(centername + "[/RIGHT]", centername + "[/CENTER]")
-                                    .replace("[RIGHT][/RIGHT]", "")
-                        } else {
-                            break
-                        }
-                        break
-                    }
-                }
-            }
-            if (gettedTextFromEditor.contains("[div style=\"text-align: right;\"]")) {
-                while (gettedTextFromEditor.contains("[div style=\"text-align: right;\"]")) {
-                    rightname = gettedTextFromEditor
-                    rightname = rightname.substring(rightname.indexOf("right;\"]") + 8)
-                    if (rightname.contains("[/div]")) {
-                        rightname = rightname.substring(0, rightname.indexOf("[/div]"))
-                        right = "[div style=\"text-align: right;\"]$rightname[/div]"
-                        gettedTextFromEditor =
-                            gettedTextFromEditor.replace("[div style=\"text-align: right;\"]$rightname",
-                                "[RIGHT]$rightname")
-                                .replace(rightname + "[/div]", rightname + "[/RIGHT]")
-                                .replace("[RIGHT][/RIGHT]", "")
-                    } else {
-                        Log.d("TAG", "right $rightname")
-                        if (gettedTextFromEditor.contains("[div style=\"text-align: right;\"]")) {
-                            rightname = rightname.substring(0, rightname.indexOf("[/CENTER]"))
-                            gettedTextFromEditor =
-                                gettedTextFromEditor.replace("[div style=\"text-align: right;\"]$rightname",
-                                    "[RIGHT]$rightname")
-                                    .replace(rightname + "[/CENTER]", rightname + "[/RIGHT]")
-                                    .replace("[RIGHT][/RIGHT]", "")
-                        } else {
-                            break
-                        }
-                    }
-                    //                        gettedText = gettedText + "[RIGHT]" + rightname + "[/RIGHT]";
-                }
-            }
-            if (gettedTextFromEditor.contains("[div style=\"text-align: left;\"]")) {
-                gettedTextFromEditor =
-                    gettedTextFromEditor.replace("[div style=\"text-align: left;\"]", "")
-                        .replace("[/div]", "")
-            }
-            Log.d("TAG", gettedTextFromEditor)
-        })
-        binding.showPostsOfThreadsFontSizeBtn.setOnClickListener(object :
-            View.OnClickListener {
-            override fun onClick(p0: View?) {
-                alertDialog1 = alertDialog!!.create()
-                alertDialog1!!.show()
-                alertDialog1!!.window!!.setLayout(300, 600)
-                alertDialog1!!.show()
-            }
-        })
-        alertDialog!!.setItems(sizes
-        ) { dialogInterface, i ->
-            when (i) {
-                0 -> {
-                    binding.showPostsOfThreadsRichEditor.setFontSize(1)
-                    Log.d("TAG", "clicked$i")
-                }
-                1 -> {
-                    binding.showPostsOfThreadsRichEditor.setFontSize(2)
-                    Log.d("TAG", "clicked$i")
-                }
-                2 -> {
-                    binding.showPostsOfThreadsRichEditor.setFontSize(3)
-                    Log.d("TAG", "clicked$i")
-                }
-                3 -> {
-                    binding.showPostsOfThreadsRichEditor.setFontSize(4)
-                    Log.d("TAG", "clicked$i")
-                }
-                4 -> {
-                    binding.showPostsOfThreadsRichEditor.setFontSize(5)
-                    Log.d("TAG", "clicked$i")
-                }
-                5 -> {
-                    binding.showPostsOfThreadsRichEditor.setFontSize(6)
-                    Log.d("TAG", "clicked$i")
-                }
-                6 -> {
-                    binding.showPostsOfThreadsRichEditor.setFontSize(7)
-                    Log.d("TAG", "clicked$i")
-                }
-            }
-        }
-        binding.showPostsOfThreadsInsertLink.setOnClickListener {
-            if (isLinkOpened) {
-                isLinkOpened = false
-                binding.showPostsOfThreadsInsertLinkLayout.visibility = View.GONE
-            } else {
-                isLinkOpened = true
-                binding.showPostsOfThreadsInsertLinkLayout.visibility = View.VISIBLE
-            }
-        }
-        binding.showPostsOfThreadsInsertLinkBtn.setOnClickListener(object : View.OnClickListener {
-            @RequiresApi(Build.VERSION_CODES.O)
-            override fun onClick(p0: View?) {
-                if (binding.showPostsOfThreadsUrlEt.text.isEmpty()) {
-                    binding.showPostsOfThreadsUrlEt.setError("Please enter a valid URL")
-                    binding.showPostsOfThreadsUrlEt.focusable = View.FOCUSABLE
-                } else if (binding.showPostsOfThreadsTextEt.text.toString().isEmpty()) {
-                    binding.showPostsOfThreadsTextEt.setError("Please enter a valid text")
-                    binding.showPostsOfThreadsTextEt.focusable = View.FOCUSABLE
-                } else {
-                    binding.showPostsOfThreadsRichEditor.insertLink(binding.showPostsOfThreadsUrlEt.text.toString(),
-                        binding.showPostsOfThreadsTextEt.text.toString())
-                    binding.showPostsOfThreadsUrlEt.setText("")
-                    binding.showPostsOfThreadsTextEt.setText("")
-                    binding.showPostsOfThreadsInsertLinkLayout.visibility = View.GONE
-                }
-            }
-        })
+//        binding.showPostsOfThreadsBold.setOnClickListener { binding.showPostsOfThreadsRichEditor.setBold() }
+//        binding.showPostsOfThreadsItalic.setOnClickListener { binding.showPostsOfThreadsRichEditor.setItalic() }
+//        binding.showPostsOfThreadsUndo.setOnClickListener { binding.showPostsOfThreadsRichEditor.undo() }
+//        binding.showPostsOfThreadsRedo.setOnClickListener { binding.showPostsOfThreadsRichEditor.redo() }
+//        binding.showPostsOfThreadsUnderline.setOnClickListener { binding.showPostsOfThreadsRichEditor.setUnderline() }
+////        binding.showPostsOfThreadsIndent.setOnClickListener { binding.showPostsOfThreadsRichEditor.setIndent() }
+////        binding.showPostsOfThreadsOutdent.setOnClickListener { binding.showPostsOfThreadsRichEditor.setOutdent() }
+//        binding.showPostsOfThreadsAlignLeft.setOnClickListener { binding.showPostsOfThreadsRichEditor.setAlignLeft() }
+//        binding.showPostsOfThreadsAlignRight.setOnClickListener { binding.showPostsOfThreadsRichEditor.setAlignRight() }
+//        binding.showPostsOfThreadsAlignCenter.setOnClickListener { binding.showPostsOfThreadsRichEditor.setAlignCenter() }
+//        binding.showPostsOfThreadsInsertBullets.setOnClickListener { binding.showPostsOfThreadsRichEditor.setBullets() }
+//        binding.showPostsOfThreadsInsertNumbers.setOnClickListener { binding.showPostsOfThreadsRichEditor.setNumbers() }
+////        binding.showPostsOfThreadsIndent.setOnClickListener { binding.showPostsOfThreadsRichEditor.setIndent() }
+////        binding.showPostsOfThreadsOutdent.setOnClickListener { binding.showPostsOfThreadsRichEditor.setOutdent() }
+//        binding.showPostsOfThreadsRichEditor.setOnTextChangeListener(RichEditor.OnTextChangeListener { text -> //                Log.d("TAG", text);
+//            val center = ""
+//            var right = ""
+//            gettedTextFromEditor = text.replace("<", "[")
+//            gettedTextFromEditor = gettedTextFromEditor.replace(">", "]")
+//            gettedTextFromEditor =
+//                gettedTextFromEditor.replace("&nbsp;", "").replace("[/li]", "")
+//                    .replace("[ol", "[List=1")
+//                    .replace("[li", "[*")
+//                    .replace("/ol", "/List").replace(" style=\"\"", "").replace(" style=\"\"", "")
+//                    .replace("[br]", "").replace("[i style=\"font-weight: bold;\"]", "[i]")
+//                    .replace("[ul", "[List").replace("[/ul", "[/List")
+//                    .replace("[span style=\"font-size: 22px;\"]", "[SIZE=6]")
+//                    .replace("[/span]", "[/SIZE]").replace("[font size=\"7\"]", "[SIZE=26]")
+//                    .replace("[font size=\"6\"]", "[SIZE=22]")
+//                    .replace("[font size=\"5\"]", "[SIZE=18]")
+//                    .replace("[font size=\"4\"]", "[SIZE=15]")
+//                    .replace("[font size=\"3\"]", "[SIZE=12]")
+//                    .replace("[font size=\"2\"]", "[SIZE=10]")
+//                    .replace("[font size=\"1\"]", "[SIZE=9]").replace("[/font]", "[/SIZE]")
+//                    .replace("[a href=", "[URL=").replace("[/a]", "[/URL]")
+//                    .replace("[blockquote style=\"margin: 0 0 0 40px; border: none; padding: 0px;\"]",
+//                        "[INDENT=2]")
+//                    .replace("[/blockquote]", "[/INDENT]")
+//                    .replace("[span style=\"font-size: 15px;\"]", "[SIZE=12]")
+//            if (gettedTextFromEditor.contains("[div style=\"text-align: center;\"]")) {
+//                while (gettedTextFromEditor.contains("[div style=\"text-align: center;\"]")) {
+//                    centername = gettedTextFromEditor
+//                    centername = centername.substring(centername.indexOf("center;\"]") + 9)
+//                    if (centername.contains("[/div]")) {
+//                        centername = centername.substring(0, centername.indexOf("[/div]"))
+//                        gettedTextFromEditor =
+//                            gettedTextFromEditor.replace("[div style=\"text-align: center;\"]$centername",
+//                                "[CENTER]$centername")
+//                                .replace(centername + "[/div]", centername + "[/CENTER]")
+//                                .replace("[CENTER][/CENTER]", "")
+//                    } else {
+//                        Log.d("TAG", "center $centername")
+//                        if (gettedTextFromEditor.contains("[div style=\"text-align: center;\"]")) {
+//                            centername = centername.substring(0, centername.indexOf("[/RIGHT]"))
+//                            gettedTextFromEditor =
+//                                gettedTextFromEditor.replace("[div style=\"text-align: center;\"]$centername",
+//                                    "[CENTER]$centername")
+//                                    .replace(centername + "[/RIGHT]", centername + "[/CENTER]")
+//                                    .replace("[RIGHT][/RIGHT]", "")
+//                        } else {
+//                            break
+//                        }
+//                        break
+//                    }
+//                }
+//            }
+//            if (gettedTextFromEditor.contains("[div style=\"text-align: right;\"]")) {
+//                while (gettedTextFromEditor.contains("[div style=\"text-align: right;\"]")) {
+//                    rightname = gettedTextFromEditor
+//                    rightname = rightname.substring(rightname.indexOf("right;\"]") + 8)
+//                    if (rightname.contains("[/div]")) {
+//                        rightname = rightname.substring(0, rightname.indexOf("[/div]"))
+//                        right = "[div style=\"text-align: right;\"]$rightname[/div]"
+//                        gettedTextFromEditor =
+//                            gettedTextFromEditor.replace("[div style=\"text-align: right;\"]$rightname",
+//                                "[RIGHT]$rightname")
+//                                .replace(rightname + "[/div]", rightname + "[/RIGHT]")
+//                                .replace("[RIGHT][/RIGHT]", "")
+//                    } else {
+//                        Log.d("TAG", "right $rightname")
+//                        if (gettedTextFromEditor.contains("[div style=\"text-align: right;\"]")) {
+//                            rightname = rightname.substring(0, rightname.indexOf("[/CENTER]"))
+//                            gettedTextFromEditor =
+//                                gettedTextFromEditor.replace("[div style=\"text-align: right;\"]$rightname",
+//                                    "[RIGHT]$rightname")
+//                                    .replace(rightname + "[/CENTER]", rightname + "[/RIGHT]")
+//                                    .replace("[RIGHT][/RIGHT]", "")
+//                        } else {
+//                            break
+//                        }
+//                    }
+//                    //                        gettedText = gettedText + "[RIGHT]" + rightname + "[/RIGHT]";
+//                }
+//            }
+//            if (gettedTextFromEditor.contains("[div style=\"text-align: left;\"]")) {
+//                gettedTextFromEditor =
+//                    gettedTextFromEditor.replace("[div style=\"text-align: left;\"]", "")
+//                        .replace("[/div]", "")
+//            }
+//            Log.d("TAG", gettedTextFromEditor)
+//        })
+//        binding.showPostsOfThreadsFontSizeBtn.setOnClickListener(object :
+//            View.OnClickListener {
+//            override fun onClick(p0: View?) {
+//                alertDialog1 = alertDialog!!.create()
+//                alertDialog1!!.show()
+//                alertDialog1!!.window!!.setLayout(300, 600)
+//                alertDialog1!!.show()
+//            }
+//        })
+//        alertDialog!!.setItems(sizes
+//        ) { dialogInterface, i ->
+//            when (i) {
+//                0 -> {
+//                    binding.showPostsOfThreadsRichEditor.setFontSize(1)
+//                    Log.d("TAG", "clicked$i")
+//                }
+//                1 -> {
+//                    binding.showPostsOfThreadsRichEditor.setFontSize(2)
+//                    Log.d("TAG", "clicked$i")
+//                }
+//                2 -> {
+//                    binding.showPostsOfThreadsRichEditor.setFontSize(3)
+//                    Log.d("TAG", "clicked$i")
+//                }
+//                3 -> {
+//                    binding.showPostsOfThreadsRichEditor.setFontSize(4)
+//                    Log.d("TAG", "clicked$i")
+//                }
+//                4 -> {
+//                    binding.showPostsOfThreadsRichEditor.setFontSize(5)
+//                    Log.d("TAG", "clicked$i")
+//                }
+//                5 -> {
+//                    binding.showPostsOfThreadsRichEditor.setFontSize(6)
+//                    Log.d("TAG", "clicked$i")
+//                }
+//                6 -> {
+//                    binding.showPostsOfThreadsRichEditor.setFontSize(7)
+//                    Log.d("TAG", "clicked$i")
+//                }
+//            }
+//        }
+//        binding.showPostsOfThreadsInsertLink.setOnClickListener {
+//            if (isLinkOpened) {
+//                isLinkOpened = false
+//                binding.showPostsOfThreadsInsertLinkLayout.visibility = View.GONE
+//            } else {
+//                isLinkOpened = true
+//                binding.showPostsOfThreadsInsertLinkLayout.visibility = View.VISIBLE
+//            }
+//        }
+//        binding.showPostsOfThreadsInsertLinkBtn.setOnClickListener(object : View.OnClickListener {
+//            @RequiresApi(Build.VERSION_CODES.O)
+//            override fun onClick(p0: View?) {
+//                if (binding.showPostsOfThreadsUrlEt.text.isEmpty()) {
+//                    binding.showPostsOfThreadsUrlEt.setError("Please enter a valid URL")
+//                    binding.showPostsOfThreadsUrlEt.focusable = View.FOCUSABLE
+//                } else if (binding.showPostsOfThreadsTextEt.text.toString().isEmpty()) {
+//                    binding.showPostsOfThreadsTextEt.setError("Please enter a valid text")
+//                    binding.showPostsOfThreadsTextEt.focusable = View.FOCUSABLE
+//                } else {
+//                    binding.showPostsOfThreadsRichEditor.insertLink(binding.showPostsOfThreadsUrlEt.text.toString(),
+//                        binding.showPostsOfThreadsTextEt.text.toString())
+//                    binding.showPostsOfThreadsUrlEt.setText("")
+//                    binding.showPostsOfThreadsTextEt.setText("")
+//                    binding.showPostsOfThreadsInsertLinkLayout.visibility = View.GONE
+//                }
+//            }
+//        })
         return binding.root
     }
 
@@ -994,31 +1001,31 @@ class ShowPostsOfThreads(
         MyDataClass.isGoForLatestPosts = false
         MyDataClass.isEnteredInShowDetails = false
         alertDialog = context?.let { AlertDialog.Builder(it) }
-        binding.showPostsOfThreadsRichEditor.setEditorHeight(100)
-        binding.showPostsOfThreadsRichEditor.setEditorFontSize(15)
-        binding.showPostsOfThreadsRichEditor.setEditorFontColor(Color.BLACK)
-        //mEditor.setEditorBackgroundColor(Color.BLUE);
-        //mEditor.setBackgroundColor(Color.BLUE);
-        //mEditor.setBackgroundResource(R.drawable.bg);
-        //mEditor.setEditorBackgroundColor(Color.BLUE);
-        //mEditor.setBackgroundColor(Color.BLUE);
-        //mEditor.setBackgroundResource(R.drawable.bg);
-        binding.showPostsOfThreadsRichEditor.setPadding(4, 4, 4, 4)
-        //mEditor.setBackground("https://raw.githubusercontent.com/wasabeef/art/master/chip.jpg");
-        //mEditor.setBackground("https://raw.githubusercontent.com/wasabeef/art/master/chip.jpg");
-        binding.showPostsOfThreadsRichEditor.setPlaceholder("Write reply...")
+//        binding.showPostsOfThreadsRichEditor.setEditorHeight(100)
+//        binding.showPostsOfThreadsRichEditor.setEditorFontSize(15)
+//        binding.showPostsOfThreadsRichEditor.setEditorFontColor(Color.BLACK)
+//        //mEditor.setEditorBackgroundColor(Color.BLUE);
+//        //mEditor.setBackgroundColor(Color.BLUE);
+//        //mEditor.setBackgroundResource(R.drawable.bg);
+//        //mEditor.setEditorBackgroundColor(Color.BLUE);
+//        //mEditor.setBackgroundColor(Color.BLUE);
+//        //mEditor.setBackgroundResource(R.drawable.bg);
+//        binding.showPostsOfThreadsRichEditor.setPadding(4, 4, 4, 4)
+//        //mEditor.setBackground("https://raw.githubusercontent.com/wasabeef/art/master/chip.jpg");
+//        //mEditor.setBackground("https://raw.githubusercontent.com/wasabeef/art/master/chip.jpg");
+//        binding.showPostsOfThreadsRichEditor.setPlaceholder("Write reply...")
         MyDataClass.threadId = threadId
         progressBar = ProgressDialog(context)
         MyDataClass.attachmentFileListAttachmentId.clear()
         MyDataClass.attachmentFileListItem.clear()
     }
 
-    fun fetchDataFromApi(path: Int, page: Int = 1) {
+      fun  fetchDataFromApi(path: Int, page: Int = 1) {
         binding.showPostsOfThreadsProgressBar.visibility = View.VISIBLE
         binding.showPostsOfThreadsRecyclerView.visibility=View.GONE
         var retrofit = RetrofitManager.getRetrofit1()
         var api: HitApi = retrofit.create(HitApi::class.java)
-        api.getPostsOfThreadsResonse("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4",
+        api.getPostsOfThreadsResonse(MyDataClass.api_key,
             MyDataClass.myUserId,
             path,
             page,
@@ -1030,20 +1037,18 @@ class ShowPostsOfThreads(
                     response: Response<ResponseThread>,
                 ) {
                     if (response.isSuccessful && response.body() != null) {
-                        binding.showPostsOfThreadsProgressBar.visibility = View.GONE
-                        binding.showPostsOfThreadsRecyclerView.visibility=View.VISIBLE
                         var list = response.body()?.posts
                         var list1: LinkedList<Posts> = LinkedList()
                         MyDataClass.paginationForPostsOfThreads = response.body()!!.pagination
                         var pagination = response.body()!!.pagination
                         list?.let { list1.addAll(it) }
-                        Log.d("TAG",
-                            "last page ${MyDataClass.paginationForShowDetails.last_page}  page${MyDataClass.page}")
                         MyDataClass.JumpedToImagePageNum=page
                         binding.showPostsOfThreadsCategory.setText(title1)
                         binding.showPostsOfThreadsUserNameTv.setText(lastPostUsername)
                         binding.showPostsOfThreadsTitle.setText(category)
                         binding.showPostsOfThreadsPostDateTv.setText(lastPostDate)
+                        binding.showPostsOfThreadsProgressBar.visibility = View.GONE
+                        binding.showPostsOfThreadsRecyclerView.visibility=View.VISIBLE
                         binding.showPostsOfThreadsRecyclerView.adapter =
                             ShowPostsOfThreadsAdapter(list1, context,
                                 response.body()!!.pagination, ::fetchDataFromApi)
@@ -1101,11 +1106,10 @@ class ShowPostsOfThreads(
             })
 
     }
-
     private fun hitApi(gettedAttachmentKey: String, attachmentFileString: String) {
         var retrofit: Retrofit = RetrofitManager.getRetrofit1()
         var api: HitApi = retrofit.create(HitApi::class.java)
-        api.getResponseOfComments("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4",
+        api.getResponseOfComments(MyDataClass.api_key,
             MyDataClass.myUserId,
             threadId,
             binding.showPostsOfThreadsMessageEt.text.toString() + attachmentFileString,
@@ -1118,7 +1122,7 @@ class ShowPostsOfThreads(
                     if (response.isSuccessful) {
                         progressBar.dismiss()
                         isAttachedFile = false
-                        api.getPostsOfThreadsResonse("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4",
+                        api.getPostsOfThreadsResonse(MyDataClass.api_key,
                             MyDataClass.myUserId,
                             threadId,
                             1,
@@ -1161,20 +1165,24 @@ class ShowPostsOfThreads(
         super.onActivityResult(requestCode, resultCode, data)
         progressBar.show()
         if (requestCode == PICKFILE_REQUEST_CODE) {
-            var uri1 = FileUtils.getPath(context, data?.data)
-            Log.d("TAG", uri1)
-            var file: File = File(uri1)
-            val requestBody: RequestBody =
-                RequestBody.create(MediaType.parse("multipart/form-data"), file)
-            val fileToUpload =
-                MultipartBody.Part.createFormData("attachment", file.getName(), requestBody)
-            var retrofit: Retrofit = RetrofitManager.getRetrofit1()
-            var api: HitApi = retrofit.create(HitApi::class.java)
-            if (isGeneratedAttachmentKey) {
-                postAttachmentFile(fileToUpload, attachmentRequestBodyKey, api)
-            } else {
-                generateAttachmentKey(api, fileToUpload)
-            }
+         if(data?.data!=null){
+             var uri1 = FileUtils.getPath(context, data?.data)
+             Log.d("TAG", uri1)
+             var file: File = File(uri1)
+             val requestBody: RequestBody =
+                 RequestBody.create(MediaType.parse("multipart/form-data"), file)
+             val fileToUpload =
+                 MultipartBody.Part.createFormData("attachment", file.getName(), requestBody)
+             var retrofit: Retrofit = RetrofitManager.getRetrofit1()
+             var api: HitApi = retrofit.create(HitApi::class.java)
+             if (isGeneratedAttachmentKey) {
+                 postAttachmentFile(fileToUpload, attachmentRequestBodyKey, api)
+             } else {
+                 generateAttachmentKey(api, fileToUpload)
+             }
+         }else{
+             progressBar.dismiss()
+         }
 
         }
 
@@ -1202,7 +1210,7 @@ class ShowPostsOfThreads(
         attachmentKey: RequestBody,
         api: HitApi,
     ) {
-        api.postAttachmentFile("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4",
+        api.postAttachmentFile(MyDataClass.api_key,
             MyDataClass.myUserId, fileToUpload, attachmentKey
         ).enqueue(object : Callback<ResponseThread> {
             override fun onResponse(
@@ -1236,7 +1244,7 @@ class ShowPostsOfThreads(
 
     private fun generateAttachmentKey(api: HitApi, fileToUpload: MultipartBody.Part) {
         isGeneratedAttachmentKey = true
-        api.generateAttachmentKey("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4",
+        api.generateAttachmentKey(MyDataClass.api_key,
             MyDataClass.myUserId,
             threadId,
             "post")

@@ -1,30 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".Fragments.PostReplyForConversation">
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="Back"
-        android:layout_marginTop="4dp"
-        android:drawableLeft="@drawable/ic_arrow_back_ios_24"
-        android:paddingLeft="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:gravity="center|start"
-        android:textColor="@color/black"
-        android:background="@drawable/update_status_bg"
-        android:id="@+id/postReplyForConversation_goBack_btn"/>
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="20dp"
             android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="Back"
+                android:layout_marginTop="4dp"
+                android:drawableLeft="@drawable/ic_arrow_back_ios_24"
+                android:paddingLeft="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:gravity="center|start"
+                android:textColor="@color/black"
+                android:background="@drawable/update_status_bg"
+                android:id="@+id/postReplyForConversation_goBack_btn"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -277,6 +274,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:padding="15dp"
                 android:weightSum="10">
                 <TextView
                     android:layout_width="0dp"
@@ -288,6 +286,7 @@
                     android:text="Attach files"
                     android:layout_marginRight="15dp"
                     android:layout_marginLeft="15dp"
+                    android:layout_marginBottom="15dp"
                     android:gravity="center|start"
                     android:background="@drawable/update_status_bg"
                     android:drawablePadding="4dp"
@@ -297,6 +296,7 @@
                     android:layout_weight="5"
                     android:layout_height="50dp"
                     android:elevation="8dp"
+                    android:layout_marginBottom="15dp"
                     android:layout_marginRight="15dp"
                     android:layout_marginLeft="15dp"
                     android:drawableLeft="@drawable/ic_post"
@@ -310,5 +310,4 @@
                     android:id="@+id/postReplyForConversation_post_Reply_btn"/>
             </LinearLayout>
         </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
-</LinearLayout>
+</androidx.core.widget.NestedScrollView>

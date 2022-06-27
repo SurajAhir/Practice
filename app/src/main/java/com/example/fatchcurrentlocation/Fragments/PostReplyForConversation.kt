@@ -19,8 +19,8 @@ import com.example.fatchcurrentlocation.AdaptersClasses.ShowAttachmentFilesAdapt
 import com.example.fatchcurrentlocation.DataClasses.MyDataClass
 import com.example.fatchcurrentlocation.DataClasses.ResponseThread
 import com.example.fatchcurrentlocation.FileUtils
-import com.example.fatchcurrentlocation.HitApi
-import com.example.fatchcurrentlocation.RetrofitManager
+import com.example.fatchcurrentlocation.services.HitApi
+import com.example.fatchcurrentlocation.services.RetrofitManager
 import com.example.fatchcurrentlocation.databinding.FragmentPostReplyForConversationBinding
 import jp.wasabeef.richeditor.RichEditor
 import okhttp3.MediaType
@@ -279,7 +279,7 @@ class PostReplyForConversation(
         Log.d("TAG", "string ${attachmentFileString}")
         var retrofit: Retrofit = RetrofitManager.getRetrofit1()
         var api: HitApi = retrofit.create(HitApi::class.java)
-        api.postConversationReply("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4",
+        api.postConversationReply(MyDataClass.api_key,
             MyDataClass.myUserId,
             conversation_id,
             convertString + binding.postReplyForConversationReplyMessageEt.text.toString() + attachmentFileString,
@@ -312,20 +312,24 @@ class PostReplyForConversation(
         super.onActivityResult(requestCode, resultCode, data)
         progressBar.show()
         if (requestCode == PICKFILE_REQUEST_CODE) {
-            var uri1 = FileUtils.getPath(context, data?.data)
-            Log.d("TAG", uri1)
-            var file: File = File(uri1)
-            val requestBody: RequestBody =
-                RequestBody.create(MediaType.parse("multipart/form-data"), file)
-            val fileToUpload =
-                MultipartBody.Part.createFormData("attachment", file.getName(), requestBody)
-            var retrofit: Retrofit = RetrofitManager.getRetrofit1()
-            var api: HitApi = retrofit.create(HitApi::class.java)
-            if (isGeneratedAttachmentKey) {
-                postAttachmentFile(fileToUpload, attachmentRequestBodyKey, api)
-            } else {
-                generateAttachmentKey(api, fileToUpload)
-            }
+         if(data?.data!=null){
+             var uri1 = FileUtils.getPath(context, data?.data)
+             Log.d("TAG", uri1)
+             var file: File = File(uri1)
+             val requestBody: RequestBody =
+                 RequestBody.create(MediaType.parse("multipart/form-data"), file)
+             val fileToUpload =
+                 MultipartBody.Part.createFormData("attachment", file.getName(), requestBody)
+             var retrofit: Retrofit = RetrofitManager.getRetrofit1()
+             var api: HitApi = retrofit.create(HitApi::class.java)
+             if (isGeneratedAttachmentKey) {
+                 postAttachmentFile(fileToUpload, attachmentRequestBodyKey, api)
+             } else {
+                 generateAttachmentKey(api, fileToUpload)
+             }
+         }else{
+             progressBar.dismiss()
+         }
 
         }
 
@@ -372,7 +376,7 @@ class PostReplyForConversation(
         attachmentKey: RequestBody,
         api: HitApi,
     ) {
-        api.postAttachmentFile("4xEmIhbiwmsneaJZ8gQ41pkfulOe0xI4",
+        api.postAttachmentFile(MyDataClass.api_key,
             MyDataClass.myUserId, fileToUpload, attachmentKey
         ).enqueue(object : Callback<ResponseThread> {
             override fun onResponse(
